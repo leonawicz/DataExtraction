@@ -1,0 +1,152 @@
+---
+title: Data Extraction
+author: Matthew Leonawicz
+output:
+  html_document:
+    toc: true
+    theme: united
+    highlight: zenburn
+    keep_md: true
+---
+
+```{r knitr_setup, echo=FALSE}
+opts_chunk$set(cache=FALSE, echo=FALSE, eval=TRUE, tidy=TRUE, message=FALSE, warning=FALSE)
+read_chunk("")
+```
+
+## Statistical sampling for spatial data extraction
+
+### Motivation: Data processing efficiency
+
+We've gotten faster at SNAP, but so has our need for speed. What was once never bothered with (outside some of my own work),
+using statistical sampling to obtain results at no cost to validity, accuracy or precision compared to a census of our data,
+is now more relevant than ever.
+Before, we were content to let a process run in the background for hours and look at the results when done.
+There was little incentive to incorporate techniques like those laid out here.
+Now we have more types of data delivery and presentation, e.g., web applications, where it is intended for there to be a human watching and waiting for data processing to occur.
+
+#### Assumptions, bad ones
+An assumption I often encounter from those outside statistics, but involved in "big data" is that with today's processing power there is no reason not to use all the data.
+A corollary of this is that many statistical methods can be dispensed with,
+which is based on another assumption that this is what statistics basically exists for;
+to help us hobble along when we were in the stone age.
+However, both of these views are flawed.
+The latter suggests little knowledge of the broad uses of statistics.
+The former suggests little knowledge of statistics period, or the myriad ways data can be improperly analyzed and results interpreted.
+
+#### Speed not for speed's sake
+Making things go faster is perhaps the last area of application I would ever find for statistical methods,
+and since not a lot of traditional statistical analysis occurs at SNAP I do not want those untrained in statistics to get the wrong impression that speed improvements are all statistics is really good for.
+But it is relevant and beneficial in the context of some of our workflows, particularly my own.
+But I am also not the only one extracting and processing large amounts of data at SNAP.
+One use of statistics is data reduction.
+This is what I aim for when needing to "get things done faster," not really the speed itself.
+I'd rather see a decrease in computational time required for large data processing occur as a latent consequence of smart application of statistical methods than as something forced for its own sake.
+I will outline a simple and extremely common case.
+
+### Case study: sample mean
+
+Example of population mean vs. sample mean for a typical map of SNAP's Alaska-Canada 2-km downscaled data.
+The sample mean converges in distribution to the population mean quite quickly.
+
+```{r packages}
+```
+
+```{r setup}
+```
+
+```{r means}
+```
+
+```{r sampling}
+```
+
+```{r size}
+```
+
+#### Justification
+
+The difference between sampling vs. using all data in a map layer is minimal.
+It depends on various factors including but not limited to the statistic of interest, the spatial autocorrelation present in the map, and whether the entire map is of interest or just a particular region of a certain size.
+
+In this example using the sample mean instead of the population mean, the difference is representative.
+The difference is also not particularly meaningful.
+It is also not final, as it tends to vanish anyway due to rounding to the nearest significant digits for the data after the statistic is computed.
+The difference in means can also be bounded arbitrarily even without the rounding to significant digits performed at the end.
+
+In the case of the mean we are helped out by the weak law of large numbers and the central limit theorem.
+Consideration must also be given to the high level of spatial autocorrelation among pixels in the downscaled raster maps.
+There is simply not as much data or information present as one might think and this drives the effective sample size.
+ 
+#### Results
+
+##### All points? No point.
+
+Using the sample mean is helpful as a data reduction strategy while not being harmful in terms of representativeness.
+The possible "tradeoff" itself appears to be largely a false dichotomy.
+There is no benefit to computing the mean of all pixels in the example map layer.
+
+##### How many samples do we really need?
+
+```{r sigdig}
+```
+
+In this example even a two percent subsample of the original non-NA data cells is small enough to limit us to a five percent probability of obtaining a mean that differs from the mean computed on the full dataset
+by an amount equal to or greater than the smallest discrete increment possible (0.1 degrees Celsius for SNAP temperature data) based simply on the number of significant figures present.
+Furthermore, even for nominal sample sizes, the 0.05 probability is one almost strictly of minimal deviation (0.1 degrees).
+The probability that a sample mean computed on a subsample of the map layer deviates enough from the population mean
+to cause it to be rounded to two discrete incremental units from the population mean (0.2 degrees) is essentially zero (except if using crudely small sample sizes).
+
+Although a two percent subsample appears sufficient for this criterion, let’s use a five percent subsample for illustration.
+This is clearly overkill in this example since the p-value attenuates to the range of 0.019 to 0.029 by around 2.5 percent subsampling.
+
+##### How much faster does this make things go?
+
+Compute time for the mean is of course affected by the sample size.
+
+```{r time}
+```
+
+```{r benchmarks3}
+```
+
+Using optimal subsampling to estimate the mean achieves speed improvements orders of magnitude greater than what can be achieved through strictly algorithmic changes to how the mean is computed on the full dataset,
+though those help immensely as well, also by many orders of magnitude.
+Sampling is vastly more effective, but both approaches can be combined for maximum benefit.
+
+```{r benchmarks4}
+```
+
+Similar to above, below are the median compute times for the mean using (1) the full data while removing NAs, (2) the sum divided by the length after NAs removed, (3) the mean of a subsample, and (4) a combination of (2) and (3).
+
+```{r benchmarks4med1}
+```
+
+Here is the same plot after removing the first bar to better show the relative compute time for the other three methods.
+
+```{r benchmarks4med2}
+```
+
+How does the benefit extend to extractions on maps at different extents, data heterogeneity, climate variables,
+or for other common statistics such as the standard deviation?
+These are open questions at the moment, but for one thing,
+I expect more samples are needed for precipitation than temperature.
+I also expect more samples needed to estimate parameters with higher moments.
+
+### Next steps
+
+Combining sampling and data reduction methods while using the most efficient **R** functions can be particularly useful when processing large numbers of high-resolution geotiff raster layers.
+One thing I already do when extracting from many files by shapefile is I avoid extracting by shape more than once.
+I do it one time to obtain the corresponding raster layer cell indices.
+Then on all subsequent maps I extract by cell indices which is notably faster.
+Ultimately, there is much more room for speed improvements in terms of efficient use of statistics than in strictly programmatic corner-cutting.
+
+The plots below benchmark different sample mean computations.
+Comparisons involve the sample mean of the entire data set and do not involve the main approach outlined above which focuses on efficiency gains by taking the mean of a smaller, representative sample.
+This provides some insight into how it is beneficial nonetheless to considering the right programmatic approach in conjunction with statistical efficiencies.
+
+```{r benchmarks1}
+```
+
+```{r benchmarks2}
+```

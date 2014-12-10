@@ -1,0 +1,78 @@
+---
+title: Data Extraction
+author: Matthew Leonawicz
+output:
+  html_document:
+    toc: true
+    theme: united
+    highlight: zenburn
+    keep_md: true
+---
+
+```{r knitr_setup, echo=FALSE}
+opts_chunk$set(cache=FALSE, echo=TRUE, eval=FALSE, tidy=TRUE, message=FALSE, warning=FALSE)
+read_chunk("")
+```
+
+## **R** code: Statistical sampling for spatial data extraction
+
+### Setup
+
+#### Packages
+
+```{r packages}
+```
+
+#### Additional setup
+
+```{r setup}
+```
+
+#### Examine population mean
+
+```{r means}
+```
+
+#### Sampling setup
+
+```{r sampling}
+```
+
+### Sample mean by size
+
+```{r size}
+```
+
+### Significant figures
+
+```{r sigdig}
+```
+
+### Compute time by sample size
+
+```{r time}
+```
+
+### Benchmarks
+
+```{r benchmarks3}
+```
+
+```{r benchmarks4}
+```
+
+### Benchmarks: median compute times
+
+```{r benchmarks4med1}
+```
+
+```{r benchmarks4med2}
+```
+
+### Final benchmarks
+
+```{r benchmarks1}
+```
+
+```{r benchmarks2}
+```
