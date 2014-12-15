@@ -10,8 +10,9 @@ output:
 ---
 
 ```{r knitr_setup, echo=FALSE}
-opts_chunk$set(cache=FALSE, echo=FALSE, eval=TRUE, tidy=TRUE, message=FALSE, warning=FALSE)
-read_chunk("")
+opts_chunk$set(cache=FALSE, echo=TRUE, eval=TRUE, tidy=TRUE, message=FALSE, warning=FALSE)
+#read_chunk("../../code/proj_sankey.R")
+read_chunk("../../code/extract_eval.R")
 ```
 
 ## Statistical sampling for spatial data extraction
