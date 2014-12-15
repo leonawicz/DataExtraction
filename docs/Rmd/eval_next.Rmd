@@ -1,0 +1,33 @@
+---
+title: Data Extraction
+author: Matthew Leonawicz
+output:
+  html_document:
+    toc: true
+    theme: united
+    highlight: zenburn
+    keep_md: true
+---
+
+```{r knitr_setup, echo=FALSE}
+opts_chunk$set(cache=FALSE, echo=FALSE, eval=TRUE, tidy=TRUE, message=FALSE, warning=FALSE)
+read_chunk("")
+```
+
+### Next steps
+
+Combining sampling and data reduction methods while using the most efficient **R** functions can be particularly useful when processing large numbers of high-resolution geotiff raster layers.
+One thing I already do when extracting from many files by shapefile is I avoid extracting by shape more than once.
+I do it one time to obtain the corresponding raster layer cell indices.
+Then on all subsequent maps I extract by cell indices which is notably faster.
+Ultimately, there is much more room for speed improvements in terms of efficient use of statistics than in strictly programmatic corner-cutting.
+
+The plots below benchmark different sample mean computations.
+Comparisons involve the sample mean of the entire data set and do not involve the main approach outlined above which focuses on efficiency gains by taking the mean of a smaller, representative sample.
+This provides some insight into how it is beneficial nonetheless to considering the right programmatic approach in conjunction with statistical efficiencies.
+
+```{r benchmarks1}
+```
+
+```{r benchmarks2}
+```
