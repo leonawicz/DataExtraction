@@ -6,9 +6,9 @@ library(ggplot2)
 library(reshape2)
 
 # @knitr setup
-setwd("X:/Leonawicz/Projects/2014/DataExtraction/data")
+setwd("C:/github/DataExtraction/data")
 #testfile <- "Z:/Base_Data/ALFRESCO_formatted/ALFRESCO_Master_Dataset/ALFRESCO_Model_Input_Datasets/AK_CAN_Inputs/Climate/gfdl_cm2_1/sresa2/tas/tas_mean_C_alf_ar4_gfdl_cm2_1_sresa2_01_2045.tif"
-testfile <- "Z:/Base_Data/Climate/AK_CAN_2km/projected/AR5_CMIP5_models/rcp60/GFDL-CM3/tas/tas_mean_C_AR5_GFDL-CM3_rcp60_01_2062.tif"
+testfile <- "tas_mean_C_AR5_GFDL-CM3_rcp60_01_2062.tif"
 
 r <- readAll(raster(testfile)) # force into memory so I/O time does not confound extraction time
 v <- getValues(r) # numeric vector
@@ -57,9 +57,9 @@ clr <- c("Samples"="gray", "Pop. mean +/- 1 sig. fig."="blue", "Rounded pop. mea
 # @knitr size
 if(no.knit) png("../plots/mean_by_size.png", width=2000, height=1600, res=200)
 g <- ggplot(means, aes(x=Percent_Sample, y=Mean, group=Sample)) + theme_bw() + geom_line(aes(colour="Samples")) +
-	geom_hline(aes(yintercept=mean.pop.out, colour="Rounded pop. mean")) +
-	geom_hline(aes(yintercept=bounds.signif, colour=c("Pop. mean +/- 1 sig. fig."))) +
-	geom_hline(aes(yintercept=discrete.out[2:5], colour="Possible rounded values"), linetype=2) +
+	geom_hline(aes(yintercept=d, colour="Rounded pop. mean"), data=data.frame(d=mean.pop.out)) +
+	geom_hline(aes(yintercept=d, colour=c("Pop. mean +/- 1 sig. fig.")), data=data.frame(d=bounds.signif)) +
+	geom_hline(aes(yintercept=d, colour="Possible rounded values"), , data=data.frame(d=discrete.out[2:5]), linetype=2) +
 	scale_colour_manual(name="hello", values=clr) + theme(legend.position="bottom") +
 	labs(title="Sample mean ~ sample size")
 print(g)
