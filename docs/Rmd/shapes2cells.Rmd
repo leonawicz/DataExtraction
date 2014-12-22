@@ -11,7 +11,7 @@ output:
 
 ```{r knitr_setup, echo=FALSE}
 opts_chunk$set(cache=FALSE, eval=FALSE, tidy=TRUE, message=FALSE, warning=FALSE)
-read_chunk("")
+read_chunk("../../code/shapes2cells.R")
 ```
 
 

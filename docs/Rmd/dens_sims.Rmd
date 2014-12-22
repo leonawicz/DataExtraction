@@ -10,51 +10,22 @@ output:
 ---
 
 ```{r knitr_setup, echo=FALSE}
-opts_chunk$set(cache=FALSE, eval=FALSE, tidy=TRUE, message=FALSE, warning=FALSE)
-read_chunk("")
+opts_chunk$set(cache=FALSE, echo=FALSE, eval=TRUE, tidy=TRUE, message=FALSE, warning=FALSE)
+read_chunk("../../extractDensityExample.R")
 ```
 
 
-## Introduction
-ADD_TEXT_HERE
+## Simulation results
 
-### Motivation
-ADD_TEXT_HERE
-
-### Details
-ADD_TEXT_HERE
-
-#### Capabilities
-ADD_TEXT_HERE
-
-#### Limitations
-ADD_TEXT_HERE
-
-## Related items
-
-### Files and Data
-ADD_TEXT_HERE
-
-### Code flow
-ADD_TEXT_HERE
-
-```{r code_sankey, echo=F, eval=T}
-```
-
-```{r code_sankey_embed, echo=F, eval=T, comment=NA, results="asis", tidy=F}
-```
-
-## R code
-
-### Setup
-ADD_TEXT_HERE: EXAMPLE
-Setup consists of loading required **R** packages and additional files, preparing any command line arguments for use, and defining functions and other **R** objects.
-
-
-NEW_CODE_CHUNKS
 ```{r setup}
 ```
+
+The first plot shows a histogram of the original simulated data, overlain with boostrap resamples drawn from the crudely estimated density, and finally, a new density estimation performed post-bootstrap.
+The second plot shows the same, but incorporates an intermediary step involving linear approximation.
+This allows the subsequent draws to be more continuous.
+
 ```{r plot1}
 ```
+
 ```{r plot2}
 ```

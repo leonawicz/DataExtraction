@@ -11,7 +11,7 @@ output:
 
 ```{r knitr_setup, echo=FALSE}
 opts_chunk$set(cache=FALSE, echo=FALSE, eval=TRUE, tidy=TRUE, message=FALSE, warning=FALSE)
-read_chunk("")
+read_chunk("../../code/extract_eval.R")
 ```
 
 ### Next steps
