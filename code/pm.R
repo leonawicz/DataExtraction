@@ -26,9 +26,8 @@ chunkNames(path=file.path(proj.location, proj.name, "code"), append.new=TRUE)
 # @knitr website
 # Setup for generating a project website
 proj.github <- file.path("https://github.com/leonawicz", proj.name)
-index.url <- "extractDensityExample.html" # temporary
-#index.url <- "proj_intro.html"
-file.copy(index.url, "index.html")
+index.url <- "index.html"
+#file.copy(index.url, "index.html")
 
 proj.title <- "Data Extraction"
 proj.menu <- c("Spatial aggregation", "Density estimation", "Pre-indexing", "All Projects")
@@ -48,7 +47,7 @@ proj.files <- list(
 )
 
 # generate navigation bar html file common to all pages
-genNavbar(htmlfile=file.path(proj.location, proj.name, "docs/Rmd/include/navbar.html"), title=proj.title, menu=proj.menu, submenus=proj.submenu, files=proj.files, title.url="index.html", home.url="index.html", site.url=proj.github, include.home=TRUE)
+genNavbar(htmlfile=file.path(proj.location, proj.name, "docs/Rmd/include/navbar.html"), title=proj.title, menu=proj.menu, submenus=proj.submenu, files=proj.files, title.url="index.html", home.url="index.html", site.url=proj.github, include.home=FALSE)
 
 # generate _output.yaml file
 # Note that external libraries are expected, stored in the "libs" below
@@ -74,7 +73,6 @@ files.Rmd <- list.files(pattern=".Rmd$", full=T)
 
 # @knitr save
 # write all yaml front-matter-specified outputs to Rmd directory for all Rmd files
-files.Rmd <- files.Rmd[11] # temporary
 lapply(files.Rmd, render, output_format="all")
 
 moveDocs(path.docs=docs.path)
