@@ -86,7 +86,7 @@ body {
       <div class="nav-collapse collapse">
         <ul class="nav">
           <li class="dropdown">
-            <a href="spatial-aggregation" class="dropdown-toggle" data-toggle="dropdown">Spatial aggregation <b class="caret"></b></a>
+            <a href="extraction-evaluation" class="dropdown-toggle" data-toggle="dropdown">Extraction evaluation <b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li class="nav-header">Project</li>
               <li><a href="eval_intro.html">Introduction</a></li>
@@ -149,11 +149,6 @@ body {
 <h4 class="author"><em>Matthew Leonawicz</em></h4>
 </div>
 
-<div id="TOC">
-<ul>
-<li><a href="#introduction">Introduction</a></li>
-</ul>
-</div>
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
@@ -164,7 +159,7 @@ body {
 </div>
 <div id="details" class="section level3">
 <h3>Details</h3>
-<p>I compile the following: - Lists of commonly used groups of polygon shapefiles - Key raster/geotiff format data sets from which we commonly extract data - Settings pertaining to the methods and circumstances under which cell indexing can occur in anticipated, subsequent data extraction exercises</p>
+<p>I compile the following: — Lists of commonly used groups of polygon shapefiles — Key raster/geotiff format data sets from which we commonly extract data — Settings pertaining to the methods and circumstances under which cell indexing can occur in anticipated, subsequent data extraction exercises</p>
 <div id="capabilities" class="section level4">
 <h4>Capabilities</h4>
 <p>The most straightforward purpose here is to obtain a nested list of groups of related geographic regions based on input shapefiles, each such lower list element storing a vector of cell numbers, or indices, pertaining to a given shapefile’s spatial location over a given rasterized data set. The nested list is named. The top level elements are themselves lists, named based on related shapefile groupings. Each of these lists is originally a list of shapefiles but is transformed into a list of vectors of raster layer cell indices.</p>
@@ -173,7 +168,7 @@ body {
 </div>
 <div id="limitations" class="section level4">
 <h4>Limitations</h4>
-<p>Obviously, the vector of cell indices for a shapefile differs for different rasterized data sets. At this time, cell index nested lists are produced for two common rasterized data products at SNAP: - Alaska-Canada 2-km downscaled climate data - Alaska-Canada 1-km Alfresco simulation data</p>
+<p>Obviously, the vector of cell indices for a shapefile differs for different rasterized data sets. At this time, cell index nested lists are produced for two common rasterized data products at SNAP: — Alaska-Canada 2-km downscaled climate data — Alaska-Canada 1-km Alfresco simulation data</p>
 <p>Although the extents are identical, resolutions differ, and hence so do cell numbers pertaining to any given polygon shapefile. Furthermore, taking the climate and Alfresco datasets as an example again, even if they were the same resolution, the Alfresco map has spatial regions of <code>NA</code> where data values exist in the climate layers. This would have an independent effect on the NA-omitted versions of the nested lists. It would also affect sampled versions where <code>NA</code> cells are removed.</p>
 <p>These are not really limitations, but trivial facts. The thing to remain aware of is simply that any version of these polygon shapefile-specific nested lists of cell numbers are of course indexed with respect to a specific rasterized dataset.</p>
 </div>

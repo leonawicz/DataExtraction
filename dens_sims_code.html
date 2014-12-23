@@ -113,7 +113,7 @@ code > span.er { color: #c3bf9f; }
       <div class="nav-collapse collapse">
         <ul class="nav">
           <li class="dropdown">
-            <a href="spatial-aggregation" class="dropdown-toggle" data-toggle="dropdown">Spatial aggregation <b class="caret"></b></a>
+            <a href="extraction-evaluation" class="dropdown-toggle" data-toggle="dropdown">Extraction evaluation <b class="caret"></b></a>
             <ul class="dropdown-menu">
               <li class="nav-header">Project</li>
               <li><a href="eval_intro.html">Introduction</a></li>
@@ -176,11 +176,6 @@ code > span.er { color: #c3bf9f; }
 <h4 class="author"><em>Matthew Leonawicz</em></h4>
 </div>
 
-<div id="TOC">
-<ul>
-<li><a href="#r-code">R code</a></li>
-</ul>
-</div>
 
 <div id="r-code" class="section level2">
 <h2>R code</h2>
@@ -207,7 +202,7 @@ for (i in <span class="dv">1</span>:<span class="dv">1000</span>) {
     <span class="co"># through my code</span>
     sample.boot &lt;-<span class="st"> </span><span class="kw">sample</span>(den$x, <span class="dt">size =</span> <span class="dv">1000</span>, <span class="dt">prob =</span> den$y, <span class="dt">rep =</span> T)
     <span class="kw">lines</span>(<span class="kw">density</span>(sample.boot, <span class="dt">adjust =</span> <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;#FF000001&quot;</span>)  <span class="co"># No extra smoothing with smaller samples</span>
-    <span class="kw">print</span>(i)
+    <span class="co"># print(i)</span>
 }
 <span class="co"># A larger bootstrap sample will pin down the distribution accurately enough</span>
 <span class="co"># if necessary</span>
@@ -223,7 +218,7 @@ for (i in <span class="dv">1</span>:<span class="dv">1000</span>) {
     ap &lt;-<span class="st"> </span><span class="kw">approx</span>(den$x, den$y, <span class="dt">n =</span> <span class="dv">1000</span>)  <span class="co"># reintroduce interpolation before sampling</span>
     sample.boot2 &lt;-<span class="st"> </span><span class="kw">sample</span>(ap$x, <span class="dt">size =</span> <span class="dv">1000</span>, <span class="dt">prob =</span> ap$y, <span class="dt">rep =</span> T)
     <span class="kw">lines</span>(<span class="kw">density</span>(sample.boot2, <span class="dt">adjust =</span> <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;#0000FF01&quot;</span>)
-    <span class="kw">print</span>(i)
+    <span class="co"># print(i)</span>
 }
 sample.boot2 &lt;-<span class="st"> </span><span class="kw">sample</span>(ap$x, <span class="dt">size =</span> <span class="dv">10000</span>, <span class="dt">prob =</span> ap$y, <span class="dt">rep =</span> T)
 <span class="kw">lines</span>(<span class="kw">density</span>(sample.boot2, <span class="dt">adjust =</span> <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;#0000FF&quot;</span>)</code></pre>
