@@ -3,7 +3,7 @@ title: Minimal Empirical Density Estimation
 author: Matthew Leonawicz
 output:
   html_document:
-    toc: true
+    toc: false
     theme: united
     highlight: zenburn
     keep_md: true

@@ -3,7 +3,7 @@ title: Data Extraction
 author: Matthew Leonawicz
 output:
   html_document:
-    toc: true
+    toc: false
     theme: united
     highlight: zenburn
     keep_md: true
@@ -12,9 +12,9 @@ output:
 ## Introduction
 This project organizes various aspects of of QA/QC on data extraction operations at SNAP.
 Currently, there are three projects under this umbrella:
-- An evaluation of data extraction routines often applied to large SNAP data sets.
-- Simulation and application of efficient data distribution estimation methods to SNAP data.
-- A priori compiling of vectorized (spatial polygons) data in the form of raster indexing for more efficient subsequent use.
+--- An evaluation of data extraction routines often applied to large SNAP data sets.
+--- Simulation and application of efficient data distribution estimation methods to SNAP data.
+--- A priori compiling of vectorized (spatial polygons) data in the form of raster indexing for more efficient subsequent use.
 
 ### Motivation
 Although these projects are not directly dependent upon one another, they all relate in terms of the efforts put toward efficient data processing at SNAP.
