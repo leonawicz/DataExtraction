@@ -4,6 +4,7 @@ Matthew Leonawicz
 ## Introduction
 This project organizes various aspects of of QA/QC on data extraction operations at SNAP.
 Currently, there are three projects under this umbrella:
+
 * An evaluation of data extraction routines often applied to large SNAP data sets.
 * Simulation and application of efficient data distribution estimation methods to SNAP data.
 * A priori compiling of vectorized (spatial polygons) data in the form of raster indexing for more efficient subsequent use.
