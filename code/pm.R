@@ -30,7 +30,7 @@ index.url <- "index.html"
 #file.copy(index.url, "index.html")
 
 proj.title <- "Data Extraction"
-proj.menu <- c("Spatial aggregation", "Density estimation", "Pre-indexing", "All Projects")
+proj.menu <- c("Extraction evaluation", "Density estimation", "Pre-indexing", "All Projects")
 
 proj.submenu <- list(
 	c("Project", "Introduction", "Case study: sample mean", "Results", "Next steps", "divider", "R Code", "Complete code"),
