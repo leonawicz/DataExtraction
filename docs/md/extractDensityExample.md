@@ -26,9 +26,9 @@ but it is especially helpful to avoid the crippling load times associated with f
 
 Instead of loading a dataset, e.g., an R workspace file, containing a huge sample of data for some variable,
 it is much easier to:
-- store a small, efficient, and hopefully, accurate and precise representation of that data,
-- load only that into the Shiny app,
-- and then have **R** quickly explode that representation into a new simulated data set.
+* store a small, efficient, and hopefully, accurate and precise representation of that data,
+* load only that into the Shiny app,
+* and then have **R** quickly explode that representation into a new simulated data set.
 
 This is especially an effective approach in the context of Shiny apps where the goal is to visually explore patterns and present information,
 and not to have tunnel vision for an exact value buried deep in a massive data set which is nevertheless riddled with uncertainty.

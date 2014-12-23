@@ -8,7 +8,7 @@ This is just a toy example where I use simple simulations to investigate propert
 ### Motivation
 I often face the real-world problem of needing to rapidly summarize large amounts of data in an efficient manner without losing, skewing, or obscuring too much information.
 The context for this simulation is to show that it is possible to estimate an empirical distribution of a variable by a small set of points roughly defining the density curve,
-which can then we used in conjunction with linear approximation and bootstrap resampling to simulate new draws from the estimated distribution.
+which can then be used in conjunction with linear approximation and bootstrap resampling to simulate new draws from the estimated distribution.
 The process can stop here if it is a sample that is required, or, in turn, an arbitrarily large sample drawn can be used to re-estimate the density more smoothly.
 
 For some applications this is not useful, as the original data are already available.
@@ -24,9 +24,9 @@ but it is especially helpful to avoid the crippling load times associated with f
 
 Instead of loading a dataset, e.g., an R workspace file, containing a huge sample of data for some variable,
 it is much easier to:
---- store a small, efficient, and hopefully, accurate and precise representation of that data,
---- load only that into the Shiny app,
---- and then have **R** quickly explode that representation into a new simulated data set.
+* store a small, efficient, and hopefully, accurate and precise representation of that data,
+* load only that into the Shiny app,
+* and then have **R** quickly explode that representation into a new simulated data set.
 
 This is especially an effective approach in the context of Shiny apps where the goal is to visually explore patterns and present information,
 and not to have tunnel vision for an exact value buried deep in a massive data set which is nevertheless riddled with uncertainty.
