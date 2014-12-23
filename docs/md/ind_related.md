@@ -1,18 +1,7 @@
----
-title: Shapefiles to Raster Cell Indices
-author: Matthew Leonawicz
-output:
-  html_document:
-    toc: true
-    theme: united
-    highlight: zenburn
-    keep_md: true
----
+# Shapefiles to Raster Cell Indices
+Matthew Leonawicz  
 
-```{r knitr_setup, echo=FALSE}
-opts_chunk$set(cache=FALSE, eval=FALSE, tidy=TRUE, message=FALSE, warning=FALSE)
-#read_chunk("../../code/s2c_code_sankey.R")
-```
+
 
 ## Related items
 

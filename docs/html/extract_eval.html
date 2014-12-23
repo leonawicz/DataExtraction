@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Matthew Leonawicz" />
+
+
+<title>Data Extraction Evaluation</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="libs/bootstrap-2.3.2/css/united.min.css" rel="stylesheet" />
+<link href="libs/bootstrap-2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+@media (max-width: 979px) {
+  body {
+    padding-top: 0;
+  }
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+@media (min-width: 980px) {
+  .section h2 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+  .section h3 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+}
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+/* some padding for disqus */
+#disqus_thread {
+  margin-top: 45px;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+<div class="container-fluid main-container">
+
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="index.html">Data Extraction</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          <li class="dropdown">
+            <a href="spatial-aggregation" class="dropdown-toggle" data-toggle="dropdown">Spatial aggregation <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="eval_intro.html">Introduction</a></li>
+              <li><a href="eval_case.html">Case study: sample mean</a></li>
+              <li><a href="eval_res.html">Results</a></li>
+              <li><a href="eval_next.html">Next steps</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R Code</li>
+              <li><a href="extract_eval_code.html">Complete code</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="density-estimation" class="dropdown-toggle" data-toggle="dropdown">Density estimation <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="dens_intro.html">Introduction</a></li>
+              <li><a href="dens_sims.html">Simulations</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">Use cases</li>
+              <li><a href="dens_use1.html">Case 1: Climate</a></li>
+              <li><a href="dens_use2.html">Case 2: Vegetation</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R code</li>
+              <li><a href="dens_sims_code.html">Basic simulation</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="pre-indexing" class="dropdown-toggle" data-toggle="dropdown">Pre-indexing <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="ind_intro.html">Introduction</a></li>
+              <li><a href="ind_related.html">Related items</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R Code</li>
+              <li><a href="ind_code.html">Complete code</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="all-projects" class="dropdown-toggle" data-toggle="dropdown">All Projects <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="proj_sankey.html">Projects diagram</a></li>
+              <li class="divider"></li>
+              <li><a href="proj_intro.html">About</a></li>
+              <li><a href="proj_intro.html">Other</a></li>
+            </ul>
+        </ul>
+        <ul class="nav pull-right">
+          <a class="btn btn-primary" href="https://github.com/leonawicz/DataExtraction">
+            <i class="fa fa-github fa-lg"></i>
+            Github
+          </a>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
+
+<div id="header">
+<h1 class="title">Data Extraction Evaluation</h1>
+<h4 class="author"><em>Matthew Leonawicz</em></h4>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#statistical-sampling-for-spatial-data-extraction">Statistical sampling for spatial data extraction</a></li>
+</ul>
+</div>
+
+<div id="statistical-sampling-for-spatial-data-extraction" class="section level2">
+<h2>Statistical sampling for spatial data extraction</h2>
+<div id="motivation-data-processing-efficiency" class="section level3">
+<h3>Motivation: Data processing efficiency</h3>
+<p>We’ve gotten faster at SNAP, but so has our need for speed. What was once never bothered with (outside some of my own work), using statistical sampling to obtain results at no cost to validity, accuracy or precision compared to a census of our data, is now more relevant than ever. Before, we were content to let a process run in the background for hours and look at the results when done. There was little incentive to incorporate techniques like those laid out here. Now we have more types of data delivery and presentation, e.g., web applications, where it is intended for there to be a human watching and waiting for data processing to occur.</p>
+<div id="assumptions-bad-ones" class="section level4">
+<h4>Assumptions, bad ones</h4>
+<p>An assumption I often encounter from those outside statistics, but involved in “big data” is that with today’s processing power there is no reason not to use all the data. A corollary of this is that many statistical methods can be dispensed with, which is based on another assumption that this is what statistics basically exists for; to help us hobble along when we were in the stone age. However, both of these views are flawed. The latter suggests little knowledge of the broad uses of statistics. The former suggests little knowledge of statistics period, or the myriad ways data can be improperly analyzed and results interpreted.</p>
+</div>
+<div id="speed-not-for-speeds-sake" class="section level4">
+<h4>Speed not for speed’s sake</h4>
+<p>Making things go faster is perhaps the last area of application I would ever find for statistical methods, and since not a lot of traditional statistical analysis occurs at SNAP I do not want those untrained in statistics to get the wrong impression that speed improvements are all statistics is really good for. But it is relevant and beneficial in the context of some of our workflows, particularly my own. But I am also not the only one extracting and processing large amounts of data at SNAP. One use of statistics is data reduction. This is what I aim for when needing to “get things done faster,” not really the speed itself. I’d rather see a decrease in computational time required for large data processing occur as a latent consequence of smart application of statistical methods than as something forced for its own sake. I will outline a simple and extremely common case.</p>
+</div>
+</div>
+<div id="case-study-sample-mean" class="section level3">
+<h3>Case study: sample mean</h3>
+<p>Example of population mean vs. sample mean for a typical map of SNAP’s Alaska-Canada 2-km downscaled data. The sample mean converges in distribution to the population mean quite quickly.</p>
+<pre class="sourceCode r"><code class="sourceCode r">no.knit &lt;-<span class="st"> </span>if (<span class="st">&quot;knitr&quot;</span> %in%<span class="st"> </span><span class="kw">names</span>(<span class="kw">sessionInfo</span>()$otherPkgs)) <span class="ot">FALSE</span> else <span class="ot">TRUE</span>
+<span class="kw">library</span>(raster)
+<span class="kw">library</span>(microbenchmark)
+<span class="kw">library</span>(ggplot2)
+<span class="kw">library</span>(reshape2)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">setwd</span>(<span class="st">&quot;C:/github/DataExtraction/data&quot;</span>)
+<span class="co"># testfile &lt;-</span>
+<span class="co"># &#39;Z:/Base_Data/ALFRESCO_formatted/ALFRESCO_Master_Dataset/ALFRESCO_Model_Input_Datasets/AK_CAN_Inputs/Climate/gfdl_cm2_1/sresa2/tas/tas_mean_C_alf_ar4_gfdl_cm2_1_sresa2_01_2045.tif&#39;</span>
+testfile &lt;-<span class="st"> &quot;tas_mean_C_AR5_GFDL-CM3_rcp60_01_2062.tif&quot;</span>
+
+r &lt;-<span class="st"> </span><span class="kw">readAll</span>(<span class="kw">raster</span>(testfile))  <span class="co"># force into memory so I/O time does not confound extraction time</span>
+v &lt;-<span class="st"> </span><span class="kw">getValues</span>(r)  <span class="co"># numeric vector</span>
+dat.ind &lt;-<span class="st"> </span><span class="kw">Which</span>(!<span class="kw">is.na</span>(r), <span class="dt">cells =</span> T)
+d &lt;-<span class="st"> </span>v[dat.ind]  <span class="co"># numeric vector of data values (drop NAs)</span>
+nd &lt;-<span class="st"> </span><span class="kw">length</span>(dat.ind)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># continue indexing v since this is how it will tend to occur in practice</span>
+<span class="co"># take mean of all cells</span>
+<span class="kw">mean</span>(v, <span class="dt">na.rm =</span> T)</code></pre>
+<pre><code>## [1] -12.7623</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># take mean of only the data cells</span>
+<span class="kw">mean</span>(v[dat.ind])</code></pre>
+<pre><code>## [1] -12.7623</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># take mean of only the data cells using sum and known length</span>
+<span class="kw">sum</span>(v[dat.ind])/nd</code></pre>
+<pre><code>## [1] -12.7623</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># take mean of data cells with .Internal</span>
+<span class="kw">.Internal</span>(<span class="kw">mean</span>(v[dat.ind]))</code></pre>
+<pre><code>## [1] -12.7623</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># take mean of data cells with .Internal sum, known length</span>
+<span class="kw">.Primitive</span>(<span class="st">&quot;sum&quot;</span>)(v[dat.ind])/nd</code></pre>
+<pre><code>## [1] -12.7623</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">mean.pop &lt;-<span class="st"> </span><span class="kw">sum</span>(d)/nd
+mean.pop.out &lt;-<span class="st"> </span><span class="kw">round</span>(mean.pop, <span class="dv">1</span>)  <span class="co"># round to one decimal place for temperature data</span>
+discrete.out &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">seq</span>(mean.pop, mean.pop +<span class="st"> </span><span class="fl">0.4</span>, <span class="dt">by =</span> <span class="fl">0.1</span>) -<span class="st"> </span><span class="fl">0.2</span>, <span class="dv">1</span>)
+<span class="co"># median.pop &lt;- median(d) median.pop.out &lt;- round(median.pop, 1) # round to</span>
+<span class="co"># one decimal place for temperature data</span>
+bounds.round &lt;-<span class="st"> </span>mean.pop.out +<span class="st"> </span><span class="kw">c</span>(-<span class="fl">0.05</span>, <span class="fl">0.05</span>)  <span class="co"># within rounding distance of the rounded population mean</span>
+bounds.signif &lt;-<span class="st"> </span>mean.pop +<span class="st"> </span><span class="kw">c</span>(-<span class="fl">0.1</span>, <span class="fl">0.1</span>)  <span class="co"># bounds on the unrounded population mean at the significant digits distance</span>
+<span class="co"># Use sample mean</span>
+n &lt;-<span class="st"> </span><span class="fl">1e+05</span>
+m &lt;-<span class="st"> </span><span class="dv">100</span>
+keep &lt;-<span class="st"> </span><span class="kw">seq</span>(<span class="dv">1000</span>, n, <span class="dt">by =</span> <span class="dv">1000</span>)  <span class="co"># burn in and thin to facilitate visualization</span>
+
+<span class="kw">set.seed</span>(<span class="dv">47</span>)
+d.sub &lt;-<span class="st"> </span><span class="kw">replicate</span>(m, <span class="kw">sample</span>(d, n, <span class="dt">replace =</span> F))
+means &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dv">1</span>:n, (<span class="dv">1</span>:n)/nd, <span class="kw">apply</span>(d.sub, <span class="dv">2</span>, function(x, n) <span class="kw">cumsum</span>(x)/(<span class="dv">1</span>:n), 
+    <span class="dt">n =</span> n))
+<span class="kw">names</span>(means) &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;Size&quot;</span>, <span class="st">&quot;Percent_Sample&quot;</span>, <span class="kw">paste0</span>(<span class="st">&quot;Sample_&quot;</span>, <span class="kw">c</span>(<span class="kw">paste0</span>(<span class="dv">0</span>, <span class="dv">0</span>:<span class="dv">9</span>), 
+    <span class="dv">10</span>:m)[<span class="dv">1</span>:m]))
+means &lt;-<span class="st"> </span>means[keep, ]
+p &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">Size =</span> keep, <span class="dt">Percent_Sample =</span> keep/nd, <span class="dt">P_value =</span> <span class="dv">1</span> -<span class="st"> </span><span class="kw">apply</span>(means, 
+    <span class="dv">1</span>, function(x) <span class="kw">length</span>(<span class="kw">which</span>(x &gt;=<span class="st"> </span>bounds.signif[<span class="dv">1</span>] &amp;<span class="st"> </span>x &lt;<span class="st"> </span>bounds.signif[<span class="dv">2</span>]))/<span class="kw">length</span>(x)))
+means &lt;-<span class="st"> </span><span class="kw">melt</span>(means, <span class="dt">id.vars =</span> <span class="kw">c</span>(<span class="st">&quot;Size&quot;</span>, <span class="st">&quot;Percent_Sample&quot;</span>), <span class="dt">variable.name =</span> <span class="kw">c</span>(<span class="st">&quot;Sample&quot;</span>), 
+    <span class="dt">value.name =</span> <span class="st">&quot;Mean&quot;</span>)
+p &lt;-<span class="st"> </span><span class="kw">melt</span>(p, <span class="dt">id.vars =</span> <span class="kw">c</span>(<span class="st">&quot;Size&quot;</span>, <span class="st">&quot;Percent_Sample&quot;</span>), <span class="dt">variable.name =</span> <span class="kw">c</span>(<span class="st">&quot;Type&quot;</span>), 
+    <span class="dt">value.name =</span> <span class="st">&quot;Pval&quot;</span>)
+
+clr &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dt">Samples =</span> <span class="st">&quot;gray&quot;</span>, <span class="st">`</span><span class="dt">Pop. mean +/- 1 sig. fig.</span><span class="st">`</span> =<span class="st"> &quot;blue&quot;</span>, <span class="st">`</span><span class="dt">Rounded pop. mean</span><span class="st">`</span> =<span class="st"> &quot;red&quot;</span>, 
+    <span class="st">`</span><span class="dt">Possible rounded values</span><span class="st">`</span> =<span class="st"> &quot;black&quot;</span>)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/mean_by_size.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">1600</span>, <span class="dt">res =</span> <span class="dv">200</span>)
+g &lt;-<span class="st"> </span><span class="kw">ggplot</span>(means, <span class="kw">aes</span>(<span class="dt">x =</span> Percent_Sample, <span class="dt">y =</span> Mean, <span class="dt">group =</span> Sample)) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span>
+<span class="st">    </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">colour =</span> <span class="st">&quot;Samples&quot;</span>)) +<span class="st"> </span><span class="kw">geom_hline</span>(<span class="kw">aes</span>(<span class="dt">yintercept =</span> d, <span class="dt">colour =</span> <span class="st">&quot;Rounded pop. mean&quot;</span>), 
+    <span class="dt">data =</span> <span class="kw">data.frame</span>(<span class="dt">d =</span> mean.pop.out)) +<span class="st"> </span><span class="kw">geom_hline</span>(<span class="kw">aes</span>(<span class="dt">yintercept =</span> d, <span class="dt">colour =</span> <span class="kw">c</span>(<span class="st">&quot;Pop. mean +/- 1 sig. fig.&quot;</span>)), 
+    <span class="dt">data =</span> <span class="kw">data.frame</span>(<span class="dt">d =</span> bounds.signif)) +<span class="st"> </span><span class="kw">geom_hline</span>(<span class="kw">aes</span>(<span class="dt">yintercept =</span> d, <span class="dt">colour =</span> <span class="st">&quot;Possible rounded values&quot;</span>), 
+    , <span class="dt">data =</span> <span class="kw">data.frame</span>(<span class="dt">d =</span> discrete.out[<span class="dv">2</span>:<span class="dv">5</span>]), <span class="dt">linetype =</span> <span class="dv">2</span>) +<span class="st"> </span><span class="kw">scale_colour_manual</span>(<span class="dt">name =</span> <span class="st">&quot;hello&quot;</span>, 
+    <span class="dt">values =</span> clr) +<span class="st"> </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;bottom&quot;</span>) +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Sample mean ~ sample size&quot;</span>)
+<span class="kw">print</span>(g)</code></pre>
+<p><img src="extract_eval_files/figure-html/size-1.png" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">dev.off</span>()</code></pre>
+<div id="justification" class="section level4">
+<h4>Justification</h4>
+<p>The difference between sampling vs. using all data in a map layer is minimal. It depends on various factors including but not limited to the statistic of interest, the spatial autocorrelation present in the map, and whether the entire map is of interest or just a particular region of a certain size.</p>
+<p>In this example using the sample mean instead of the population mean, the difference is representative. The difference is also not particularly meaningful. It is also not final, as it tends to vanish anyway due to rounding to the nearest significant digits for the data after the statistic is computed. The difference in means can also be bounded arbitrarily even without the rounding to significant digits performed at the end.</p>
+<p>In the case of the mean we are helped out by the weak law of large numbers and the central limit theorem. Consideration must also be given to the high level of spatial autocorrelation among pixels in the downscaled raster maps. There is simply not as much data or information present as one might think and this drives the effective sample size.</p>
+</div>
+<div id="results" class="section level4">
+<h4>Results</h4>
+<div id="all-points-no-point." class="section level5">
+<h5>All points? No point.</h5>
+<p>Using the sample mean is helpful as a data reduction strategy while not being harmful in terms of representativeness. The possible “tradeoff” itself appears to be largely a false dichotomy. There is no benefit to computing the mean of all pixels in the example map layer.</p>
+</div>
+<div id="how-many-samples-do-we-really-need" class="section level5">
+<h5>How many samples do we really need?</h5>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/pvalue_sigdig.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">2000</span>, 
+    <span class="dt">res =</span> <span class="dv">200</span>)
+g &lt;-<span class="st"> </span><span class="kw">ggplot</span>(p, <span class="kw">aes</span>(<span class="dt">x =</span> Percent_Sample, <span class="dt">y =</span> Pval, <span class="dt">group =</span> Type, <span class="dt">colour =</span> Type)) +<span class="st"> </span>
+<span class="st">    </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">geom_line</span>(<span class="dt">colour =</span> <span class="st">&quot;black&quot;</span>)
+g &lt;-<span class="st"> </span>g +<span class="st"> </span><span class="kw">geom_hline</span>(<span class="kw">aes</span>(<span class="dt">yintercept =</span> <span class="fl">0.05</span>, <span class="dt">linetype =</span> <span class="st">&quot;P-value = 0.05&quot;</span>), <span class="dt">colour =</span> <span class="st">&quot;red&quot;</span>, 
+    <span class="dt">linetype =</span> <span class="dv">2</span>) +<span class="st"> </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, <span class="fl">0.005</span>, <span class="fl">0.05</span> *<span class="st"> </span><span class="fl">1.2</span>, <span class="dt">label =</span> <span class="st">&quot;P-value = 0.05&quot;</span>, 
+    <span class="dt">size =</span> <span class="dv">3</span>)
+g &lt;-<span class="st"> </span>g +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;P(abs(sample mean - pop. mean) &gt; 1 sig. digit | sample size)&quot;</span>)
+<span class="kw">print</span>(g)</code></pre>
+<p><img src="extract_eval_files/figure-html/sigdig-1.png" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">dev.off</span>()</code></pre>
+<p>In this example even a two percent subsample of the original non-NA data cells is small enough to limit us to a five percent probability of obtaining a mean that differs from the mean computed on the full dataset by an amount equal to or greater than the smallest discrete increment possible (0.1 degrees Celsius for SNAP temperature data) based simply on the number of significant figures present. Furthermore, even for nominal sample sizes, the 0.05 probability is one almost strictly of minimal deviation (0.1 degrees). The probability that a sample mean computed on a subsample of the map layer deviates enough from the population mean to cause it to be rounded to two discrete incremental units from the population mean (0.2 degrees) is essentially zero (except if using crudely small sample sizes).</p>
+<p>Although a two percent subsample appears sufficient for this criterion, letâ€™s use a five percent subsample for illustration. This is clearly overkill in this example since the p-value attenuates to the range of 0.019 to 0.029 by around 2.5 percent subsampling.</p>
+</div>
+<div id="how-much-faster-does-this-make-things-go" class="section level5">
+<h5>How much faster does this make things go?</h5>
+<p>Compute time for the mean is of course affected by the sample size.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># compute time for means for different sample size</span>
+s005pct &lt;-<span class="st"> </span>d.sub[<span class="dv">1</span>:<span class="kw">round</span>((<span class="kw">nrow</span>(d.sub) *<span class="st"> </span><span class="fl">0.05</span>)), <span class="dv">1</span>]
+s010pct &lt;-<span class="st"> </span>d.sub[<span class="dv">1</span>:<span class="kw">round</span>((<span class="kw">nrow</span>(d.sub) *<span class="st"> </span><span class="fl">0.1</span>)), <span class="dv">1</span>]
+s025pct &lt;-<span class="st"> </span>d.sub[<span class="dv">1</span>:<span class="kw">round</span>((<span class="kw">nrow</span>(d.sub) *<span class="st"> </span><span class="fl">0.25</span>)), <span class="dv">1</span>]
+s100pct &lt;-<span class="st"> </span>d.sub[, <span class="dv">1</span>]</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">mb3 &lt;-<span class="st"> </span><span class="kw">microbenchmark</span>(<span class="kw">sum</span>(s005pct)/<span class="kw">length</span>(s005pct), <span class="kw">sum</span>(s010pct)/<span class="kw">length</span>(s010pct), 
+    <span class="kw">sum</span>(s025pct)/<span class="kw">length</span>(s025pct), <span class="kw">sum</span>(s100pct)/<span class="kw">length</span>(s100pct), <span class="dt">times =</span> <span class="dv">10000</span>)
+mb3</code></pre>
+<pre><code>## Unit: microseconds
+##                          expr    min     lq     mean median     uq
+##  sum(s005pct)/length(s005pct)  4.976  5.287  5.69475  5.287  5.598
+##  sum(s010pct)/length(s010pct)  9.641  9.952 10.36300  9.952 10.263
+##  sum(s025pct)/length(s025pct) 23.325 23.636 24.51426 23.637 23.947
+##  sum(s100pct)/length(s100pct) 92.056 92.367 94.69702 92.368 92.679
+##       max neval
+##   172.295 10000
+##   130.310 10000
+##   429.804 10000
+##  1807.852 10000</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/benchmark3.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">1600</span>, <span class="dt">res =</span> <span class="dv">200</span>)
+<span class="kw">autoplot</span>(mb3) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Compute time for mean by sample size&quot;</span>, 
+    <span class="dt">y =</span> <span class="st">&quot;Function&quot;</span>)</code></pre>
+<p><img src="extract_eval_files/figure-html/benchmarks3-1.png" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">dev.off</span>()</code></pre>
+<p>Using optimal subsampling to estimate the mean achieves speed improvements orders of magnitude greater than what can be achieved through strictly algorithmic changes to how the mean is computed on the full dataset, though those help immensely as well, also by many orders of magnitude. Sampling is vastly more effective, but both approaches can be combined for maximum benefit.</p>
+<pre class="sourceCode r"><code class="sourceCode r">mb4 &lt;-<span class="st"> </span><span class="kw">microbenchmark</span>(<span class="kw">sum</span>(s005pct)/<span class="kw">length</span>(s005pct), <span class="kw">mean</span>(v, <span class="dt">na.rm =</span> T), <span class="kw">sum</span>(d)/<span class="kw">length</span>(d), 
+    <span class="kw">mean</span>(s005pct), <span class="dt">times =</span> <span class="dv">100</span>)
+mb4</code></pre>
+<pre><code>## Unit: microseconds
+##                          expr        min         lq         mean
+##  sum(s005pct)/length(s005pct)      5.287      7.464     11.10586
+##            mean(v, na.rm = T) 392841.803 394754.152 402416.70213
+##              sum(d)/length(d)   1483.477   1495.762   1521.89181
+##                 mean(s005pct)     18.038     20.682     46.89284
+##      median          uq        max neval
+##       9.641     11.3515     22.392   100
+##  397355.990 408180.0850 504257.765   100
+##    1505.091   1530.7490   1770.842   100
+##      55.669     64.3770     93.611   100</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">med &lt;-<span class="st"> </span><span class="kw">print</span>(mb4)$median</code></pre>
+<pre><code>## Unit: microseconds
+##                          expr        min         lq         mean
+##  sum(s005pct)/length(s005pct)      5.287      7.464     11.10586
+##            mean(v, na.rm = T) 392841.803 394754.152 402416.70213
+##              sum(d)/length(d)   1483.477   1495.762   1521.89181
+##                 mean(s005pct)     18.038     20.682     46.89284
+##      median          uq        max neval
+##       9.641     11.3515     22.392   100
+##  397355.990 408180.0850 504257.765   100
+##    1505.091   1530.7490   1770.842   100
+##      55.669     64.3770     93.611   100</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(med) &lt;-<span class="st"> </span><span class="kw">print</span>(mb4)$expr</code></pre>
+<pre><code>## Unit: microseconds
+##                          expr        min         lq         mean
+##  sum(s005pct)/length(s005pct)      5.287      7.464     11.10586
+##            mean(v, na.rm = T) 392841.803 394754.152 402416.70213
+##              sum(d)/length(d)   1483.477   1495.762   1521.89181
+##                 mean(s005pct)     18.038     20.682     46.89284
+##      median          uq        max neval
+##       9.641     11.3515     22.392   100
+##  397355.990 408180.0850 504257.765   100
+##    1505.091   1530.7490   1770.842   100
+##      55.669     64.3770     93.611   100</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">med &lt;-<span class="st"> </span>med[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>:<span class="dv">2</span>)]
+
+if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/benchmark4.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">1600</span>, <span class="dt">res =</span> <span class="dv">200</span>)
+<span class="kw">autoplot</span>(mb4) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Compute time for mean | sampling and/or function change&quot;</span>, 
+    <span class="dt">y =</span> <span class="st">&quot;Function&quot;</span>)</code></pre>
+<p><img src="extract_eval_files/figure-html/benchmarks4-1.png" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">dev.off</span>()</code></pre>
+<p>Similar to above, below are the median compute times for the mean using (1) the full data while removing NAs, (2) the sum divided by the length after NAs removed, (3) the mean of a subsample, and (4) a combination of (2) and (3).</p>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/benchmark4medians.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">1000</span>, 
+    <span class="dt">res =</span> <span class="dv">200</span>)
+<span class="kw">ggplot</span>(<span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">names</span>(med), <span class="dt">y =</span> med), <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">reorder</span>(x, <span class="dv">1</span>:<span class="kw">length</span>(x), 
+    function(z) z), <span class="dt">y =</span> y, <span class="dt">colour =</span> x)) +<span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, 
+    <span class="dt">width =</span> <span class="fl">0.9</span>) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>, <span class="dt">axis.ticks =</span> <span class="kw">element_blank</span>(), 
+    <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>()) +<span class="st"> </span><span class="kw">scale_colour_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;gray&quot;</span>, 
+    <span class="st">&quot;dodgerblue&quot;</span>, <span class="st">&quot;orange&quot;</span>, <span class="st">&quot;purple&quot;</span>)[<span class="kw">c</span>(<span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">4</span>)]) +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Compute time for mean | sampling and/or function change&quot;</span>, 
+    <span class="dt">x =</span> <span class="st">&quot;Function +/- sampling&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Time [microseconds]&quot;</span>) +<span class="st"> </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, 
+    <span class="dt">x =</span> (<span class="dv">1</span>:<span class="dv">4</span>) -<span class="st"> </span><span class="fl">0.2</span>, <span class="dt">y =</span> <span class="dv">20000</span>, <span class="dt">label =</span> <span class="kw">names</span>(med), <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">hjust =</span> <span class="dv">0</span>, <span class="dt">colour =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;black&quot;</span>, 
+        <span class="dv">3</span>), <span class="st">&quot;white&quot;</span>)) +<span class="st"> </span><span class="kw">coord_flip</span>()</code></pre>
+<p><img src="extract_eval_files/figure-html/benchmarks4med1-1.png" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">dev.off</span>()</code></pre>
+<p>Here is the same plot after removing the first bar to better show the relative compute time for the other three methods.</p>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/benchmark4medians2.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">1000</span>, 
+    <span class="dt">res =</span> <span class="dv">200</span>)
+<span class="kw">ggplot</span>(<span class="kw">data.frame</span>(<span class="dt">x =</span> <span class="kw">names</span>(med)[-<span class="dv">4</span>], <span class="dt">y =</span> med[-<span class="dv">4</span>]), <span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">reorder</span>(x, <span class="dv">1</span>:<span class="kw">length</span>(x), 
+    function(z) z), <span class="dt">y =</span> y, <span class="dt">colour =</span> x)) +<span class="st"> </span><span class="kw">geom_bar</span>(<span class="dt">stat =</span> <span class="st">&quot;identity&quot;</span>, <span class="dt">size =</span> <span class="fl">0.5</span>, 
+    <span class="dt">width =</span> <span class="fl">0.9</span>) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">theme</span>(<span class="dt">legend.position =</span> <span class="st">&quot;none&quot;</span>, <span class="dt">axis.ticks =</span> <span class="kw">element_blank</span>(), 
+    <span class="dt">axis.text.y =</span> <span class="kw">element_blank</span>()) +<span class="st"> </span><span class="kw">scale_colour_manual</span>(<span class="dt">values =</span> <span class="kw">c</span>(<span class="st">&quot;dodgerblue&quot;</span>, 
+    <span class="st">&quot;orange&quot;</span>, <span class="st">&quot;purple&quot;</span>)[<span class="kw">c</span>(<span class="dv">2</span>, <span class="dv">1</span>, <span class="dv">3</span>)]) +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Compute time for mean | sampling and/or function change&quot;</span>, 
+    <span class="dt">x =</span> <span class="st">&quot;Function +/- sampling&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Time [microseconds]&quot;</span>) +<span class="st"> </span><span class="kw">annotate</span>(<span class="st">&quot;text&quot;</span>, 
+    <span class="dt">x =</span> (<span class="dv">1</span>:(<span class="dv">4</span> -<span class="st"> </span><span class="dv">1</span>)) -<span class="st"> </span><span class="fl">0.2</span>, <span class="dt">y =</span> <span class="dv">125</span>, <span class="dt">label =</span> <span class="kw">names</span>(med)[-<span class="dv">4</span>], <span class="dt">size =</span> <span class="dv">4</span>, <span class="dt">hjust =</span> <span class="dv">0</span>, 
+    <span class="dt">colour =</span> <span class="kw">c</span>(<span class="kw">rep</span>(<span class="st">&quot;black&quot;</span>, <span class="dv">3</span> -<span class="st"> </span><span class="dv">1</span>), <span class="st">&quot;white&quot;</span>)) +<span class="st"> </span><span class="kw">coord_flip</span>()</code></pre>
+<p><img src="extract_eval_files/figure-html/benchmarks4med2-1.png" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">dev.off</span>()</code></pre>
+<p>How does the benefit extend to extractions on maps at different extents, data heterogeneity, climate variables, or for other common statistics such as the standard deviation? These are open questions at the moment, but for one thing, I expect more samples are needed for precipitation than temperature. I also expect more samples needed to estimate parameters with higher moments.</p>
+</div>
+</div>
+</div>
+<div id="next-steps" class="section level3">
+<h3>Next steps</h3>
+<p>Combining sampling and data reduction methods while using the most efficient <strong>R</strong> functions can be particularly useful when processing large numbers of high-resolution geotiff raster layers. One thing I already do when extracting from many files by shapefile is I avoid extracting by shape more than once. I do it one time to obtain the corresponding raster layer cell indices. Then on all subsequent maps I extract by cell indices which is notably faster. Ultimately, there is much more room for speed improvements in terms of efficient use of statistics than in strictly programmatic corner-cutting.</p>
+<p>The plots below benchmark different sample mean computations. Comparisons involve the sample mean of the entire data set and do not involve the main approach outlined above which focuses on efficiency gains by taking the mean of a smaller, representative sample. This provides some insight into how it is beneficial nonetheless to considering the right programmatic approach in conjunction with statistical efficiencies.</p>
+<pre class="sourceCode r"><code class="sourceCode r">mb &lt;-<span class="st"> </span><span class="kw">microbenchmark</span>(<span class="kw">mean</span>(v, <span class="dt">na.rm =</span> T), <span class="kw">mean</span>(v[dat.ind]), <span class="kw">sum</span>(v[dat.ind])/nd, 
+    <span class="kw">.Internal</span>(<span class="kw">mean</span>(v[dat.ind])), <span class="kw">.Primitive</span>(<span class="st">&quot;sum&quot;</span>)(v[dat.ind])/nd, <span class="dt">times =</span> <span class="dv">100</span>)
+mb</code></pre>
+<pre><code>## Unit: milliseconds
+##                              expr       min        lq      mean    median
+##                mean(v, na.rm = T) 393.32914 394.52759 402.21052 395.60925
+##                  mean(v[dat.ind])  12.00559  14.00844  15.08224  14.07888
+##                sum(v[dat.ind])/nd  11.66909  12.53802  14.77446  12.60131
+##       .Internal(mean(v[dat.ind]))  13.07326  13.94484  15.49330  14.01435
+##  .Primitive(&quot;sum&quot;)(v[dat.ind])/nd  11.66535  12.55466  13.73424  12.63272
+##         uq       max neval
+##  407.66242 505.81153   100
+##   14.19566  34.97180   100
+##   12.73147  36.05969   100
+##   14.12522  38.89633   100
+##   12.74157  36.21083   100</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/benchmark1.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">1600</span>, <span class="dt">res =</span> <span class="dv">200</span>)
+<span class="kw">autoplot</span>(mb) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Comparisons of time to index data and compute mean&quot;</span>, 
+    <span class="dt">y =</span> <span class="st">&quot;Function&quot;</span>)</code></pre>
+<p><img src="extract_eval_files/figure-html/benchmarks1-1.png" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">dev.off</span>()</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">mb2 &lt;-<span class="st"> </span><span class="kw">microbenchmark</span>(<span class="kw">mean</span>(v[dat.ind]), <span class="kw">sum</span>(v[dat.ind])/nd, <span class="kw">mean</span>(d), <span class="kw">sum</span>(d)/nd, 
+    <span class="dt">times =</span> <span class="dv">1000</span>)
+mb2</code></pre>
+<pre><code>## Unit: milliseconds
+##                expr       min        lq      mean    median        uq
+##    mean(v[dat.ind]) 11.423706 13.993510 15.427615 14.069084 14.187887
+##  sum(v[dat.ind])/nd 11.581383 12.513921 14.273734 12.582808 12.727269
+##             mean(d)  2.938341  2.947049  3.000841  2.954825  2.992456
+##           sum(d)/nd  1.478501  1.484099  1.513294  1.490941  1.505558
+##         max neval
+##   46.124004  1000
+##  123.249878  1000
+##    5.169466  1000
+##    2.246985  1000</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/benchmark2.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">1600</span>, <span class="dt">res =</span> <span class="dv">200</span>)
+<span class="kw">autoplot</span>(mb2) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Comparisons of time to compute mean&quot;</span>, 
+    <span class="dt">y =</span> <span class="st">&quot;Function&quot;</span>)</code></pre>
+<p><img src="extract_eval_files/figure-html/benchmarks2-1.png" /></p>
+<pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">dev.off</span>()</code></pre>
+</div>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>

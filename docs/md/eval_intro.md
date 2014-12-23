@@ -1,13 +1,5 @@
----
-title: Data Extraction Evaluation
-author: Matthew Leonawicz
-output:
-  html_document:
-    toc: true
-    theme: united
-    highlight: zenburn
-    keep_md: true
----
+# Data Extraction Evaluation
+Matthew Leonawicz  
 
 ## Statistical sampling for spatial data extraction
 

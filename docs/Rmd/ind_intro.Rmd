@@ -1,5 +1,5 @@
 ---
-title: Shapefiles to raster cell indices
+title: Shapefiles to Raster Cell Indices
 author: Matthew Leonawicz
 output:
   html_document:

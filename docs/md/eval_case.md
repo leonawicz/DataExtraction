@@ -1,38 +1,41 @@
----
-title: Data Extraction Evaluation
-author: Matthew Leonawicz
-output:
-  html_document:
-    toc: true
-    theme: united
-    highlight: zenburn
-    keep_md: true
----
+# Data Extraction Evaluation
+Matthew Leonawicz  
 
-```{r knitr_setup, echo=FALSE}
-opts_chunk$set(cache=FALSE, echo=FALSE, eval=TRUE, tidy=TRUE, message=FALSE, warning=FALSE)
-read_chunk("../../code/extract_eval.R")
-```
+
 
 ### Case study: sample mean
 
 Example of population mean vs. sample mean for a typical map of SNAP's Alaska-Canada 2-km downscaled data.
 The sample mean converges in distribution to the population mean quite quickly.
 
-```{r packages}
+
+
+
+
+
+```
+## [1] -12.7623
 ```
 
-```{r setup}
+```
+## [1] -12.7623
 ```
 
-```{r means}
+```
+## [1] -12.7623
 ```
 
-```{r sampling}
+```
+## [1] -12.7623
 ```
 
-```{r size}
 ```
+## [1] -12.7623
+```
+
+
+
+![](eval_case_files/figure-html/size-1.png) 
 
 #### Justification
 

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Matthew Leonawicz" />
+
+
+<title>Data Extraction Evaluation</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="libs/bootstrap-2.3.2/css/united.min.css" rel="stylesheet" />
+<link href="libs/bootstrap-2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+@media (max-width: 979px) {
+  body {
+    padding-top: 0;
+  }
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+@media (min-width: 980px) {
+  .section h2 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+  .section h3 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+}
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+/* some padding for disqus */
+#disqus_thread {
+  margin-top: 45px;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+<div class="container-fluid main-container">
+
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="index.html">Data Extraction</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          <li class="dropdown">
+            <a href="spatial-aggregation" class="dropdown-toggle" data-toggle="dropdown">Spatial aggregation <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="eval_intro.html">Introduction</a></li>
+              <li><a href="eval_case.html">Case study: sample mean</a></li>
+              <li><a href="eval_res.html">Results</a></li>
+              <li><a href="eval_next.html">Next steps</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R Code</li>
+              <li><a href="extract_eval_code.html">Complete code</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="density-estimation" class="dropdown-toggle" data-toggle="dropdown">Density estimation <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="dens_intro.html">Introduction</a></li>
+              <li><a href="dens_sims.html">Simulations</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">Use cases</li>
+              <li><a href="dens_use1.html">Case 1: Climate</a></li>
+              <li><a href="dens_use2.html">Case 2: Vegetation</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R code</li>
+              <li><a href="dens_sims_code.html">Basic simulation</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="pre-indexing" class="dropdown-toggle" data-toggle="dropdown">Pre-indexing <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="ind_intro.html">Introduction</a></li>
+              <li><a href="ind_related.html">Related items</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R Code</li>
+              <li><a href="ind_code.html">Complete code</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="all-projects" class="dropdown-toggle" data-toggle="dropdown">All Projects <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="proj_sankey.html">Projects diagram</a></li>
+              <li class="divider"></li>
+              <li><a href="proj_intro.html">About</a></li>
+              <li><a href="proj_intro.html">Other</a></li>
+            </ul>
+        </ul>
+        <ul class="nav pull-right">
+          <a class="btn btn-primary" href="https://github.com/leonawicz/DataExtraction">
+            <i class="fa fa-github fa-lg"></i>
+            Github
+          </a>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
+
+<div id="header">
+<h1 class="title">Data Extraction Evaluation</h1>
+<h4 class="author"><em>Matthew Leonawicz</em></h4>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#statistical-sampling-for-spatial-data-extraction">Statistical sampling for spatial data extraction</a></li>
+</ul>
+</div>
+
+<div id="statistical-sampling-for-spatial-data-extraction" class="section level2">
+<h2>Statistical sampling for spatial data extraction</h2>
+<div id="motivation-data-processing-efficiency" class="section level3">
+<h3>Motivation: Data processing efficiency</h3>
+<p>We’ve gotten faster at SNAP, but so has our need for speed. What was once never bothered with (outside some of my own work), using statistical sampling to obtain results at no cost to validity, accuracy or precision compared to a census of our data, is now more relevant than ever. Before, we were content to let a process run in the background for hours and look at the results when done. There was little incentive to incorporate techniques like those laid out here. Now we have more types of data delivery and presentation, e.g., web applications, where it is intended for there to be a human watching and waiting for data processing to occur.</p>
+<div id="assumptions-bad-ones" class="section level4">
+<h4>Assumptions, bad ones</h4>
+<p>An assumption I often encounter from those outside statistics, but involved in “big data” is that with today’s processing power there is no reason not to use all the data. A corollary of this is that many statistical methods can be dispensed with, which is based on another assumption that this is what statistics basically exists for; to help us hobble along when we were in the stone age. However, both of these views are flawed. The latter suggests little knowledge of the broad uses of statistics. The former suggests little knowledge of statistics period, or the myriad ways data can be improperly analyzed and results interpreted.</p>
+</div>
+<div id="speed-not-for-speeds-sake" class="section level4">
+<h4>Speed not for speed’s sake</h4>
+<p>Making things go faster is perhaps the last area of application I would ever find for statistical methods, and since not a lot of traditional statistical analysis occurs at SNAP I do not want those untrained in statistics to get the wrong impression that speed improvements are all statistics is really good for. But it is relevant and beneficial in the context of some of our workflows, particularly my own. But I am also not the only one extracting and processing large amounts of data at SNAP. One use of statistics is data reduction. This is what I aim for when needing to “get things done faster,” not really the speed itself. I’d rather see a decrease in computational time required for large data processing occur as a latent consequence of smart application of statistical methods than as something forced for its own sake. I will outline a simple and extremely common case.</p>
+</div>
+</div>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>

@@ -1,18 +1,7 @@
----
-title: Minimal Empirical Density Estimation
-author: Matthew Leonawicz
-output:
-  html_document:
-    toc: true
-    theme: united
-    highlight: zenburn
-    keep_md: true
----
+# Minimal Empirical Density Estimation
+Matthew Leonawicz  
 
-```{r knitr_setup, echo=FALSE}
-opts_chunk$set(cache=FALSE, eval=TRUE, tidy=TRUE, message=FALSE, warning=FALSE)
-read_chunk("../../code/extractDensityExample.R")
-```
+
 
 ## Introduction
 Here I explore basic kernel density estimation in **R** as a way to empirically estimate densities for data extracted from common SNAP data sets.
@@ -64,7 +53,14 @@ For the use cases, references are made to other projects which can be explored f
 ### Setup
 First simulate some data and perform some rudimentary density estimation.
 
-```{r setup}
+
+```r
+set.seed(47)
+x <- c(rnorm(1000, -3, 1), rnorm(500, -1, 1), rpois(500, 10))  # Simulate multimodal distribution
+
+n <- 20  # default for density() is n=512
+den.smooth <- density(x, adjust = 1.5, n = n)  # I tend to smooth it a bit
+den <- density(x, adjust = 1, n = n)  # But I store one without additional smoothing
 ```
 
 ### Graph results
@@ -72,11 +68,44 @@ The first plot shows a histogram of the original simulated data, overlain with b
 The second plot shows the same, but incorporates an intermediary step involving linear approximation.
 This allows the subsequent draws to be more continuous.
 
-```{r plot1}
+
+```r
+# win.graph(10,5) layout(matrix(1:2,1,2))
+
+# hist(x, freq=F) lines(den.smooth, lwd=2) # my preferred smoothed density
+# estimate based on x
+
+hist(x, freq = F)
+for (i in 1:1000) {
+    # reproducing a sample from distribution of x based on den which I carry
+    # through my code
+    sample.boot <- sample(den$x, size = 1000, prob = den$y, rep = T)
+    lines(density(sample.boot, adjust = 1), lwd = 1, col = "#FF000001")  # No extra smoothing with smaller samples
+    # print(i)
+}
+# A larger bootstrap sample will pin down the distribution accurately enough
+# if necessary
+sample.boot <- sample(den$x, size = 10000, prob = den$y, rep = T)
+lines(density(sample.boot, adjust = 1.5), lwd = 2, col = "#FF0000")  # smoothing affordable
 ```
 
-```{r plot2}
+![](extractDensityExample_files/figure-html/plot1-1.png) 
+
+
+```r
+# As before but adding an approx() step
+hist(x, freq = F)
+for (i in 1:1000) {
+    ap <- approx(den$x, den$y, n = 1000)  # reintroduce interpolation before sampling
+    sample.boot2 <- sample(ap$x, size = 1000, prob = ap$y, rep = T)
+    lines(density(sample.boot2, adjust = 1), lwd = 1, col = "#0000FF01")
+    # print(i)
+}
+sample.boot2 <- sample(ap$x, size = 10000, prob = ap$y, rep = T)
+lines(density(sample.boot2, adjust = 1), lwd = 2, col = "#0000FF")
 ```
+
+![](extractDensityExample_files/figure-html/plot2-1.png) 
 
 ## Use case 1: Climate
 Temperature and precipition data from SNAP's downscaled climate models are often used to make inferences about future trends and uncertainty among potential climate scenarios.
@@ -96,13 +125,16 @@ The only other variable being analyzed was temperature.
 Things like this are important to code for in nuanced ways when the goal is to apply such a function to a large number of datasets.
 Effort must go into dealing with rare idiosyncrasies in the data and their effects.
 
-```{r denFun1, eval=FALSE}
-denFun <- function(x, n, variable){
-	x <- x[!is.na(x)]
-	dif <- diff(range(x))
-	z <- density(x, adjust=2, n=n, from=min(x)-0.05*dif, to=max(x)+0.05*dif)
-	if(variable=="pr" && any(z$x < 0)) z <- density(x, adjust=2, n=n, from=0, to=max(x)+0.05*dif)
-	as.numeric(c(z$x, z$y))
+
+```r
+denFun <- function(x, n, variable) {
+    x <- x[!is.na(x)]
+    dif <- diff(range(x))
+    z <- density(x, adjust = 2, n = n, from = min(x) - 0.05 * dif, to = max(x) + 
+        0.05 * dif)
+    if (variable == "pr" && any(z$x < 0)) 
+        z <- density(x, adjust = 2, n = n, from = 0, to = max(x) + 0.05 * dif)
+    as.numeric(c(z$x, z$y))
 }
 ```
 
@@ -111,23 +143,24 @@ This is much faster and more efficient than trying to load an enormous data set.
 In this app, the `ggplo2` graphics rely on the sample for plotting which is why the bootstrapping occurs following loading of the density estimate,
 and why there is no subsequent code for fitting a new density estimate to the bootstrap sample.
 
-```{r bootfun1, eval=FALSE}
-density2bootstrap <- function(d, n.density, n.boot=10000, interp=FALSE, n.interp=1000, ...){
-	n.fact <- n.boot/n.density
-	n.grp <- nrow(d)/n.density
-	d$Index <- rep(1:n.grp, each=n.density)
-	d2 <- data.frame(lapply(d, rep, n.fact), stringsAsFactors=FALSE)
-	prob.col <- which(names(d2) %in% c("Prob","Index"))
-	d2 <- d2[order(d2$Index), -prob.col]
-	d2$Val <- as.numeric(vapply(X=1:n.grp,
-		FUN=function(i, d, n, interp, n.interp, ...){
-			p <- list(x=d$Val[d$Index==i], y=d$Prob[d$Index==i])
-			if(interp) p <- approx(p$x, p$y, n=n.interp)
-			round(sample(p$x, n, prob=p$y, rep=T), ...)
-		},
-		FUN.VALUE=numeric(n.boot),
-		d=d, n=n.boot, interp=interp, n.interp=n.interp, ...))
-	d2
+
+```r
+density2bootstrap <- function(d, n.density, n.boot = 10000, interp = FALSE, 
+    n.interp = 1000, ...) {
+    n.fact <- n.boot/n.density
+    n.grp <- nrow(d)/n.density
+    d$Index <- rep(1:n.grp, each = n.density)
+    d2 <- data.frame(lapply(d, rep, n.fact), stringsAsFactors = FALSE)
+    prob.col <- which(names(d2) %in% c("Prob", "Index"))
+    d2 <- d2[order(d2$Index), -prob.col]
+    d2$Val <- as.numeric(vapply(X = 1:n.grp, FUN = function(i, d, n, interp, 
+        n.interp, ...) {
+        p <- list(x = d$Val[d$Index == i], y = d$Prob[d$Index == i])
+        if (interp) p <- approx(p$x, p$y, n = n.interp)
+        round(sample(p$x, n, prob = p$y, rep = T), ...)
+    }, FUN.VALUE = numeric(n.boot), d = d, n = n.boot, interp = interp, n.interp = n.interp, 
+        ...))
+    d2
 }
 ```
 
@@ -150,42 +183,62 @@ there are different potential consequences arising from other internal forms of 
 For instance, if all cells in a map layer of a given vegetation class are of the same age, do I want to sample with some kernal located on that value, knowing that these ages are not all the same in reality?
 On the other hand, I could return nothing but `NA` values if I am not satisfied with certain circumstances, as shown in the subsequent version of `denFun` which is applied to vegetated area rather than age.
 
-```{r denFun2, eval=FALSE}
-denFun <- function(x, n, min.zero=TRUE, diversify=FALSE){
-	x <- x[!is.na(x)]
-	lx <- length(x)
-	if(diversify && length(unique(x))==1) x <- rnorm(max(10, lx), mean=x[1]) # diversify constant values
-	if(lx==1) x <- x + c(-1:1) #single pixel of veg type, add and subtract one age year to make procedure possible
-	dif <- diff(range(x))
-	z <- density(x, adjust=2, n=n, from=min(x)-max(1, 0.05*dif), to=max(x)+max(1, 0.05*dif))
-	if(min.zero && any(z$x < 0)) z <- density(x, adjust=2, n=n, from=0, to=max(x)+max(1, 0.05*dif))
-	as.numeric(c(z$x, z$y))
+
+```r
+denFun <- function(x, n, min.zero = TRUE, diversify = FALSE) {
+    x <- x[!is.na(x)]
+    lx <- length(x)
+    if (diversify && length(unique(x)) == 1) 
+        x <- rnorm(max(10, lx), mean = x[1])  # diversify constant values
+    if (lx == 1) 
+        x <- x + c(-1:1)  #single pixel of veg type, add and subtract one age year to make procedure possible
+    dif <- diff(range(x))
+    z <- density(x, adjust = 2, n = n, from = min(x) - max(1, 0.05 * dif), to = max(x) + 
+        max(1, 0.05 * dif))
+    if (min.zero && any(z$x < 0)) 
+        z <- density(x, adjust = 2, n = n, from = 0, to = max(x) + max(1, 0.05 * 
+            dif))
+    as.numeric(c(z$x, z$y))
 }
 ```
 
-```{r denFun3, eval=FALSE}
-denFun <- function(x, n=20, min.zero=TRUE, diversify=FALSE, missing.veg.NA=TRUE, fire=FALSE){
-	if(all(is.na(x))) return(rep(NA, 2*n))
-	x <- x[!is.na(x)]
-	lx <- length(x)
-	if(sum(x)==0 & missing.veg.NA & !fire) return(rep(NA, 2*n))
-	if(diversify && length(unique(x))==1) x <- rnorm(max(10, lx), mean=x[1]) # diversify constant values
-	if(lx==1) x <- x + c(-1:1) #single pixel of veg type, add and subtract one age year to make procedure possible
-	dif <- diff(range(x))
-	z <- density(x, adjust=2, n=n, from=min(x)-max(1, 0.05*dif), to=max(x)+max(1, 0.05*dif))
-	if(min.zero && any(z$x < 0)) z <- density(x, adjust=2, n=n, from=0, to=max(x)+max(1, 0.05*dif))
-	as.numeric(c(z$x, z$y))
+
+```r
+denFun <- function(x, n = 20, min.zero = TRUE, diversify = FALSE, missing.veg.NA = TRUE, 
+    fire = FALSE) {
+    if (all(is.na(x))) 
+        return(rep(NA, 2 * n))
+    x <- x[!is.na(x)]
+    lx <- length(x)
+    if (sum(x) == 0 & missing.veg.NA & !fire) 
+        return(rep(NA, 2 * n))
+    if (diversify && length(unique(x)) == 1) 
+        x <- rnorm(max(10, lx), mean = x[1])  # diversify constant values
+    if (lx == 1) 
+        x <- x + c(-1:1)  #single pixel of veg type, add and subtract one age year to make procedure possible
+    dif <- diff(range(x))
+    z <- density(x, adjust = 2, n = n, from = min(x) - max(1, 0.05 * dif), to = max(x) + 
+        max(1, 0.05 * dif))
+    if (min.zero && any(z$x < 0)) 
+        z <- density(x, adjust = 2, n = n, from = 0, to = max(x) + max(1, 0.05 * 
+            dif))
+    as.numeric(c(z$x, z$y))
 }
 ```
 
-```{r bootfun2, eval=FALSE}
-btfun <- function(p, n.samples=length(p)/2, n.boot=10000, interp=FALSE, n.interp=1000, ...){
-	if(!length(p)) return(p)
-	if(all(is.na(p))) return(rep(NA, n.boot))
-	p <- list(x=p[1:n.samples], y=p[(n.samples+1):(2*n.samples)])
-	if(interp && length(unique(p[1:n.samples])) > 1) p <- approx(p$x, p$y, n=n.interp)
-	p <- round(sample(p$x, n.boot, prob=p$y, rep=T), ...)
-	p
+
+```r
+btfun <- function(p, n.samples = length(p)/2, n.boot = 10000, interp = FALSE, 
+    n.interp = 1000, ...) {
+    if (!length(p)) 
+        return(p)
+    if (all(is.na(p))) 
+        return(rep(NA, n.boot))
+    p <- list(x = p[1:n.samples], y = p[(n.samples + 1):(2 * n.samples)])
+    if (interp && length(unique(p[1:n.samples])) > 1) 
+        p <- approx(p$x, p$y, n = n.interp)
+    p <- round(sample(p$x, n.boot, prob = p$y, rep = T), ...)
+    p
 }
 ```
 

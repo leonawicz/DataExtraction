@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Matthew Leonawicz" />
+
+
+<title>Minimal Empirical Density Estimation</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="libs/bootstrap-2.3.2/css/united.min.css" rel="stylesheet" />
+<link href="libs/bootstrap-2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+@media (max-width: 979px) {
+  body {
+    padding-top: 0;
+  }
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+@media (min-width: 980px) {
+  .section h2 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+  .section h3 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+}
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+/* some padding for disqus */
+#disqus_thread {
+  margin-top: 45px;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+<div class="container-fluid main-container">
+
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="index.html">Data Extraction</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          <li class="dropdown">
+            <a href="spatial-aggregation" class="dropdown-toggle" data-toggle="dropdown">Spatial aggregation <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="eval_intro.html">Introduction</a></li>
+              <li><a href="eval_case.html">Case study: sample mean</a></li>
+              <li><a href="eval_res.html">Results</a></li>
+              <li><a href="eval_next.html">Next steps</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R Code</li>
+              <li><a href="extract_eval_code.html">Complete code</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="density-estimation" class="dropdown-toggle" data-toggle="dropdown">Density estimation <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="dens_intro.html">Introduction</a></li>
+              <li><a href="dens_sims.html">Simulations</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">Use cases</li>
+              <li><a href="dens_use1.html">Case 1: Climate</a></li>
+              <li><a href="dens_use2.html">Case 2: Vegetation</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R code</li>
+              <li><a href="dens_sims_code.html">Basic simulation</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="pre-indexing" class="dropdown-toggle" data-toggle="dropdown">Pre-indexing <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="ind_intro.html">Introduction</a></li>
+              <li><a href="ind_related.html">Related items</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R Code</li>
+              <li><a href="ind_code.html">Complete code</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="all-projects" class="dropdown-toggle" data-toggle="dropdown">All Projects <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="proj_sankey.html">Projects diagram</a></li>
+              <li class="divider"></li>
+              <li><a href="proj_intro.html">About</a></li>
+              <li><a href="proj_intro.html">Other</a></li>
+            </ul>
+        </ul>
+        <ul class="nav pull-right">
+          <a class="btn btn-primary" href="https://github.com/leonawicz/DataExtraction">
+            <i class="fa fa-github fa-lg"></i>
+            Github
+          </a>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
+
+<div id="header">
+<h1 class="title">Minimal Empirical Density Estimation</h1>
+<h4 class="author"><em>Matthew Leonawicz</em></h4>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#related-items">Related items</a></li>
+</ul>
+</div>
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Here I explore basic kernel density estimation in <strong>R</strong> as a way to empirically estimate densities for data extracted from common SNAP data sets. This is just a toy example where I use simple simulations to investigate properties I am most interested in for the estimated distributions.</p>
+<div id="motivation" class="section level3">
+<h3>Motivation</h3>
+<p>I often face the real-world problem of needing to rapidly summarize large amounts of data in an efficient manner without losing, skewing, or obscuring too much information. The context for this simulation is to show that it is possible to estimate an empirical distribution of a variable by a small set of points roughly defining the density curve, which can then we used in conjunction with linear approximation and bootstrap resampling to simulate new draws from the estimated distribution. The process can stop here if it is a sample that is required, or, in turn, an arbitrarily large sample drawn can be used to re-estimate the density more smoothly.</p>
+<p>For some applications this is not useful, as the original data are already available. Their distribution can be estimated in the most appropriate manner the first time around. However, this delay in the chain of data propagation is extremely helpful when I am trying to provide real-time summaries of large data sets on demand, the quintessential example being my <strong>R</strong> Shiny web applications.</p>
+<p>Particularly, in the case of trying to rapidly summarize and graph full distributional information, as opposed to, say, a time series of mean values, some form of data reduction must take place upstream from the web application. At SNAP, we have long time series of high spatial resolution data that are too much to dump into a simple web application. Data can easily be externalized and specific data sets sourced by an app on demand, but it is especially helpful to avoid the crippling load times associated with forcing massive amounts of data into an app while a user is trying to interact with it.</p>
+<p>Instead of loading a dataset, e.g., an R workspace file, containing a huge sample of data for some variable, it is much easier to: - store a small, efficient, and hopefully, accurate and precise representation of that data, - load only that into the Shiny app, - and then have <strong>R</strong> quickly explode that representation into a new simulated data set.</p>
+<p>This is especially an effective approach in the context of Shiny apps where the goal is to visually explore patterns and present information, and not to have tunnel vision for an exact value buried deep in a massive data set which is nevertheless riddled with uncertainty.</p>
+</div>
+<div id="details" class="section level3">
+<h3>Details</h3>
+<p>Currently a simple simulation is shown, followed by two typical use cases in which application of such a strategy proves very beneficial. For the use cases, <strong>R</strong> code is provided to show how this is done in practice with real data inthe context of actual projects.</p>
+<div id="limitations" class="section level4">
+<h4>Limitations</h4>
+<p>The simulation is obviously not a robust analysis. Rather it is intended as a simple illustration of the process being utilized for data reduction in specific applications.</p>
+</div>
+</div>
+</div>
+<div id="related-items" class="section level2">
+<h2>Related items</h2>
+<div id="files-and-data" class="section level3">
+<h3>Files and Data</h3>
+<p>There are no files or data related to the simulation itself. It is self-contained and reproducible. For the use cases, references are made to other projects which can be explored further.</p>
+</div>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>

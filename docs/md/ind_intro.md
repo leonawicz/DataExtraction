@@ -1,20 +1,5 @@
----
-title: Shapefiles to Raster Cell Indices
-author: Matthew Leonawicz
-output:
-  html_document:
-    toc: true
-    theme: united
-    highlight: zenburn
-    keep_md: true
----
-
-```{r knitr_setup, echo=FALSE}
-opts_chunk$set(cache=FALSE, eval=FALSE, tidy=TRUE, message=FALSE, warning=FALSE)
-#read_chunk("../../code/s2c_code_sankey.R")
-read_chunk("../../code/shapes2cells.R")
-```
-
+# Shapefiles to Raster Cell Indices
+Matthew Leonawicz  
 
 ## Introduction
 **R** code is provided showing how I convert polygon shapefiles to lists of raster cell indices.
@@ -63,53 +48,3 @@ It would also affect sampled versions where `NA` cells are removed.
 
 These are not really limitations, but trivial facts.
 The thing to remain aware of is simply that any version of these polygon shapefile-specific nested lists of cell numbers are of course indexed with respect to a specific rasterized dataset.
-
-## Related items
-
-### Files and Data
-Input files include polygon shapefiles commonly used at SNAP and two of SNAP's current geotiff data products, Alaska-Canada 2-km downscaled climate data and 1-km Alfresco simulation outputs.
-Output files are **R** workspaces, .RData files.
-There is one workspace storing each version of a nested list for each type of rasterized data set.
-
-### Code flow
-The code flow is simple for this task, only involving a single **R** script.
-However, a diagram is provided here to show it in the context of both input and output data.
-
-ADD LATER
-
-## R code
-
-### Initial setup
-
-Load required packages, define output directory, and load shapefiles.
-Shapefiles are organized into related groups.
-I ensure certain idiosyncrasies are addressed, such as reprojection of shapefiles with differing coordinate reference systems.
-Some shapefiles also contain single polygon regions whereas others contain multiple.
-Care must be taken to ensure all object manipulation is as intended.
-
-```{r setup}
-```
-
-### Organization and metadata
-Lists of names and IDs must be created to prepare for cell index extraction by shapefile.
-
-```{r organize}
-```
-
-### Alfresco example
-A representative map layer is loaded with the `raster` package.
-A nested list of cell numbers is obtained efficiently for several shapefiles by using `mclapply` from the `parallel` package.
-This is further processed with a call to `rapply` and then a full extent region is appended to the list (no shapefile was used here of course).
-
-At this point, subsampling and/or `NA` removal is done,
-resulting, in this example, in four total versions of nested lists which can be used in conjunction with SNAP's Alfresco output geotiffs
-under various conditions of data extraction for any and all of the input spatial regions.
-
-```{r 1km_AKCAN_alfresco}
-```
-
-### Climate example
-THe process for this data set is the same as above.
-
-```{r 2km_AKCAN_climate}
-```
