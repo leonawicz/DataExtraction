@@ -33,7 +33,7 @@ for (i in 1:1000) {
     # through my code
     sample.boot <- sample(den$x, size = 1000, prob = den$y, rep = T)
     lines(density(sample.boot, adjust = 1), lwd = 1, col = "#FF000001")  # No extra smoothing with smaller samples
-    print(i)
+    # print(i)
 }
 # A larger bootstrap sample will pin down the distribution accurately enough
 # if necessary
@@ -52,7 +52,7 @@ for (i in 1:1000) {
     ap <- approx(den$x, den$y, n = 1000)  # reintroduce interpolation before sampling
     sample.boot2 <- sample(ap$x, size = 1000, prob = ap$y, rep = T)
     lines(density(sample.boot2, adjust = 1), lwd = 1, col = "#0000FF01")
-    print(i)
+    # print(i)
 }
 sample.boot2 <- sample(ap$x, size = 10000, prob = ap$y, rep = T)
 lines(density(sample.boot2, adjust = 1), lwd = 2, col = "#0000FF")

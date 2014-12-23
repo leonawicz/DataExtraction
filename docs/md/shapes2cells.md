@@ -16,9 +16,9 @@ I have moved toward an a priori establishment of the more preliminary and repeti
 
 ### Details
 I compile the following:
-- Lists of commonly used groups of polygon shapefiles
-- Key raster/geotiff format data sets from which we commonly extract data
-- Settings pertaining to the methods and circumstances under which cell indexing can occur in anticipated, subsequent data extraction exercises
+--- Lists of commonly used groups of polygon shapefiles
+--- Key raster/geotiff format data sets from which we commonly extract data
+--- Settings pertaining to the methods and circumstances under which cell indexing can occur in anticipated, subsequent data extraction exercises
 
 #### Capabilities
 The most straightforward purpose here is to obtain a nested list of groups of related geographic regions based on input shapefiles,
@@ -40,8 +40,8 @@ here this is done in advance by obtaining a representative sample for each shape
 #### Limitations
 Obviously, the vector of cell indices for a shapefile differs for different rasterized data sets.
 At this time, cell index nested lists are produced for two common rasterized data products at SNAP:
-- Alaska-Canada 2-km downscaled climate data
-- Alaska-Canada 1-km Alfresco simulation data
+--- Alaska-Canada 2-km downscaled climate data
+--- Alaska-Canada 1-km Alfresco simulation data
 
 Although the extents are identical, resolutions differ, and hence so do cell numbers pertaining to any given polygon shapefile.
 Furthermore, taking the climate and Alfresco datasets as an example again, even if they were the same resolution,
