@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Matthew Leonawicz" />
+
+
+<title>Minimal Empirical Density Estimation</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="libs/bootstrap-2.3.2/css/united.min.css" rel="stylesheet" />
+<link href="libs/bootstrap-2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+@media (max-width: 979px) {
+  body {
+    padding-top: 0;
+  }
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+@media (min-width: 980px) {
+  .section h2 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+  .section h3 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+}
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+/* some padding for disqus */
+#disqus_thread {
+  margin-top: 45px;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+<div class="container-fluid main-container">
+
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="index.html">Data Extraction</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          <li class="dropdown">
+            <a href="spatial-aggregation" class="dropdown-toggle" data-toggle="dropdown">Spatial aggregation <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="eval_intro.html">Introduction</a></li>
+              <li><a href="eval_case.html">Case study: sample mean</a></li>
+              <li><a href="eval_res.html">Results</a></li>
+              <li><a href="eval_next.html">Next steps</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R Code</li>
+              <li><a href="extract_eval_code.html">Complete code</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="density-estimation" class="dropdown-toggle" data-toggle="dropdown">Density estimation <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="dens_intro.html">Introduction</a></li>
+              <li><a href="dens_sims.html">Simulations</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">Use cases</li>
+              <li><a href="dens_use1.html">Case 1: Climate</a></li>
+              <li><a href="dens_use2.html">Case 2: Vegetation</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R code</li>
+              <li><a href="dens_sims_code.html">Basic simulation</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="pre-indexing" class="dropdown-toggle" data-toggle="dropdown">Pre-indexing <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="ind_intro.html">Introduction</a></li>
+              <li><a href="ind_related.html">Related items</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R Code</li>
+              <li><a href="ind_code.html">Complete code</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="all-projects" class="dropdown-toggle" data-toggle="dropdown">All Projects <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="proj_sankey.html">Projects diagram</a></li>
+              <li class="divider"></li>
+              <li><a href="proj_intro.html">About</a></li>
+              <li><a href="proj_intro.html">Other</a></li>
+            </ul>
+        </ul>
+        <ul class="nav pull-right">
+          <a class="btn btn-primary" href="https://github.com/leonawicz/DataExtraction">
+            <i class="fa fa-github fa-lg"></i>
+            Github
+          </a>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
+
+<div id="header">
+<h1 class="title">Minimal Empirical Density Estimation</h1>
+<h4 class="author"><em>Matthew Leonawicz</em></h4>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#use-case-2-vegetation">Use case 2: Vegetation</a></li>
+</ul>
+</div>
+
+<div id="use-case-2-vegetation" class="section level2">
+<h2>Use case 2: Vegetation</h2>
+<p>The motivation and the context for vegetation area and age distributions from SNAP’s ALFRESCO model ouput are the same as with use case one. However, the data are different. Through preliminary investigation, I can make changes to my approach, such as requiring a greater initial sample size or some other change that will maintain accuracy, which conceivably will differ for different random variables, data sets, and forms of variability and uncertainty involved. In this case I do something very similar to above.</p>
+<p>As in the case of climate, there is a similar function for estimating densities storing only minimal information. However, with this data there were more things to look out for, such as entirely missing data or all data consisting of a single unique value (e.g., all modeled vegetation ages in one subregion are the same age in the ALFRESCO model), and how these situations are to be handled.</p>
+<p>Furthermore, depending on how they are handled, which to some extent depends on how I eventually plan to use these estimated distributions, there are different potential consequences arising from other internal forms of sample. For instance, if all cells in a map layer of a given vegetation class are of the same age, do I want to sample with some kernal located on that value, knowing that these ages are not all the same in reality? On the other hand, I could return nothing but <code>NA</code> values if I am not satisfied with certain circumstances, as shown in the subsequent version of <code>denFun</code> which is applied to vegetated area rather than age.</p>
+<pre class="sourceCode r"><code class="sourceCode r">denFun &lt;-<span class="st"> </span>function(x, n, <span class="dt">min.zero =</span> <span class="ot">TRUE</span>, <span class="dt">diversify =</span> <span class="ot">FALSE</span>) {
+    x &lt;-<span class="st"> </span>x[!<span class="kw">is.na</span>(x)]
+    lx &lt;-<span class="st"> </span><span class="kw">length</span>(x)
+    if (diversify &amp;&amp;<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(x)) ==<span class="st"> </span><span class="dv">1</span>) 
+        x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">max</span>(<span class="dv">10</span>, lx), <span class="dt">mean =</span> x[<span class="dv">1</span>])  <span class="co"># diversify constant values</span>
+    if (lx ==<span class="st"> </span><span class="dv">1</span>) 
+        x &lt;-<span class="st"> </span>x +<span class="st"> </span><span class="kw">c</span>(-<span class="dv">1</span>:<span class="dv">1</span>)  <span class="co">#single pixel of veg type, add and subtract one age year to make procedure possible</span>
+    dif &lt;-<span class="st"> </span><span class="kw">diff</span>(<span class="kw">range</span>(x))
+    z &lt;-<span class="st"> </span><span class="kw">density</span>(x, <span class="dt">adjust =</span> <span class="dv">2</span>, <span class="dt">n =</span> n, <span class="dt">from =</span> <span class="kw">min</span>(x) -<span class="st"> </span><span class="kw">max</span>(<span class="dv">1</span>, <span class="fl">0.05</span> *<span class="st"> </span>dif), <span class="dt">to =</span> <span class="kw">max</span>(x) +<span class="st"> </span>
+<span class="st">        </span><span class="kw">max</span>(<span class="dv">1</span>, <span class="fl">0.05</span> *<span class="st"> </span>dif))
+    if (min.zero &amp;&amp;<span class="st"> </span><span class="kw">any</span>(z$x &lt;<span class="st"> </span><span class="dv">0</span>)) 
+        z &lt;-<span class="st"> </span><span class="kw">density</span>(x, <span class="dt">adjust =</span> <span class="dv">2</span>, <span class="dt">n =</span> n, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="kw">max</span>(x) +<span class="st"> </span><span class="kw">max</span>(<span class="dv">1</span>, <span class="fl">0.05</span> *<span class="st"> </span>
+<span class="st">            </span>dif))
+    <span class="kw">as.numeric</span>(<span class="kw">c</span>(z$x, z$y))
+}</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">denFun &lt;-<span class="st"> </span>function(x, <span class="dt">n =</span> <span class="dv">20</span>, <span class="dt">min.zero =</span> <span class="ot">TRUE</span>, <span class="dt">diversify =</span> <span class="ot">FALSE</span>, <span class="dt">missing.veg.NA =</span> <span class="ot">TRUE</span>, 
+    <span class="dt">fire =</span> <span class="ot">FALSE</span>) {
+    if (<span class="kw">all</span>(<span class="kw">is.na</span>(x))) 
+        <span class="kw">return</span>(<span class="kw">rep</span>(<span class="ot">NA</span>, <span class="dv">2</span> *<span class="st"> </span>n))
+    x &lt;-<span class="st"> </span>x[!<span class="kw">is.na</span>(x)]
+    lx &lt;-<span class="st"> </span><span class="kw">length</span>(x)
+    if (<span class="kw">sum</span>(x) ==<span class="st"> </span><span class="dv">0</span> &amp;<span class="st"> </span>missing.veg.NA &amp;<span class="st"> </span>!fire) 
+        <span class="kw">return</span>(<span class="kw">rep</span>(<span class="ot">NA</span>, <span class="dv">2</span> *<span class="st"> </span>n))
+    if (diversify &amp;&amp;<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(x)) ==<span class="st"> </span><span class="dv">1</span>) 
+        x &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="kw">max</span>(<span class="dv">10</span>, lx), <span class="dt">mean =</span> x[<span class="dv">1</span>])  <span class="co"># diversify constant values</span>
+    if (lx ==<span class="st"> </span><span class="dv">1</span>) 
+        x &lt;-<span class="st"> </span>x +<span class="st"> </span><span class="kw">c</span>(-<span class="dv">1</span>:<span class="dv">1</span>)  <span class="co">#single pixel of veg type, add and subtract one age year to make procedure possible</span>
+    dif &lt;-<span class="st"> </span><span class="kw">diff</span>(<span class="kw">range</span>(x))
+    z &lt;-<span class="st"> </span><span class="kw">density</span>(x, <span class="dt">adjust =</span> <span class="dv">2</span>, <span class="dt">n =</span> n, <span class="dt">from =</span> <span class="kw">min</span>(x) -<span class="st"> </span><span class="kw">max</span>(<span class="dv">1</span>, <span class="fl">0.05</span> *<span class="st"> </span>dif), <span class="dt">to =</span> <span class="kw">max</span>(x) +<span class="st"> </span>
+<span class="st">        </span><span class="kw">max</span>(<span class="dv">1</span>, <span class="fl">0.05</span> *<span class="st"> </span>dif))
+    if (min.zero &amp;&amp;<span class="st"> </span><span class="kw">any</span>(z$x &lt;<span class="st"> </span><span class="dv">0</span>)) 
+        z &lt;-<span class="st"> </span><span class="kw">density</span>(x, <span class="dt">adjust =</span> <span class="dv">2</span>, <span class="dt">n =</span> n, <span class="dt">from =</span> <span class="dv">0</span>, <span class="dt">to =</span> <span class="kw">max</span>(x) +<span class="st"> </span><span class="kw">max</span>(<span class="dv">1</span>, <span class="fl">0.05</span> *<span class="st"> </span>
+<span class="st">            </span>dif))
+    <span class="kw">as.numeric</span>(<span class="kw">c</span>(z$x, z$y))
+}</code></pre>
+<p>Again, there is another case of bootstrap resampling from the estimated distributions to arrive at new simulated, representative draws from the original distribution.</p>
+<pre class="sourceCode r"><code class="sourceCode r">btfun &lt;-<span class="st"> </span>function(p, <span class="dt">n.samples =</span> <span class="kw">length</span>(p)/<span class="dv">2</span>, <span class="dt">n.boot =</span> <span class="dv">10000</span>, <span class="dt">interp =</span> <span class="ot">FALSE</span>, 
+    <span class="dt">n.interp =</span> <span class="dv">1000</span>, ...) {
+    if (!<span class="kw">length</span>(p)) 
+        <span class="kw">return</span>(p)
+    if (<span class="kw">all</span>(<span class="kw">is.na</span>(p))) 
+        <span class="kw">return</span>(<span class="kw">rep</span>(<span class="ot">NA</span>, n.boot))
+    p &lt;-<span class="st"> </span><span class="kw">list</span>(<span class="dt">x =</span> p[<span class="dv">1</span>:n.samples], <span class="dt">y =</span> p[(n.samples +<span class="st"> </span><span class="dv">1</span>):(<span class="dv">2</span> *<span class="st"> </span>n.samples)])
+    if (interp &amp;&amp;<span class="st"> </span><span class="kw">length</span>(<span class="kw">unique</span>(p[<span class="dv">1</span>:n.samples])) &gt;<span class="st"> </span><span class="dv">1</span>) 
+        p &lt;-<span class="st"> </span><span class="kw">approx</span>(p$x, p$y, <span class="dt">n =</span> n.interp)
+    p &lt;-<span class="st"> </span><span class="kw">round</span>(<span class="kw">sample</span>(p$x, n.boot, <span class="dt">prob =</span> p$y, <span class="dt">rep =</span> T), ...)
+    p
+}</code></pre>
+<p>Think of it like teleporting to your destination instead of walking, specifically when you have a heavy pack. As with use case 1, it is helpful to see the documentation for the ALFRESCO output extraction and related projects to which these functions belong.</p>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>

@@ -11,7 +11,7 @@
 <meta name="author" content="Matthew Leonawicz" />
 
 
-<title>Data Extraction</title>
+<title>Data Extraction Evaluation</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -145,22 +145,29 @@ body {
 </div>
 
 <div id="header">
-<h1 class="title">Data Extraction</h1>
+<h1 class="title">Data Extraction Evaluation</h1>
 <h4 class="author"><em>Matthew Leonawicz</em></h4>
 </div>
 
 <div id="TOC">
 <ul>
-<li><a href="#introduction">Introduction</a></li>
+<li><a href="#statistical-sampling-for-spatial-data-extraction">Statistical sampling for spatial data extraction</a></li>
 </ul>
 </div>
 
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
-<p>This project organizes various aspects of of QA/QC on data extraction operations at SNAP. Currently, there are three projects under this umbrella: - An evaluation of data extraction routines often applied to large SNAP data sets. - Simulation and application of efficient data distribution estimation methods to SNAP data. - A priori compiling of vectorized (spatial polygons) data in the form of raster indexing for more efficient subsequent use.</p>
-<div id="motivation" class="section level3">
-<h3>Motivation</h3>
-<p>Although these projects are not directly dependent upon one another, they all relate in terms of the efforts put toward efficient data processing at SNAP. The goals are to improve efficiency while maintaining, and in some cases also improving, statistical accuracy and sensible probabilistic bounds on uncertainty.</p>
+<div id="statistical-sampling-for-spatial-data-extraction" class="section level2">
+<h2>Statistical sampling for spatial data extraction</h2>
+<div id="motivation-data-processing-efficiency" class="section level3">
+<h3>Motivation: Data processing efficiency</h3>
+<p>We’ve gotten faster at SNAP, but so has our need for speed. What was once never bothered with (outside some of my own work), using statistical sampling to obtain results at no cost to validity, accuracy or precision compared to a census of our data, is now more relevant than ever. Before, we were content to let a process run in the background for hours and look at the results when done. There was little incentive to incorporate techniques like those laid out here. Now we have more types of data delivery and presentation, e.g., web applications, where it is intended for there to be a human watching and waiting for data processing to occur.</p>
+<div id="assumptions-bad-ones" class="section level4">
+<h4>Assumptions, bad ones</h4>
+<p>An assumption I often encounter from those outside statistics, but involved in “big data” is that with today’s processing power there is no reason not to use all the data. A corollary of this is that many statistical methods can be dispensed with, which is based on another assumption that this is what statistics basically exists for; to help us hobble along when we were in the stone age. However, both of these views are flawed. The latter suggests little knowledge of the broad uses of statistics. The former suggests little knowledge of statistics period, or the myriad ways data can be improperly analyzed and results interpreted.</p>
+</div>
+<div id="speed-not-for-speeds-sake" class="section level4">
+<h4>Speed not for speed’s sake</h4>
+<p>Making things go faster is perhaps the last area of application I would ever find for statistical methods, and since not a lot of traditional statistical analysis occurs at SNAP I do not want those untrained in statistics to get the wrong impression that speed improvements are all statistics is really good for. But it is relevant and beneficial in the context of some of our workflows, particularly my own. But I am also not the only one extracting and processing large amounts of data at SNAP. One use of statistics is data reduction. This is what I aim for when needing to “get things done faster,” not really the speed itself. I’d rather see a decrease in computational time required for large data processing occur as a latent consequence of smart application of statistical methods than as something forced for its own sake. I will outline a simple and extremely common case.</p>
+</div>
 </div>
 </div>
 

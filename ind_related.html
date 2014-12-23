@@ -11,7 +11,7 @@
 <meta name="author" content="Matthew Leonawicz" />
 
 
-<title>Data Extraction</title>
+<title>Shapefiles to Raster Cell Indices</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -145,22 +145,26 @@ body {
 </div>
 
 <div id="header">
-<h1 class="title">Data Extraction</h1>
+<h1 class="title">Shapefiles to Raster Cell Indices</h1>
 <h4 class="author"><em>Matthew Leonawicz</em></h4>
 </div>
 
 <div id="TOC">
 <ul>
-<li><a href="#introduction">Introduction</a></li>
+<li><a href="#related-items">Related items</a></li>
 </ul>
 </div>
 
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
-<p>This project organizes various aspects of of QA/QC on data extraction operations at SNAP. Currently, there are three projects under this umbrella: - An evaluation of data extraction routines often applied to large SNAP data sets. - Simulation and application of efficient data distribution estimation methods to SNAP data. - A priori compiling of vectorized (spatial polygons) data in the form of raster indexing for more efficient subsequent use.</p>
-<div id="motivation" class="section level3">
-<h3>Motivation</h3>
-<p>Although these projects are not directly dependent upon one another, they all relate in terms of the efforts put toward efficient data processing at SNAP. The goals are to improve efficiency while maintaining, and in some cases also improving, statistical accuracy and sensible probabilistic bounds on uncertainty.</p>
+<div id="related-items" class="section level2">
+<h2>Related items</h2>
+<div id="files-and-data" class="section level3">
+<h3>Files and Data</h3>
+<p>Input files include polygon shapefiles commonly used at SNAP and two of SNAP’s current geotiff data products, Alaska-Canada 2-km downscaled climate data and 1-km Alfresco simulation outputs. Output files are <strong>R</strong> workspaces, .RData files. There is one workspace storing each version of a nested list for each type of rasterized data set.</p>
+</div>
+<div id="code-flow" class="section level3">
+<h3>Code flow</h3>
+<p>The code flow is simple for this task, only involving a single <strong>R</strong> script. However, a diagram is provided here to show it in the context of both input and output data.</p>
+<p>ADD LATER</p>
 </div>
 </div>
 

@@ -11,7 +11,7 @@
 <meta name="author" content="Matthew Leonawicz" />
 
 
-<title>Data Extraction</title>
+<title>Minimal Empirical Density Estimation</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -145,22 +145,42 @@ body {
 </div>
 
 <div id="header">
-<h1 class="title">Data Extraction</h1>
+<h1 class="title">Minimal Empirical Density Estimation</h1>
 <h4 class="author"><em>Matthew Leonawicz</em></h4>
 </div>
 
 <div id="TOC">
 <ul>
 <li><a href="#introduction">Introduction</a></li>
+<li><a href="#related-items">Related items</a></li>
 </ul>
 </div>
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>This project organizes various aspects of of QA/QC on data extraction operations at SNAP. Currently, there are three projects under this umbrella: - An evaluation of data extraction routines often applied to large SNAP data sets. - Simulation and application of efficient data distribution estimation methods to SNAP data. - A priori compiling of vectorized (spatial polygons) data in the form of raster indexing for more efficient subsequent use.</p>
+<p>Here I explore basic kernel density estimation in <strong>R</strong> as a way to empirically estimate densities for data extracted from common SNAP data sets. This is just a toy example where I use simple simulations to investigate properties I am most interested in for the estimated distributions.</p>
 <div id="motivation" class="section level3">
 <h3>Motivation</h3>
-<p>Although these projects are not directly dependent upon one another, they all relate in terms of the efforts put toward efficient data processing at SNAP. The goals are to improve efficiency while maintaining, and in some cases also improving, statistical accuracy and sensible probabilistic bounds on uncertainty.</p>
+<p>I often face the real-world problem of needing to rapidly summarize large amounts of data in an efficient manner without losing, skewing, or obscuring too much information. The context for this simulation is to show that it is possible to estimate an empirical distribution of a variable by a small set of points roughly defining the density curve, which can then we used in conjunction with linear approximation and bootstrap resampling to simulate new draws from the estimated distribution. The process can stop here if it is a sample that is required, or, in turn, an arbitrarily large sample drawn can be used to re-estimate the density more smoothly.</p>
+<p>For some applications this is not useful, as the original data are already available. Their distribution can be estimated in the most appropriate manner the first time around. However, this delay in the chain of data propagation is extremely helpful when I am trying to provide real-time summaries of large data sets on demand, the quintessential example being my <strong>R</strong> Shiny web applications.</p>
+<p>Particularly, in the case of trying to rapidly summarize and graph full distributional information, as opposed to, say, a time series of mean values, some form of data reduction must take place upstream from the web application. At SNAP, we have long time series of high spatial resolution data that are too much to dump into a simple web application. Data can easily be externalized and specific data sets sourced by an app on demand, but it is especially helpful to avoid the crippling load times associated with forcing massive amounts of data into an app while a user is trying to interact with it.</p>
+<p>Instead of loading a dataset, e.g., an R workspace file, containing a huge sample of data for some variable, it is much easier to: - store a small, efficient, and hopefully, accurate and precise representation of that data, - load only that into the Shiny app, - and then have <strong>R</strong> quickly explode that representation into a new simulated data set.</p>
+<p>This is especially an effective approach in the context of Shiny apps where the goal is to visually explore patterns and present information, and not to have tunnel vision for an exact value buried deep in a massive data set which is nevertheless riddled with uncertainty.</p>
+</div>
+<div id="details" class="section level3">
+<h3>Details</h3>
+<p>Currently a simple simulation is shown, followed by two typical use cases in which application of such a strategy proves very beneficial. For the use cases, <strong>R</strong> code is provided to show how this is done in practice with real data inthe context of actual projects.</p>
+<div id="limitations" class="section level4">
+<h4>Limitations</h4>
+<p>The simulation is obviously not a robust analysis. Rather it is intended as a simple illustration of the process being utilized for data reduction in specific applications.</p>
+</div>
+</div>
+</div>
+<div id="related-items" class="section level2">
+<h2>Related items</h2>
+<div id="files-and-data" class="section level3">
+<h3>Files and Data</h3>
+<p>There are no files or data related to the simulation itself. It is self-contained and reproducible. For the use cases, references are made to other projects which can be explored further.</p>
 </div>
 </div>
 

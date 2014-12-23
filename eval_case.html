@@ -11,7 +11,7 @@
 <meta name="author" content="Matthew Leonawicz" />
 
 
-<title>Data Extraction</title>
+<title>Data Extraction Evaluation</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -145,22 +145,25 @@ body {
 </div>
 
 <div id="header">
-<h1 class="title">Data Extraction</h1>
+<h1 class="title">Data Extraction Evaluation</h1>
 <h4 class="author"><em>Matthew Leonawicz</em></h4>
 </div>
 
-<div id="TOC">
-<ul>
-<li><a href="#introduction">Introduction</a></li>
-</ul>
-</div>
 
-<div id="introduction" class="section level2">
-<h2>Introduction</h2>
-<p>This project organizes various aspects of of QA/QC on data extraction operations at SNAP. Currently, there are three projects under this umbrella: - An evaluation of data extraction routines often applied to large SNAP data sets. - Simulation and application of efficient data distribution estimation methods to SNAP data. - A priori compiling of vectorized (spatial polygons) data in the form of raster indexing for more efficient subsequent use.</p>
-<div id="motivation" class="section level3">
-<h3>Motivation</h3>
-<p>Although these projects are not directly dependent upon one another, they all relate in terms of the efforts put toward efficient data processing at SNAP. The goals are to improve efficiency while maintaining, and in some cases also improving, statistical accuracy and sensible probabilistic bounds on uncertainty.</p>
+<div id="case-study-sample-mean" class="section level3">
+<h3>Case study: sample mean</h3>
+<p>Example of population mean vs. sample mean for a typical map of SNAP’s Alaska-Canada 2-km downscaled data. The sample mean converges in distribution to the population mean quite quickly.</p>
+<pre><code>## [1] -12.7623</code></pre>
+<pre><code>## [1] -12.7623</code></pre>
+<pre><code>## [1] -12.7623</code></pre>
+<pre><code>## [1] -12.7623</code></pre>
+<pre><code>## [1] -12.7623</code></pre>
+<p><img src="eval_case_files/figure-html/size-1.png" /></p>
+<div id="justification" class="section level4">
+<h4>Justification</h4>
+<p>The difference between sampling vs. using all data in a map layer is minimal. It depends on various factors including but not limited to the statistic of interest, the spatial autocorrelation present in the map, and whether the entire map is of interest or just a particular region of a certain size.</p>
+<p>In this example using the sample mean instead of the population mean, the difference is representative. The difference is also not particularly meaningful. It is also not final, as it tends to vanish anyway due to rounding to the nearest significant digits for the data after the statistic is computed. The difference in means can also be bounded arbitrarily even without the rounding to significant digits performed at the end.</p>
+<p>In the case of the mean we are helped out by the weak law of large numbers and the central limit theorem. Consideration must also be given to the high level of spatial autocorrelation among pixels in the downscaled raster maps. There is simply not as much data or information present as one might think and this drives the effective sample size.</p>
 </div>
 </div>
 

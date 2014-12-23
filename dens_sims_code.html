@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="author" content="Matthew Leonawicz" />
+
+
+<title>Minimal Empirical Density Estimation</title>
+
+<script src="libs/jquery-1.11.0/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link href="libs/bootstrap-2.3.2/css/united.min.css" rel="stylesheet" />
+<link href="libs/bootstrap-2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<style type="text/css">
+
+/* padding for bootstrap navbar */
+body {
+  padding-top: 50px;
+  padding-bottom: 40px;
+}
+@media (max-width: 979px) {
+  body {
+    padding-top: 0;
+  }
+}
+
+/* offset scroll position for anchor links (for fixed navbar)  */
+@media (min-width: 980px) {
+  .section h2 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+  .section h3 {
+    padding-top: 52px;
+    margin-top: -52px;
+  }
+}
+
+
+/* don't use link color in navbar */
+.dropdown-menu>li>a {
+  color: black;
+}
+
+/* some padding for disqus */
+#disqus_thread {
+  margin-top: 45px;
+}
+
+</style>
+
+<link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; background-color: #303030; color: #cccccc; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; }
+td.sourceCode { padding-left: 5px; }
+pre, code { color: #cccccc; background-color: #303030; }
+code > span.kw { color: #f0dfaf; }
+code > span.dt { color: #dfdfbf; }
+code > span.dv { color: #dcdccc; }
+code > span.bn { color: #dca3a3; }
+code > span.fl { color: #c0bed1; }
+code > span.ch { color: #dca3a3; }
+code > span.st { color: #cc9393; }
+code > span.co { color: #7f9f7f; }
+code > span.ot { color: #efef8f; }
+code > span.al { color: #ffcfaf; }
+code > span.fu { color: #efef8f; }
+code > span.er { color: #c3bf9f; }
+</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+<div class="container-fluid main-container">
+
+<div class="navbar navbar-default navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="brand" href="index.html">Data Extraction</a>
+      <div class="nav-collapse collapse">
+        <ul class="nav">
+          <li class="dropdown">
+            <a href="spatial-aggregation" class="dropdown-toggle" data-toggle="dropdown">Spatial aggregation <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="eval_intro.html">Introduction</a></li>
+              <li><a href="eval_case.html">Case study: sample mean</a></li>
+              <li><a href="eval_res.html">Results</a></li>
+              <li><a href="eval_next.html">Next steps</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R Code</li>
+              <li><a href="extract_eval_code.html">Complete code</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="density-estimation" class="dropdown-toggle" data-toggle="dropdown">Density estimation <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="dens_intro.html">Introduction</a></li>
+              <li><a href="dens_sims.html">Simulations</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">Use cases</li>
+              <li><a href="dens_use1.html">Case 1: Climate</a></li>
+              <li><a href="dens_use2.html">Case 2: Vegetation</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R code</li>
+              <li><a href="dens_sims_code.html">Basic simulation</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="pre-indexing" class="dropdown-toggle" data-toggle="dropdown">Pre-indexing <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li class="nav-header">Project</li>
+              <li><a href="ind_intro.html">Introduction</a></li>
+              <li><a href="ind_related.html">Related items</a></li>
+              <li class="divider"></li>
+              <li class="nav-header">R Code</li>
+              <li><a href="ind_code.html">Complete code</a></li>
+            </ul>
+
+          <li class="dropdown">
+            <a href="all-projects" class="dropdown-toggle" data-toggle="dropdown">All Projects <b class="caret"></b></a>
+            <ul class="dropdown-menu">
+              <li><a href="proj_sankey.html">Projects diagram</a></li>
+              <li class="divider"></li>
+              <li><a href="proj_intro.html">About</a></li>
+              <li><a href="proj_intro.html">Other</a></li>
+            </ul>
+        </ul>
+        <ul class="nav pull-right">
+          <a class="btn btn-primary" href="https://github.com/leonawicz/DataExtraction">
+            <i class="fa fa-github fa-lg"></i>
+            Github
+          </a>
+        </ul>
+      </div><!--/.nav-collapse -->
+    </div>
+  </div>
+</div>
+
+<div id="header">
+<h1 class="title">Minimal Empirical Density Estimation</h1>
+<h4 class="author"><em>Matthew Leonawicz</em></h4>
+</div>
+
+<div id="TOC">
+<ul>
+<li><a href="#r-code">R code</a></li>
+</ul>
+</div>
+
+<div id="r-code" class="section level2">
+<h2>R code</h2>
+<div id="setup" class="section level3">
+<h3>Setup</h3>
+<p>First simulate some data and perform some rudimentary density estimation.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">47</span>)
+x &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="kw">rnorm</span>(<span class="dv">1000</span>, -<span class="dv">3</span>, <span class="dv">1</span>), <span class="kw">rnorm</span>(<span class="dv">500</span>, -<span class="dv">1</span>, <span class="dv">1</span>), <span class="kw">rpois</span>(<span class="dv">500</span>, <span class="dv">10</span>))  <span class="co"># Simulate multimodal distribution</span>
+
+n &lt;-<span class="st"> </span><span class="dv">20</span>  <span class="co"># default for density() is n=512</span>
+den.smooth &lt;-<span class="st"> </span><span class="kw">density</span>(x, <span class="dt">adjust =</span> <span class="fl">1.5</span>, <span class="dt">n =</span> n)  <span class="co"># I tend to smooth it a bit</span>
+den &lt;-<span class="st"> </span><span class="kw">density</span>(x, <span class="dt">adjust =</span> <span class="dv">1</span>, <span class="dt">n =</span> n)  <span class="co"># But I store one without additional smoothing</span></code></pre>
+</div>
+<div id="graph-one" class="section level3">
+<h3>Graph one</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># win.graph(10,5) layout(matrix(1:2,1,2))</span>
+
+<span class="co"># hist(x, freq=F) lines(den.smooth, lwd=2) # my preferred smoothed density</span>
+<span class="co"># estimate based on x</span>
+
+<span class="kw">hist</span>(x, <span class="dt">freq =</span> F)
+for (i in <span class="dv">1</span>:<span class="dv">1000</span>) {
+    <span class="co"># reproducing a sample from distribution of x based on den which I carry</span>
+    <span class="co"># through my code</span>
+    sample.boot &lt;-<span class="st"> </span><span class="kw">sample</span>(den$x, <span class="dt">size =</span> <span class="dv">1000</span>, <span class="dt">prob =</span> den$y, <span class="dt">rep =</span> T)
+    <span class="kw">lines</span>(<span class="kw">density</span>(sample.boot, <span class="dt">adjust =</span> <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;#FF000001&quot;</span>)  <span class="co"># No extra smoothing with smaller samples</span>
+    <span class="kw">print</span>(i)
+}
+<span class="co"># A larger bootstrap sample will pin down the distribution accurately enough</span>
+<span class="co"># if necessary</span>
+sample.boot &lt;-<span class="st"> </span><span class="kw">sample</span>(den$x, <span class="dt">size =</span> <span class="dv">10000</span>, <span class="dt">prob =</span> den$y, <span class="dt">rep =</span> T)
+<span class="kw">lines</span>(<span class="kw">density</span>(sample.boot, <span class="dt">adjust =</span> <span class="fl">1.5</span>), <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;#FF0000&quot;</span>)  <span class="co"># smoothing affordable</span></code></pre>
+</div>
+<div id="graph-two" class="section level3">
+<h3>Graph two</h3>
+<p>Almost the same as above.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># As before but adding an approx() step</span>
+<span class="kw">hist</span>(x, <span class="dt">freq =</span> F)
+for (i in <span class="dv">1</span>:<span class="dv">1000</span>) {
+    ap &lt;-<span class="st"> </span><span class="kw">approx</span>(den$x, den$y, <span class="dt">n =</span> <span class="dv">1000</span>)  <span class="co"># reintroduce interpolation before sampling</span>
+    sample.boot2 &lt;-<span class="st"> </span><span class="kw">sample</span>(ap$x, <span class="dt">size =</span> <span class="dv">1000</span>, <span class="dt">prob =</span> ap$y, <span class="dt">rep =</span> T)
+    <span class="kw">lines</span>(<span class="kw">density</span>(sample.boot2, <span class="dt">adjust =</span> <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="dv">1</span>, <span class="dt">col =</span> <span class="st">&quot;#0000FF01&quot;</span>)
+    <span class="kw">print</span>(i)
+}
+sample.boot2 &lt;-<span class="st"> </span><span class="kw">sample</span>(ap$x, <span class="dt">size =</span> <span class="dv">10000</span>, <span class="dt">prob =</span> ap$y, <span class="dt">rep =</span> T)
+<span class="kw">lines</span>(<span class="kw">density</span>(sample.boot2, <span class="dt">adjust =</span> <span class="dv">1</span>), <span class="dt">lwd =</span> <span class="dv">2</span>, <span class="dt">col =</span> <span class="st">&quot;#0000FF&quot;</span>)</code></pre>
+</div>
+</div>
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+$(document).ready(function () {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+});
+
+</script>
+
+
+</body>
+</html>
