@@ -1,0 +1,332 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.514, 0.58, 0.588}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.863,0.196,0.184}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.863,0.196,0.184}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.345,0.431,0.459}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0.576,0.631,0.631}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.514,0.58,0.588}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.796,0.294,0.086}{#1}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.522,0.6,0}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.796,0.294,0.086}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.576,0.631,0.631}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{geometry}
+\geometry{verbose, tmargin=2.5cm, bmargin=2.5cm, lmargin=2.5cm, rmargin=2.5cm}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\title{Minimal Empirical Density Estimation}
+\author{Matthew Leonawicz}
+\maketitle
+
+
+
+
+
+\section{Introduction}
+Here I explore basic kernel density estimation in \textbf{R} as a way to empirically estimate densities for data extracted from common SNAP data sets.
+This is just a toy example where I use simple simulations to investigate properties I am most interested in for the estimated distributions.
+
+\subsection{Motivation}
+I often face the real-world problem of needing to rapidly summarize large amounts of data in an efficient manner without losing, skewing, or obscuring too much information.
+The context for this simulation is to show that it is possible to estimate an empirical distribution of a variable by a small set of points roughly defining the density curve,
+which can then we used in conjunction with linear approximation and bootstrap resampling to simulate new draws from the estimated distribution.
+The process can stop here if it is a sample that is required, or, in turn, an arbitrarily large sample drawn can be used to re-estimate the density more smoothly.
+
+For some applications this is not useful, as the original data are already available.
+Their distribution can be estimated in the most appropriate manner the first time around.
+However, this delay in the chain of data propagation is extremely helpful when I am trying to provide real-time summaries of large data sets on demand,
+the quintessential example being my \textbf{R} Shiny web applications.
+
+Particularly, in the case of trying to rapidly summarize and graph full distributional information, as opposed to, say, a time series of mean values,
+some form of data reduction must take place upstream from the web application.
+At SNAP, we have long time series of high spatial resolution data that are too much to dump into a simple web application.
+Data can easily be externalized and specific data sets sourced by an app on demand,
+but it is especially helpful to avoid the crippling load times associated with forcing massive amounts of data into an app while a user is trying to interact with it.
+
+Instead of loading a dataset, e.g., an R workspace file, containing a huge sample of data for some variable,
+it is much easier to:
+
+* store a small, efficient, and hopefully, accurate and precise representation of that data,
+* load only that into the Shiny app,
+* and then have \textbf{R} quickly explode that representation into a new simulated data set.
+
+This is especially an effective approach in the context of Shiny apps where the goal is to visually explore patterns and present information,
+and not to have tunnel vision for an exact value buried deep in a massive data set which is nevertheless riddled with uncertainty.
+
+\subsection{Details}
+Currently a simple simulation is shown, followed by two typical use cases in which application of such a strategy proves very beneficial.
+For the use cases, \textbf{R} code is provided to show how this is done in practice with real data inthe context of actual projects.
+
+\subsubsection{Limitations}
+The simulation is obviously not a robust analysis.
+Rather it is intended as a simple illustration of the process being utilized for data reduction in specific applications.
+
+\section{Related items}
+
+\subsection{Files and Data}
+There are no files or data related to the simulation itself.
+It is self-contained and reproducible.
+For the use cases, references are made to other projects which can be explored further.
+
+\section{R code}
+
+\subsection{Setup}
+First simulate some data and perform some rudimentary density estimation.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{set.seed}\hlstd{(}\hlnum{47}\hlstd{)}
+\hlstd{x} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{1000}\hlstd{,} \hlopt{-}\hlnum{3}\hlstd{,} \hlnum{1}\hlstd{),} \hlkwd{rnorm}\hlstd{(}\hlnum{500}\hlstd{,} \hlopt{-}\hlnum{1}\hlstd{,} \hlnum{1}\hlstd{),} \hlkwd{rpois}\hlstd{(}\hlnum{500}\hlstd{,} \hlnum{10}\hlstd{))}  \hlcom{# Simulate multimodal distribution}
+
+\hlstd{n} \hlkwb{<-} \hlnum{20}  \hlcom{# default for density() is n=512}
+\hlstd{den.smooth} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{1.5}\hlstd{,} \hlkwc{n} \hlstd{= n)}  \hlcom{# I tend to smooth it a bit}
+\hlstd{den} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{n} \hlstd{= n)}  \hlcom{# But I store one without additional smoothing}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\subsection{Graph results}
+The first plot shows a histogram of the original simulated data, overlain with boostrap resamples drawn from the crudely estimated density, and finally, a new density estimation performed post-bootstrap.
+The second plot shows the same, but incorporates an intermediary step involving linear approximation.
+This allows the subsequent draws to be more continuous.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# win.graph(10,5) layout(matrix(1:2,1,2))}
+
+\hlcom{# hist(x, freq=F) lines(den.smooth, lwd=2) # my preferred smoothed density}
+\hlcom{# estimate based on x}
+
+\hlkwd{hist}\hlstd{(x,} \hlkwc{freq} \hlstd{= F)}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlnum{1000}\hlstd{) \{}
+    \hlcom{# reproducing a sample from distribution of x based on den which I carry}
+    \hlcom{# through my code}
+    \hlstd{sample.boot} \hlkwb{<-} \hlkwd{sample}\hlstd{(den}\hlopt{$}\hlstd{x,} \hlkwc{size} \hlstd{=} \hlnum{1000}\hlstd{,} \hlkwc{prob} \hlstd{= den}\hlopt{$}\hlstd{y,} \hlkwc{rep} \hlstd{= T)}
+    \hlkwd{lines}\hlstd{(}\hlkwd{density}\hlstd{(sample.boot,} \hlkwc{adjust} \hlstd{=} \hlnum{1}\hlstd{),} \hlkwc{lwd} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"#FF000001"}\hlstd{)}  \hlcom{# No extra smoothing with smaller samples}
+    \hlcom{# print(i)}
+\hlstd{\}}
+\hlcom{# A larger bootstrap sample will pin down the distribution accurately enough}
+\hlcom{# if necessary}
+\hlstd{sample.boot} \hlkwb{<-} \hlkwd{sample}\hlstd{(den}\hlopt{$}\hlstd{x,} \hlkwc{size} \hlstd{=} \hlnum{10000}\hlstd{,} \hlkwc{prob} \hlstd{= den}\hlopt{$}\hlstd{y,} \hlkwc{rep} \hlstd{= T)}
+\hlkwd{lines}\hlstd{(}\hlkwd{density}\hlstd{(sample.boot,} \hlkwc{adjust} \hlstd{=} \hlnum{1.5}\hlstd{),} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"#FF0000"}\hlstd{)}  \hlcom{# smoothing affordable}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/plot1-1} 
+
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# As before but adding an approx() step}
+\hlkwd{hist}\hlstd{(x,} \hlkwc{freq} \hlstd{= F)}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlnum{1000}\hlstd{) \{}
+    \hlstd{ap} \hlkwb{<-} \hlkwd{approx}\hlstd{(den}\hlopt{$}\hlstd{x, den}\hlopt{$}\hlstd{y,} \hlkwc{n} \hlstd{=} \hlnum{1000}\hlstd{)}  \hlcom{# reintroduce interpolation before sampling}
+    \hlstd{sample.boot2} \hlkwb{<-} \hlkwd{sample}\hlstd{(ap}\hlopt{$}\hlstd{x,} \hlkwc{size} \hlstd{=} \hlnum{1000}\hlstd{,} \hlkwc{prob} \hlstd{= ap}\hlopt{$}\hlstd{y,} \hlkwc{rep} \hlstd{= T)}
+    \hlkwd{lines}\hlstd{(}\hlkwd{density}\hlstd{(sample.boot2,} \hlkwc{adjust} \hlstd{=} \hlnum{1}\hlstd{),} \hlkwc{lwd} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"#0000FF01"}\hlstd{)}
+    \hlcom{# print(i)}
+\hlstd{\}}
+\hlstd{sample.boot2} \hlkwb{<-} \hlkwd{sample}\hlstd{(ap}\hlopt{$}\hlstd{x,} \hlkwc{size} \hlstd{=} \hlnum{10000}\hlstd{,} \hlkwc{prob} \hlstd{= ap}\hlopt{$}\hlstd{y,} \hlkwc{rep} \hlstd{= T)}
+\hlkwd{lines}\hlstd{(}\hlkwd{density}\hlstd{(sample.boot2,} \hlkwc{adjust} \hlstd{=} \hlnum{1}\hlstd{),} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"#0000FF"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\includegraphics[width=\maxwidth]{figure/plot2-1} 
+
+\end{knitrout}
+
+\section{Use case 1: Climate}
+Temperature and precipition data from SNAP's downscaled climate models are often used to make inferences about future trends and uncertainty among potential climate scenarios.
+This generally is done by looking at specific statistics culled from the model outputs, usually the mean value over some combination of factors of interest such as seasonal period or geographical region.
+But what about when we want to look at an entire distribution of data at once?
+Furthermore, we want to visualize many distributions in quick succession, distributions of temperature or precipitation from different months, seasons, years, decades, locations, climate models, scenarios, etc.
+
+This is a case where I extract a relatively coarse density estimate a priori.
+Subsequently, this small, stored estimate, is what is actually used to regenerate an accurate simulation of the original model output.
+This means no inefficient, slow lugging around of big data.
+Compress it down, release it in similar to original form later.
+
+The following is used in the \texttt{AR4\_AR5\_extract.R} script which is part of the SNAP data QA/QC project and feeds into the Shiny app for comparing CMIP3 and CMIP5 downscaled climate model outputs.
+There is a function for estimating densities.
+In this case I wanted to avoid any \texttt{NA} values and for precipitation I wanted to ensure densities did not include positive probability over any interval containing negative values.
+The only other variable being analyzed was temperature.
+Things like this are important to code for in nuanced ways when the goal is to apply such a function to a large number of datasets.
+Effort must go into dealing with rare idiosyncrasies in the data and their effects.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{denFun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{n}\hlstd{,} \hlkwc{variable}\hlstd{) \{}
+    \hlstd{x} \hlkwb{<-} \hlstd{x[}\hlopt{!}\hlkwd{is.na}\hlstd{(x)]}
+    \hlstd{dif} \hlkwb{<-} \hlkwd{diff}\hlstd{(}\hlkwd{range}\hlstd{(x))}
+    \hlstd{z} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{n} \hlstd{= n,} \hlkwc{from} \hlstd{=} \hlkwd{min}\hlstd{(x)} \hlopt{-} \hlnum{0.05} \hlopt{*} \hlstd{dif,} \hlkwc{to} \hlstd{=} \hlkwd{max}\hlstd{(x)} \hlopt{+}
+        \hlnum{0.05} \hlopt{*} \hlstd{dif)}
+    \hlkwa{if} \hlstd{(variable} \hlopt{==} \hlstr{"pr"} \hlopt{&&} \hlkwd{any}\hlstd{(z}\hlopt{$}\hlstd{x} \hlopt{<} \hlnum{0}\hlstd{))}
+        \hlstd{z} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{n} \hlstd{= n,} \hlkwc{from} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{to} \hlstd{=} \hlkwd{max}\hlstd{(x)} \hlopt{+} \hlnum{0.05} \hlopt{*} \hlstd{dif)}
+    \hlkwd{as.numeric}\hlstd{(}\hlkwd{c}\hlstd{(z}\hlopt{$}\hlstd{x, z}\hlopt{$}\hlstd{y))}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+On the other end, in this case tucked within the aforementioned Shiny app, the function, \texttt{density2bootstrap} is used to simulate new draws from the estimated density.
+This is much faster and more efficient than trying to load an enormous data set.
+In this app, the \texttt{ggplo2} graphics rely on the sample for plotting which is why the bootstrapping occurs following loading of the density estimate,
+and why there is no subsequent code for fitting a new density estimate to the bootstrap sample.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{density2bootstrap} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{d}\hlstd{,} \hlkwc{n.density}\hlstd{,} \hlkwc{n.boot} \hlstd{=} \hlnum{10000}\hlstd{,} \hlkwc{interp} \hlstd{=} \hlnum{FALSE}\hlstd{,}
+    \hlkwc{n.interp} \hlstd{=} \hlnum{1000}\hlstd{,} \hlkwc{...}\hlstd{) \{}
+    \hlstd{n.fact} \hlkwb{<-} \hlstd{n.boot}\hlopt{/}\hlstd{n.density}
+    \hlstd{n.grp} \hlkwb{<-} \hlkwd{nrow}\hlstd{(d)}\hlopt{/}\hlstd{n.density}
+    \hlstd{d}\hlopt{$}\hlstd{Index} \hlkwb{<-} \hlkwd{rep}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n.grp,} \hlkwc{each} \hlstd{= n.density)}
+    \hlstd{d2} \hlkwb{<-} \hlkwd{data.frame}\hlstd{(}\hlkwd{lapply}\hlstd{(d, rep, n.fact),} \hlkwc{stringsAsFactors} \hlstd{=} \hlnum{FALSE}\hlstd{)}
+    \hlstd{prob.col} \hlkwb{<-} \hlkwd{which}\hlstd{(}\hlkwd{names}\hlstd{(d2)} \hlopt{%in%} \hlkwd{c}\hlstd{(}\hlstr{"Prob"}\hlstd{,} \hlstr{"Index"}\hlstd{))}
+    \hlstd{d2} \hlkwb{<-} \hlstd{d2[}\hlkwd{order}\hlstd{(d2}\hlopt{$}\hlstd{Index),} \hlopt{-}\hlstd{prob.col]}
+    \hlstd{d2}\hlopt{$}\hlstd{Val} \hlkwb{<-} \hlkwd{as.numeric}\hlstd{(}\hlkwd{vapply}\hlstd{(}\hlkwc{X} \hlstd{=} \hlnum{1}\hlopt{:}\hlstd{n.grp,} \hlkwc{FUN} \hlstd{=} \hlkwa{function}\hlstd{(}\hlkwc{i}\hlstd{,} \hlkwc{d}\hlstd{,} \hlkwc{n}\hlstd{,} \hlkwc{interp}\hlstd{,}
+        \hlkwc{n.interp}\hlstd{,} \hlkwc{...}\hlstd{) \{}
+        \hlstd{p} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwc{x} \hlstd{= d}\hlopt{$}\hlstd{Val[d}\hlopt{$}\hlstd{Index} \hlopt{==} \hlstd{i],} \hlkwc{y} \hlstd{= d}\hlopt{$}\hlstd{Prob[d}\hlopt{$}\hlstd{Index} \hlopt{==} \hlstd{i])}
+        \hlkwa{if} \hlstd{(interp) p} \hlkwb{<-} \hlkwd{approx}\hlstd{(p}\hlopt{$}\hlstd{x, p}\hlopt{$}\hlstd{y,} \hlkwc{n} \hlstd{= n.interp)}
+        \hlkwd{round}\hlstd{(}\hlkwd{sample}\hlstd{(p}\hlopt{$}\hlstd{x, n,} \hlkwc{prob} \hlstd{= p}\hlopt{$}\hlstd{y,} \hlkwc{rep} \hlstd{= T), ...)}
+    \hlstd{\},} \hlkwc{FUN.VALUE} \hlstd{=} \hlkwd{numeric}\hlstd{(n.boot),} \hlkwc{d} \hlstd{= d,} \hlkwc{n} \hlstd{= n.boot,} \hlkwc{interp} \hlstd{= interp,} \hlkwc{n.interp} \hlstd{= n.interp,}
+        \hlstd{...))}
+    \hlstd{d2}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+However, for a complete picture of how these functions work together, it is important to see the documentation for the projects of which they are a part.
+
+\section{Use case 2: Vegetation}
+The motivation and the context for vegetation area and age distributions from SNAP's ALFRESCO model ouput are the same as with use case one.
+However, the data are different.
+Through preliminary investigation, I can make changes to my approach, such as requiring a greater initial sample size or some other change that will maintain accuracy,
+which conceivably will differ for different random variables, data sets, and forms of variability and uncertainty involved.
+In this case I do something very similar to above.
+
+As in the case of climate, there is a similar function for estimating densities storing only minimal information.
+However, with this data there were more things to look out for,
+such as entirely missing data or all data consisting of a single unique value (e.g., all modeled vegetation ages in one subregion are the same age in the ALFRESCO model),
+and how these situations are to be handled.
+
+Furthermore, depending on how they are handled, which to some extent depends on how I eventually plan to use these estimated distributions,
+there are different potential consequences arising from other internal forms of sample.
+For instance, if all cells in a map layer of a given vegetation class are of the same age, do I want to sample with some kernal located on that value, knowing that these ages are not all the same in reality?
+On the other hand, I could return nothing but \texttt{NA} values if I am not satisfied with certain circumstances, as shown in the subsequent version of \texttt{denFun} which is applied to vegetated area rather than age.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{denFun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{n}\hlstd{,} \hlkwc{min.zero} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{diversify} \hlstd{=} \hlnum{FALSE}\hlstd{) \{}
+    \hlstd{x} \hlkwb{<-} \hlstd{x[}\hlopt{!}\hlkwd{is.na}\hlstd{(x)]}
+    \hlstd{lx} \hlkwb{<-} \hlkwd{length}\hlstd{(x)}
+    \hlkwa{if} \hlstd{(diversify} \hlopt{&&} \hlkwd{length}\hlstd{(}\hlkwd{unique}\hlstd{(x))} \hlopt{==} \hlnum{1}\hlstd{)}
+        \hlstd{x} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlkwd{max}\hlstd{(}\hlnum{10}\hlstd{, lx),} \hlkwc{mean} \hlstd{= x[}\hlnum{1}\hlstd{])}  \hlcom{# diversify constant values}
+    \hlkwa{if} \hlstd{(lx} \hlopt{==} \hlnum{1}\hlstd{)}
+        \hlstd{x} \hlkwb{<-} \hlstd{x} \hlopt{+} \hlkwd{c}\hlstd{(}\hlopt{-}\hlnum{1}\hlopt{:}\hlnum{1}\hlstd{)}  \hlcom{#single pixel of veg type, add and subtract one age year to make procedure possible}
+    \hlstd{dif} \hlkwb{<-} \hlkwd{diff}\hlstd{(}\hlkwd{range}\hlstd{(x))}
+    \hlstd{z} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{n} \hlstd{= n,} \hlkwc{from} \hlstd{=} \hlkwd{min}\hlstd{(x)} \hlopt{-} \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*} \hlstd{dif),} \hlkwc{to} \hlstd{=} \hlkwd{max}\hlstd{(x)} \hlopt{+}
+        \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*} \hlstd{dif))}
+    \hlkwa{if} \hlstd{(min.zero} \hlopt{&&} \hlkwd{any}\hlstd{(z}\hlopt{$}\hlstd{x} \hlopt{<} \hlnum{0}\hlstd{))}
+        \hlstd{z} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{n} \hlstd{= n,} \hlkwc{from} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{to} \hlstd{=} \hlkwd{max}\hlstd{(x)} \hlopt{+} \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*}
+            \hlstd{dif))}
+    \hlkwd{as.numeric}\hlstd{(}\hlkwd{c}\hlstd{(z}\hlopt{$}\hlstd{x, z}\hlopt{$}\hlstd{y))}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{denFun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{n} \hlstd{=} \hlnum{20}\hlstd{,} \hlkwc{min.zero} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{diversify} \hlstd{=} \hlnum{FALSE}\hlstd{,} \hlkwc{missing.veg.NA} \hlstd{=} \hlnum{TRUE}\hlstd{,}
+    \hlkwc{fire} \hlstd{=} \hlnum{FALSE}\hlstd{) \{}
+    \hlkwa{if} \hlstd{(}\hlkwd{all}\hlstd{(}\hlkwd{is.na}\hlstd{(x)))}
+        \hlkwd{return}\hlstd{(}\hlkwd{rep}\hlstd{(}\hlnum{NA}\hlstd{,} \hlnum{2} \hlopt{*} \hlstd{n))}
+    \hlstd{x} \hlkwb{<-} \hlstd{x[}\hlopt{!}\hlkwd{is.na}\hlstd{(x)]}
+    \hlstd{lx} \hlkwb{<-} \hlkwd{length}\hlstd{(x)}
+    \hlkwa{if} \hlstd{(}\hlkwd{sum}\hlstd{(x)} \hlopt{==} \hlnum{0} \hlopt{&} \hlstd{missing.veg.NA} \hlopt{& !}\hlstd{fire)}
+        \hlkwd{return}\hlstd{(}\hlkwd{rep}\hlstd{(}\hlnum{NA}\hlstd{,} \hlnum{2} \hlopt{*} \hlstd{n))}
+    \hlkwa{if} \hlstd{(diversify} \hlopt{&&} \hlkwd{length}\hlstd{(}\hlkwd{unique}\hlstd{(x))} \hlopt{==} \hlnum{1}\hlstd{)}
+        \hlstd{x} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlkwd{max}\hlstd{(}\hlnum{10}\hlstd{, lx),} \hlkwc{mean} \hlstd{= x[}\hlnum{1}\hlstd{])}  \hlcom{# diversify constant values}
+    \hlkwa{if} \hlstd{(lx} \hlopt{==} \hlnum{1}\hlstd{)}
+        \hlstd{x} \hlkwb{<-} \hlstd{x} \hlopt{+} \hlkwd{c}\hlstd{(}\hlopt{-}\hlnum{1}\hlopt{:}\hlnum{1}\hlstd{)}  \hlcom{#single pixel of veg type, add and subtract one age year to make procedure possible}
+    \hlstd{dif} \hlkwb{<-} \hlkwd{diff}\hlstd{(}\hlkwd{range}\hlstd{(x))}
+    \hlstd{z} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{n} \hlstd{= n,} \hlkwc{from} \hlstd{=} \hlkwd{min}\hlstd{(x)} \hlopt{-} \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*} \hlstd{dif),} \hlkwc{to} \hlstd{=} \hlkwd{max}\hlstd{(x)} \hlopt{+}
+        \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*} \hlstd{dif))}
+    \hlkwa{if} \hlstd{(min.zero} \hlopt{&&} \hlkwd{any}\hlstd{(z}\hlopt{$}\hlstd{x} \hlopt{<} \hlnum{0}\hlstd{))}
+        \hlstd{z} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{n} \hlstd{= n,} \hlkwc{from} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{to} \hlstd{=} \hlkwd{max}\hlstd{(x)} \hlopt{+} \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*}
+            \hlstd{dif))}
+    \hlkwd{as.numeric}\hlstd{(}\hlkwd{c}\hlstd{(z}\hlopt{$}\hlstd{x, z}\hlopt{$}\hlstd{y))}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{btfun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{p}\hlstd{,} \hlkwc{n.samples} \hlstd{=} \hlkwd{length}\hlstd{(p)}\hlopt{/}\hlnum{2}\hlstd{,} \hlkwc{n.boot} \hlstd{=} \hlnum{10000}\hlstd{,} \hlkwc{interp} \hlstd{=} \hlnum{FALSE}\hlstd{,}
+    \hlkwc{n.interp} \hlstd{=} \hlnum{1000}\hlstd{,} \hlkwc{...}\hlstd{) \{}
+    \hlkwa{if} \hlstd{(}\hlopt{!}\hlkwd{length}\hlstd{(p))}
+        \hlkwd{return}\hlstd{(p)}
+    \hlkwa{if} \hlstd{(}\hlkwd{all}\hlstd{(}\hlkwd{is.na}\hlstd{(p)))}
+        \hlkwd{return}\hlstd{(}\hlkwd{rep}\hlstd{(}\hlnum{NA}\hlstd{, n.boot))}
+    \hlstd{p} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwc{x} \hlstd{= p[}\hlnum{1}\hlopt{:}\hlstd{n.samples],} \hlkwc{y} \hlstd{= p[(n.samples} \hlopt{+} \hlnum{1}\hlstd{)}\hlopt{:}\hlstd{(}\hlnum{2} \hlopt{*} \hlstd{n.samples)])}
+    \hlkwa{if} \hlstd{(interp} \hlopt{&&} \hlkwd{length}\hlstd{(}\hlkwd{unique}\hlstd{(p[}\hlnum{1}\hlopt{:}\hlstd{n.samples]))} \hlopt{>} \hlnum{1}\hlstd{)}
+        \hlstd{p} \hlkwb{<-} \hlkwd{approx}\hlstd{(p}\hlopt{$}\hlstd{x, p}\hlopt{$}\hlstd{y,} \hlkwc{n} \hlstd{= n.interp)}
+    \hlstd{p} \hlkwb{<-} \hlkwd{round}\hlstd{(}\hlkwd{sample}\hlstd{(p}\hlopt{$}\hlstd{x, n.boot,} \hlkwc{prob} \hlstd{= p}\hlopt{$}\hlstd{y,} \hlkwc{rep} \hlstd{= T), ...)}
+    \hlstd{p}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+Again, there is another case of bootstrap resampling from the estimated distributions to arrive at new simulated, representative draws from the original distribution.
+Think of it like teleporting to your destination instead of walking, specifically when you have a heavy pack.
+As with use case 1, it is helpful to see the documentation for the ALFRESCO output extraction and related projects to which these functions belong.
+
+\end{document}

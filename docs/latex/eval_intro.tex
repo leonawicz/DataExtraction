@@ -1,0 +1,92 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.514, 0.58, 0.588}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.863,0.196,0.184}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.863,0.196,0.184}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.345,0.431,0.459}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0.576,0.631,0.631}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.514,0.58,0.588}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.796,0.294,0.086}{#1}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.522,0.6,0}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.796,0.294,0.086}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.576,0.631,0.631}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{geometry}
+\geometry{verbose, tmargin=2.5cm, bmargin=2.5cm, lmargin=2.5cm, rmargin=2.5cm}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\title{Data Extraction Evaluation}
+\author{Matthew Leonawicz}
+\maketitle
+
+
+
+\section{Statistical sampling for spatial data extraction}
+
+\subsection{Motivation: Data processing efficiency}
+
+We've gotten faster at SNAP, but so has our need for speed. What was once never bothered with (outside some of my own work),
+using statistical sampling to obtain results at no cost to validity, accuracy or precision compared to a census of our data,
+is now more relevant than ever.
+Before, we were content to let a process run in the background for hours and look at the results when done.
+There was little incentive to incorporate techniques like those laid out here.
+Now we have more types of data delivery and presentation, e.g., web applications, where it is intended for there to be a human watching and waiting for data processing to occur.
+
+\subsubsection{Assumptions, bad ones}
+An assumption I often encounter from those outside statistics, but involved in "big data" is that with today's processing power there is no reason not to use all the data.
+A corollary of this is that many statistical methods can be dispensed with,
+which is based on another assumption that this is what statistics basically exists for;
+to help us hobble along when we were in the stone age.
+However, both of these views are flawed.
+The latter suggests little knowledge of the broad uses of statistics.
+The former suggests little knowledge of statistics period, or the myriad ways data can be improperly analyzed and results interpreted.
+
+\subsubsection{Speed not for speed's sake}
+Making things go faster is perhaps the last area of application I would ever find for statistical methods,
+and since not a lot of traditional statistical analysis occurs at SNAP I do not want those untrained in statistics to get the wrong impression that speed improvements are all statistics is really good for.
+But it is relevant and beneficial in the context of some of our workflows, particularly my own.
+But I am also not the only one extracting and processing large amounts of data at SNAP.
+One use of statistics is data reduction.
+This is what I aim for when needing to "get things done faster," not really the speed itself.
+I'd rather see a decrease in computational time required for large data processing occur as a latent consequence of smart application of statistical methods than as something forced for its own sake.
+I will outline a simple and extremely common case.
+
+\end{document}

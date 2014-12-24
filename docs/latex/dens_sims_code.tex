@@ -1,0 +1,128 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.514, 0.58, 0.588}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.863,0.196,0.184}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.863,0.196,0.184}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.345,0.431,0.459}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0.576,0.631,0.631}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.514,0.58,0.588}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.796,0.294,0.086}{#1}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.522,0.6,0}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.796,0.294,0.086}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.576,0.631,0.631}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{geometry}
+\geometry{verbose, tmargin=2.5cm, bmargin=2.5cm, lmargin=2.5cm, rmargin=2.5cm}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\title{Minimal Empirical Density Estimation}
+\author{Matthew Leonawicz}
+\maketitle
+
+
+
+
+
+\section{R code}
+
+\subsection{Setup}
+First simulate some data and perform some rudimentary density estimation.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{set.seed}\hlstd{(}\hlnum{47}\hlstd{)}
+\hlstd{x} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlkwd{rnorm}\hlstd{(}\hlnum{1000}\hlstd{,} \hlopt{-}\hlnum{3}\hlstd{,} \hlnum{1}\hlstd{),} \hlkwd{rnorm}\hlstd{(}\hlnum{500}\hlstd{,} \hlopt{-}\hlnum{1}\hlstd{,} \hlnum{1}\hlstd{),} \hlkwd{rpois}\hlstd{(}\hlnum{500}\hlstd{,} \hlnum{10}\hlstd{))}  \hlcom{# Simulate multimodal distribution}
+
+\hlstd{n} \hlkwb{<-} \hlnum{20}  \hlcom{# default for density() is n=512}
+\hlstd{den.smooth} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{1.5}\hlstd{,} \hlkwc{n} \hlstd{= n)}  \hlcom{# I tend to smooth it a bit}
+\hlstd{den} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{n} \hlstd{= n)}  \hlcom{# But I store one without additional smoothing}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\subsection{Graph one}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# win.graph(10,5) layout(matrix(1:2,1,2))}
+
+\hlcom{# hist(x, freq=F) lines(den.smooth, lwd=2) # my preferred smoothed density}
+\hlcom{# estimate based on x}
+
+\hlkwd{hist}\hlstd{(x,} \hlkwc{freq} \hlstd{= F)}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlnum{1000}\hlstd{) \{}
+    \hlcom{# reproducing a sample from distribution of x based on den which I carry}
+    \hlcom{# through my code}
+    \hlstd{sample.boot} \hlkwb{<-} \hlkwd{sample}\hlstd{(den}\hlopt{$}\hlstd{x,} \hlkwc{size} \hlstd{=} \hlnum{1000}\hlstd{,} \hlkwc{prob} \hlstd{= den}\hlopt{$}\hlstd{y,} \hlkwc{rep} \hlstd{= T)}
+    \hlkwd{lines}\hlstd{(}\hlkwd{density}\hlstd{(sample.boot,} \hlkwc{adjust} \hlstd{=} \hlnum{1}\hlstd{),} \hlkwc{lwd} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"#FF000001"}\hlstd{)}  \hlcom{# No extra smoothing with smaller samples}
+    \hlcom{# print(i)}
+\hlstd{\}}
+\hlcom{# A larger bootstrap sample will pin down the distribution accurately enough}
+\hlcom{# if necessary}
+\hlstd{sample.boot} \hlkwb{<-} \hlkwd{sample}\hlstd{(den}\hlopt{$}\hlstd{x,} \hlkwc{size} \hlstd{=} \hlnum{10000}\hlstd{,} \hlkwc{prob} \hlstd{= den}\hlopt{$}\hlstd{y,} \hlkwc{rep} \hlstd{= T)}
+\hlkwd{lines}\hlstd{(}\hlkwd{density}\hlstd{(sample.boot,} \hlkwc{adjust} \hlstd{=} \hlnum{1.5}\hlstd{),} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"#FF0000"}\hlstd{)}  \hlcom{# smoothing affordable}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\subsection{Graph two}
+Almost the same as above.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# As before but adding an approx() step}
+\hlkwd{hist}\hlstd{(x,} \hlkwc{freq} \hlstd{= F)}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlnum{1000}\hlstd{) \{}
+    \hlstd{ap} \hlkwb{<-} \hlkwd{approx}\hlstd{(den}\hlopt{$}\hlstd{x, den}\hlopt{$}\hlstd{y,} \hlkwc{n} \hlstd{=} \hlnum{1000}\hlstd{)}  \hlcom{# reintroduce interpolation before sampling}
+    \hlstd{sample.boot2} \hlkwb{<-} \hlkwd{sample}\hlstd{(ap}\hlopt{$}\hlstd{x,} \hlkwc{size} \hlstd{=} \hlnum{1000}\hlstd{,} \hlkwc{prob} \hlstd{= ap}\hlopt{$}\hlstd{y,} \hlkwc{rep} \hlstd{= T)}
+    \hlkwd{lines}\hlstd{(}\hlkwd{density}\hlstd{(sample.boot2,} \hlkwc{adjust} \hlstd{=} \hlnum{1}\hlstd{),} \hlkwc{lwd} \hlstd{=} \hlnum{1}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"#0000FF01"}\hlstd{)}
+    \hlcom{# print(i)}
+\hlstd{\}}
+\hlstd{sample.boot2} \hlkwb{<-} \hlkwd{sample}\hlstd{(ap}\hlopt{$}\hlstd{x,} \hlkwc{size} \hlstd{=} \hlnum{10000}\hlstd{,} \hlkwc{prob} \hlstd{= ap}\hlopt{$}\hlstd{y,} \hlkwc{rep} \hlstd{= T)}
+\hlkwd{lines}\hlstd{(}\hlkwd{density}\hlstd{(sample.boot2,} \hlkwc{adjust} \hlstd{=} \hlnum{1}\hlstd{),} \hlkwc{lwd} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{col} \hlstd{=} \hlstr{"#0000FF"}\hlstd{)}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\end{document}

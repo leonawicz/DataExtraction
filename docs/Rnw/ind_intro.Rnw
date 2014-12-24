@@ -1,0 +1,64 @@
+\documentclass{article}
+\usepackage{geometry}
+\geometry{verbose, tmargin=2.5cm, bmargin=2.5cm, lmargin=2.5cm, rmargin=2.5cm}
+\begin{document}
+
+\title{Shapefiles to Raster Cell Indices}
+\author{Matthew Leonawicz}
+\maketitle
+
+<<highlight, echo=FALSE>>=
+knit_theme$set(knit_theme$get('solarized-dark'))
+@
+
+\section{Introduction}
+\textbf{R} code is provided showing how I convert polygon shapefiles to lists of raster cell indices.
+
+\subsection{Motivation}
+At SNAP I often find myself performing large numbers of data extractions on raster layers by way of shapefiles.
+This can be time consuming with respect to our high-resolution downscaled geotiffs.
+Large raster layers in combination with large (or large numbers of) shapefiles can make for the perfect storm of wasteful and painfully slow processing time.
+In light of the additional fact that such processing is commonplace at SNAP and that almost any data extraction done once is bound to recur at a later date in some overlapping and redundant sense,
+I have moved toward an a priori establishment of the more preliminary and repetitive aspects of common spatial data extraction tasks at SNAP.
+
+\subsection{Details}
+I compile the following:
+
+* Lists of commonly used groups of polygon shapefiles
+* Key raster/geotiff format data sets from which we commonly extract data
+* Settings pertaining to the methods and circumstances under which cell indexing can occur in anticipated, subsequent data extraction exercises
+
+\subsubsection{Capabilities}
+The most straightforward purpose here is to obtain a nested list of groups of related geographic regions based on input shapefiles,
+each such lower list element storing a vector of cell numbers, or indices, pertaining to a given shapefile's spatial location over a given rasterized data set.
+The nested list is named. The top level elements are themselves lists, named based on related shapefile groupings.
+Each of these lists is originally a list of shapefiles but is transformed into a list of vectors of raster layer cell indices.
+
+Sometimes data extraction is performed on SNAP data sets with explicit a priori removal of \texttt{NA} values.
+Anticipating this context of usage, cell indices corresponding to shapefiles are also obtained with respect to an NA-omitted version of a raster layer.
+
+Additionally, the context of data extraction procedures sometimes includes sampling methods where not all raster cells are used.
+Sampling may be applied to rasterized objects in \textbf{R} prior to doing any other work with them.
+As with \texttt{NA} removal, this may be done to improve computational efficiencies.
+Under these circumstances, obtaining cell indices by shapefile in advance would not work.
+However, the code below also provides an example of one a priori sampling schemes, the five percent random sample.
+In anticipation of commonly performing such sampling on raster layers,
+here this is done in advance by obtaining a representative sample for each shapefile region.
+
+\subsubsection{Limitations}
+Obviously, the vector of cell indices for a shapefile differs for different rasterized data sets.
+At this time, cell index nested lists are produced for two common rasterized data products at SNAP:
+
+* Alaska-Canada 2-km downscaled climate data
+* Alaska-Canada 1-km Alfresco simulation data
+
+Although the extents are identical, resolutions differ, and hence so do cell numbers pertaining to any given polygon shapefile.
+Furthermore, taking the climate and Alfresco datasets as an example again, even if they were the same resolution,
+the Alfresco map has spatial regions of \texttt{NA} where data values exist in the climate layers.
+This would have an independent effect on the NA-omitted versions of the nested lists.
+It would also affect sampled versions where \texttt{NA} cells are removed.
+
+These are not really limitations, but trivial facts.
+The thing to remain aware of is simply that any version of these polygon shapefile-specific nested lists of cell numbers are of course indexed with respect to a specific rasterized dataset.
+
+\end{document}

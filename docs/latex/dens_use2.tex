@@ -1,0 +1,154 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.514, 0.58, 0.588}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.863,0.196,0.184}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.863,0.196,0.184}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.345,0.431,0.459}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0.576,0.631,0.631}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.514,0.58,0.588}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.796,0.294,0.086}{#1}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.522,0.6,0}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.796,0.294,0.086}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.576,0.631,0.631}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{geometry}
+\geometry{verbose, tmargin=2.5cm, bmargin=2.5cm, lmargin=2.5cm, rmargin=2.5cm}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\title{Minimal Empirical Density Estimation}
+\author{Matthew Leonawicz}
+\maketitle
+
+
+
+
+
+\section{Use case 2: Vegetation}
+The motivation and the context for vegetation area and age distributions from SNAP's ALFRESCO model ouput are the same as with use case one.
+However, the data are different.
+Through preliminary investigation, I can make changes to my approach, such as requiring a greater initial sample size or some other change that will maintain accuracy,
+which conceivably will differ for different random variables, data sets, and forms of variability and uncertainty involved.
+In this case I do something very similar to above.
+
+As in the case of climate, there is a similar function for estimating densities storing only minimal information.
+However, with this data there were more things to look out for,
+such as entirely missing data or all data consisting of a single unique value (e.g., all modeled vegetation ages in one subregion are the same age in the ALFRESCO model),
+and how these situations are to be handled.
+
+Furthermore, depending on how they are handled, which to some extent depends on how I eventually plan to use these estimated distributions,
+there are different potential consequences arising from other internal forms of sample.
+For instance, if all cells in a map layer of a given vegetation class are of the same age, do I want to sample with some kernal located on that value, knowing that these ages are not all the same in reality?
+On the other hand, I could return nothing but \texttt{NA} values if I am not satisfied with certain circumstances, as shown in the subsequent version of \texttt{denFun} which is applied to vegetated area rather than age.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{denFun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{n}\hlstd{,} \hlkwc{min.zero} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{diversify} \hlstd{=} \hlnum{FALSE}\hlstd{) \{}
+    \hlstd{x} \hlkwb{<-} \hlstd{x[}\hlopt{!}\hlkwd{is.na}\hlstd{(x)]}
+    \hlstd{lx} \hlkwb{<-} \hlkwd{length}\hlstd{(x)}
+    \hlkwa{if} \hlstd{(diversify} \hlopt{&&} \hlkwd{length}\hlstd{(}\hlkwd{unique}\hlstd{(x))} \hlopt{==} \hlnum{1}\hlstd{)}
+        \hlstd{x} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlkwd{max}\hlstd{(}\hlnum{10}\hlstd{, lx),} \hlkwc{mean} \hlstd{= x[}\hlnum{1}\hlstd{])}  \hlcom{# diversify constant values}
+    \hlkwa{if} \hlstd{(lx} \hlopt{==} \hlnum{1}\hlstd{)}
+        \hlstd{x} \hlkwb{<-} \hlstd{x} \hlopt{+} \hlkwd{c}\hlstd{(}\hlopt{-}\hlnum{1}\hlopt{:}\hlnum{1}\hlstd{)}  \hlcom{#single pixel of veg type, add and subtract one age year to make procedure possible}
+    \hlstd{dif} \hlkwb{<-} \hlkwd{diff}\hlstd{(}\hlkwd{range}\hlstd{(x))}
+    \hlstd{z} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{n} \hlstd{= n,} \hlkwc{from} \hlstd{=} \hlkwd{min}\hlstd{(x)} \hlopt{-} \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*} \hlstd{dif),} \hlkwc{to} \hlstd{=} \hlkwd{max}\hlstd{(x)} \hlopt{+}
+        \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*} \hlstd{dif))}
+    \hlkwa{if} \hlstd{(min.zero} \hlopt{&&} \hlkwd{any}\hlstd{(z}\hlopt{$}\hlstd{x} \hlopt{<} \hlnum{0}\hlstd{))}
+        \hlstd{z} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{n} \hlstd{= n,} \hlkwc{from} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{to} \hlstd{=} \hlkwd{max}\hlstd{(x)} \hlopt{+} \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*}
+            \hlstd{dif))}
+    \hlkwd{as.numeric}\hlstd{(}\hlkwd{c}\hlstd{(z}\hlopt{$}\hlstd{x, z}\hlopt{$}\hlstd{y))}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{denFun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{n} \hlstd{=} \hlnum{20}\hlstd{,} \hlkwc{min.zero} \hlstd{=} \hlnum{TRUE}\hlstd{,} \hlkwc{diversify} \hlstd{=} \hlnum{FALSE}\hlstd{,} \hlkwc{missing.veg.NA} \hlstd{=} \hlnum{TRUE}\hlstd{,}
+    \hlkwc{fire} \hlstd{=} \hlnum{FALSE}\hlstd{) \{}
+    \hlkwa{if} \hlstd{(}\hlkwd{all}\hlstd{(}\hlkwd{is.na}\hlstd{(x)))}
+        \hlkwd{return}\hlstd{(}\hlkwd{rep}\hlstd{(}\hlnum{NA}\hlstd{,} \hlnum{2} \hlopt{*} \hlstd{n))}
+    \hlstd{x} \hlkwb{<-} \hlstd{x[}\hlopt{!}\hlkwd{is.na}\hlstd{(x)]}
+    \hlstd{lx} \hlkwb{<-} \hlkwd{length}\hlstd{(x)}
+    \hlkwa{if} \hlstd{(}\hlkwd{sum}\hlstd{(x)} \hlopt{==} \hlnum{0} \hlopt{&} \hlstd{missing.veg.NA} \hlopt{& !}\hlstd{fire)}
+        \hlkwd{return}\hlstd{(}\hlkwd{rep}\hlstd{(}\hlnum{NA}\hlstd{,} \hlnum{2} \hlopt{*} \hlstd{n))}
+    \hlkwa{if} \hlstd{(diversify} \hlopt{&&} \hlkwd{length}\hlstd{(}\hlkwd{unique}\hlstd{(x))} \hlopt{==} \hlnum{1}\hlstd{)}
+        \hlstd{x} \hlkwb{<-} \hlkwd{rnorm}\hlstd{(}\hlkwd{max}\hlstd{(}\hlnum{10}\hlstd{, lx),} \hlkwc{mean} \hlstd{= x[}\hlnum{1}\hlstd{])}  \hlcom{# diversify constant values}
+    \hlkwa{if} \hlstd{(lx} \hlopt{==} \hlnum{1}\hlstd{)}
+        \hlstd{x} \hlkwb{<-} \hlstd{x} \hlopt{+} \hlkwd{c}\hlstd{(}\hlopt{-}\hlnum{1}\hlopt{:}\hlnum{1}\hlstd{)}  \hlcom{#single pixel of veg type, add and subtract one age year to make procedure possible}
+    \hlstd{dif} \hlkwb{<-} \hlkwd{diff}\hlstd{(}\hlkwd{range}\hlstd{(x))}
+    \hlstd{z} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{n} \hlstd{= n,} \hlkwc{from} \hlstd{=} \hlkwd{min}\hlstd{(x)} \hlopt{-} \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*} \hlstd{dif),} \hlkwc{to} \hlstd{=} \hlkwd{max}\hlstd{(x)} \hlopt{+}
+        \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*} \hlstd{dif))}
+    \hlkwa{if} \hlstd{(min.zero} \hlopt{&&} \hlkwd{any}\hlstd{(z}\hlopt{$}\hlstd{x} \hlopt{<} \hlnum{0}\hlstd{))}
+        \hlstd{z} \hlkwb{<-} \hlkwd{density}\hlstd{(x,} \hlkwc{adjust} \hlstd{=} \hlnum{2}\hlstd{,} \hlkwc{n} \hlstd{= n,} \hlkwc{from} \hlstd{=} \hlnum{0}\hlstd{,} \hlkwc{to} \hlstd{=} \hlkwd{max}\hlstd{(x)} \hlopt{+} \hlkwd{max}\hlstd{(}\hlnum{1}\hlstd{,} \hlnum{0.05} \hlopt{*}
+            \hlstd{dif))}
+    \hlkwd{as.numeric}\hlstd{(}\hlkwd{c}\hlstd{(z}\hlopt{$}\hlstd{x, z}\hlopt{$}\hlstd{y))}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+Again, there is another case of bootstrap resampling from the estimated distributions to arrive at new simulated, representative draws from the original distribution.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlstd{btfun} \hlkwb{<-} \hlkwa{function}\hlstd{(}\hlkwc{p}\hlstd{,} \hlkwc{n.samples} \hlstd{=} \hlkwd{length}\hlstd{(p)}\hlopt{/}\hlnum{2}\hlstd{,} \hlkwc{n.boot} \hlstd{=} \hlnum{10000}\hlstd{,} \hlkwc{interp} \hlstd{=} \hlnum{FALSE}\hlstd{,}
+    \hlkwc{n.interp} \hlstd{=} \hlnum{1000}\hlstd{,} \hlkwc{...}\hlstd{) \{}
+    \hlkwa{if} \hlstd{(}\hlopt{!}\hlkwd{length}\hlstd{(p))}
+        \hlkwd{return}\hlstd{(p)}
+    \hlkwa{if} \hlstd{(}\hlkwd{all}\hlstd{(}\hlkwd{is.na}\hlstd{(p)))}
+        \hlkwd{return}\hlstd{(}\hlkwd{rep}\hlstd{(}\hlnum{NA}\hlstd{, n.boot))}
+    \hlstd{p} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlkwc{x} \hlstd{= p[}\hlnum{1}\hlopt{:}\hlstd{n.samples],} \hlkwc{y} \hlstd{= p[(n.samples} \hlopt{+} \hlnum{1}\hlstd{)}\hlopt{:}\hlstd{(}\hlnum{2} \hlopt{*} \hlstd{n.samples)])}
+    \hlkwa{if} \hlstd{(interp} \hlopt{&&} \hlkwd{length}\hlstd{(}\hlkwd{unique}\hlstd{(p[}\hlnum{1}\hlopt{:}\hlstd{n.samples]))} \hlopt{>} \hlnum{1}\hlstd{)}
+        \hlstd{p} \hlkwb{<-} \hlkwd{approx}\hlstd{(p}\hlopt{$}\hlstd{x, p}\hlopt{$}\hlstd{y,} \hlkwc{n} \hlstd{= n.interp)}
+    \hlstd{p} \hlkwb{<-} \hlkwd{round}\hlstd{(}\hlkwd{sample}\hlstd{(p}\hlopt{$}\hlstd{x, n.boot,} \hlkwc{prob} \hlstd{= p}\hlopt{$}\hlstd{y,} \hlkwc{rep} \hlstd{= T), ...)}
+    \hlstd{p}
+\hlstd{\}}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+Think of it like teleporting to your destination instead of walking, specifically when you have a heavy pack.
+As with use case 1, it is helpful to see the documentation for the ALFRESCO output extraction and related projects to which these functions belong.
+
+\end{document}

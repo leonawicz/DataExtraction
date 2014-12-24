@@ -1,0 +1,279 @@
+\documentclass{article}\usepackage[]{graphicx}\usepackage[]{color}
+%% maxwidth is the original width if it is less than linewidth
+%% otherwise use linewidth (to make sure the graphics do not exceed the margin)
+\makeatletter
+\def\maxwidth{ %
+  \ifdim\Gin@nat@width>\linewidth
+    \linewidth
+  \else
+    \Gin@nat@width
+  \fi
+}
+\makeatother
+
+\definecolor{fgcolor}{rgb}{0.514, 0.58, 0.588}
+\newcommand{\hlnum}[1]{\textcolor[rgb]{0.863,0.196,0.184}{#1}}%
+\newcommand{\hlstr}[1]{\textcolor[rgb]{0.863,0.196,0.184}{#1}}%
+\newcommand{\hlcom}[1]{\textcolor[rgb]{0.345,0.431,0.459}{#1}}%
+\newcommand{\hlopt}[1]{\textcolor[rgb]{0.576,0.631,0.631}{#1}}%
+\newcommand{\hlstd}[1]{\textcolor[rgb]{0.514,0.58,0.588}{#1}}%
+\newcommand{\hlkwa}[1]{\textcolor[rgb]{0.796,0.294,0.086}{#1}}%
+\newcommand{\hlkwb}[1]{\textcolor[rgb]{0.522,0.6,0}{#1}}%
+\newcommand{\hlkwc}[1]{\textcolor[rgb]{0.796,0.294,0.086}{#1}}%
+\newcommand{\hlkwd}[1]{\textcolor[rgb]{0.576,0.631,0.631}{#1}}%
+
+\usepackage{framed}
+\makeatletter
+\newenvironment{kframe}{%
+ \def\at@end@of@kframe{}%
+ \ifinner\ifhmode%
+  \def\at@end@of@kframe{\end{minipage}}%
+  \begin{minipage}{\columnwidth}%
+ \fi\fi%
+ \def\FrameCommand##1{\hskip\@totalleftmargin \hskip-\fboxsep
+ \colorbox{shadecolor}{##1}\hskip-\fboxsep
+     % There is no \\@totalrightmargin, so:
+     \hskip-\linewidth \hskip-\@totalleftmargin \hskip\columnwidth}%
+ \MakeFramed {\advance\hsize-\width
+   \@totalleftmargin\z@ \linewidth\hsize
+   \@setminipage}}%
+ {\par\unskip\endMakeFramed%
+ \at@end@of@kframe}
+\makeatother
+
+\definecolor{shadecolor}{rgb}{.97, .97, .97}
+\definecolor{messagecolor}{rgb}{0, 0, 0}
+\definecolor{warningcolor}{rgb}{1, 0, 1}
+\definecolor{errorcolor}{rgb}{1, 0, 0}
+\newenvironment{knitrout}{}{} % an empty environment to be redefined in TeX
+
+\usepackage{alltt}
+\usepackage{geometry}
+\geometry{verbose, tmargin=2.5cm, bmargin=2.5cm, lmargin=2.5cm, rmargin=2.5cm}
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\begin{document}
+
+\title{Shapefiles to Raster Cell Indices}
+\author{Matthew Leonawicz}
+\maketitle
+
+
+
+
+
+
+\section{Introduction}
+\textbf{R} code is provided showing how I convert polygon shapefiles to lists of raster cell indices.
+
+\subsection{Motivation}
+At SNAP I often find myself performing large numbers of data extractions on raster layers by way of shapefiles.
+This can be time consuming with respect to our high-resolution downscaled geotiffs.
+Large raster layers in combination with large (or large numbers of) shapefiles can make for the perfect storm of wasteful and painfully slow processing time.
+In light of the additional fact that such processing is commonplace at SNAP and that almost any data extraction done once is bound to recur at a later date in some overlapping and redundant sense,
+I have moved toward an a priori establishment of the more preliminary and repetitive aspects of common spatial data extraction tasks at SNAP.
+
+\subsection{Details}
+I compile the following:
+
+* Lists of commonly used groups of polygon shapefiles
+* Key raster/geotiff format data sets from which we commonly extract data
+* Settings pertaining to the methods and circumstances under which cell indexing can occur in anticipated, subsequent data extraction exercises
+
+\subsubsection{Capabilities}
+The most straightforward purpose here is to obtain a nested list of groups of related geographic regions based on input shapefiles,
+each such lower list element storing a vector of cell numbers, or indices, pertaining to a given shapefile's spatial location over a given rasterized data set.
+The nested list is named. The top level elements are themselves lists, named based on related shapefile groupings.
+Each of these lists is originally a list of shapefiles but is transformed into a list of vectors of raster layer cell indices.
+
+Sometimes data extraction is performed on SNAP data sets with explicit a priori removal of \texttt{NA} values.
+Anticipating this context of usage, cell indices corresponding to shapefiles are also obtained with respect to an NA-omitted version of a raster layer.
+
+Additionally, the context of data extraction procedures sometimes includes sampling methods where not all raster cells are used.
+Sampling may be applied to rasterized objects in \textbf{R} prior to doing any other work with them.
+As with \texttt{NA} removal, this may be done to improve computational efficiencies.
+Under these circumstances, obtaining cell indices by shapefile in advance would not work.
+However, the code below also provides an example of one a priori sampling schemes, the five percent random sample.
+In anticipation of commonly performing such sampling on raster layers,
+here this is done in advance by obtaining a representative sample for each shapefile region.
+
+\subsubsection{Limitations}
+Obviously, the vector of cell indices for a shapefile differs for different rasterized data sets.
+At this time, cell index nested lists are produced for two common rasterized data products at SNAP:
+
+* Alaska-Canada 2-km downscaled climate data
+* Alaska-Canada 1-km Alfresco simulation data
+
+Although the extents are identical, resolutions differ, and hence so do cell numbers pertaining to any given polygon shapefile.
+Furthermore, taking the climate and Alfresco datasets as an example again, even if they were the same resolution,
+the Alfresco map has spatial regions of \texttt{NA} where data values exist in the climate layers.
+This would have an independent effect on the NA-omitted versions of the nested lists.
+It would also affect sampled versions where \texttt{NA} cells are removed.
+
+These are not really limitations, but trivial facts.
+The thing to remain aware of is simply that any version of these polygon shapefile-specific nested lists of cell numbers are of course indexed with respect to a specific rasterized dataset.
+
+\section{Related items}
+
+\subsection{Files and Data}
+Input files include polygon shapefiles commonly used at SNAP and two of SNAP's current geotiff data products, Alaska-Canada 2-km downscaled climate data and 1-km Alfresco simulation outputs.
+Output files are \textbf{R} workspaces, .RData files.
+There is one workspace storing each version of a nested list for each type of rasterized data set.
+
+\subsection{Code flow}
+The code flow is simple for this task, only involving a single \textbf{R} script.
+However, a diagram is provided here to show it in the context of both input and output data.
+
+ADD LATER
+
+\section{R code}
+
+\subsection{Initial setup}
+
+Load required packages, define output directory, and load shapefiles.
+Shapefiles are organized into related groups.
+I ensure certain idiosyncrasies are addressed, such as reprojection of shapefiles with differing coordinate reference systems.
+Some shapefiles also contain single polygon regions whereas others contain multiple.
+Care must be taken to ensure all object manipulation is as intended.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlkwd{library}\hlstd{(raster)}
+\hlkwd{library}\hlstd{(maptools)}
+\hlkwd{library}\hlstd{(parallel)}
+
+\hlstd{outDir} \hlkwb{<-} \hlstr{"/workspace/UA/mfleonawicz/Leonawicz/Projects/2014/DataExtraction/workspaces"}
+
+\hlcom{# Political boundaries}
+\hlstd{Alaska_shp} \hlkwb{<-} \hlkwd{shapefile}\hlstd{(}\hlstr{"/workspace/Shared/Users/mfleonawicz/shapefiles/Political/Alaska"}\hlstd{)}
+\hlstd{Alberta_shp} \hlkwb{<-} \hlkwd{shapefile}\hlstd{(}\hlstr{"/workspace/Shared/Users/mfleonawicz/shapefiles/Political/alberta_albers"}\hlstd{)}
+\hlstd{BC_shp} \hlkwb{<-} \hlkwd{shapefile}\hlstd{(}\hlstr{"/workspace/Shared/Users/mfleonawicz/shapefiles/Political/BC_albers"}\hlstd{)}
+
+\hlcom{# Alaska ecoregions}
+\hlstd{eco32_shp} \hlkwb{<-} \hlkwd{shapefile}\hlstd{(}\hlstr{"/workspace/Shared/Users/mfleonawicz/shapefiles/AK_ecoregions/akecoregions"}\hlstd{)}
+\hlstd{eco32_shp} \hlkwb{<-} \hlkwd{spTransform}\hlstd{(eco32_shp,} \hlkwd{CRS}\hlstd{(}\hlkwd{projection}\hlstd{(Alaska_shp)))}
+\hlstd{eco9_shp} \hlkwb{<-} \hlkwd{unionSpatialPolygons}\hlstd{(eco32_shp, eco32_shp}\hlopt{@}\hlkwc{data}\hlopt{$}\hlstd{LEVEL_2)}
+\hlstd{eco3_shp} \hlkwb{<-} \hlkwd{unionSpatialPolygons}\hlstd{(eco32_shp, eco32_shp}\hlopt{@}\hlkwc{data}\hlopt{$}\hlstd{LEVEL_1)}
+
+\hlstd{eco32_IDs} \hlkwb{<-} \hlkwd{gsub}\hlstd{(}\hlstr{"\textbackslash{}\textbackslash{}."}\hlstd{,} \hlstr{""}\hlstd{,} \hlkwd{as.data.frame}\hlstd{(eco32_shp)[,} \hlnum{1}\hlstd{])}
+\hlstd{eco9_IDs} \hlkwb{<-} \hlkwd{sapply}\hlstd{(}\hlkwd{slot}\hlstd{(eco9_shp,} \hlstr{"polygons"}\hlstd{),} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)} \hlkwd{slot}\hlstd{(x,} \hlstr{"ID"}\hlstd{))}
+\hlstd{eco3_IDs} \hlkwb{<-} \hlkwd{sapply}\hlstd{(}\hlkwd{slot}\hlstd{(eco3_shp,} \hlstr{"polygons"}\hlstd{),} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{)} \hlkwd{slot}\hlstd{(x,} \hlstr{"ID"}\hlstd{))}
+
+\hlcom{# LCC regions}
+\hlstd{LCC_shp} \hlkwb{<-} \hlkwd{shapefile}\hlstd{(}\hlstr{"/workspace/Shared/Users/mfleonawicz/shapefiles/LCC/LCC_summarization_units_singlepartPolys"}\hlstd{)}
+\hlstd{LCC_IDs} \hlkwb{<-} \hlkwd{gsub}\hlstd{(}\hlstr{" LCC"}\hlstd{,} \hlstr{""}\hlstd{,} \hlkwd{gsub}\hlstd{(}\hlstr{"South"}\hlstd{,} \hlstr{"S"}\hlstd{,} \hlkwd{gsub}\hlstd{(}\hlstr{"western"}\hlstd{,} \hlstr{"W"}\hlstd{,} \hlkwd{gsub}\hlstd{(}\hlstr{"Western"}\hlstd{,}
+    \hlstr{"W"}\hlstd{,} \hlkwd{gsub}\hlstd{(}\hlstr{"North"}\hlstd{,} \hlstr{"N"}\hlstd{,} \hlkwd{gsub}\hlstd{(}\hlstr{"  "}\hlstd{,} \hlstr{" "}\hlstd{,} \hlkwd{gsub}\hlstd{(}\hlstr{"\textbackslash{}\textbackslash{}."}\hlstd{,} \hlstr{""}\hlstd{,} \hlkwd{as.data.frame}\hlstd{(LCC_shp)[,}
+        \hlnum{1}\hlstd{])))))))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\subsection{Organization and metadata}
+Lists of names and IDs must be created to prepare for cell index extraction by shapefile.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# organize shapefile lists and associated metadata}
+\hlstd{shp.names} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"Political 0"}\hlstd{,} \hlstr{"Political 1"}\hlstd{,} \hlstr{"Political 2"}\hlstd{,} \hlstr{"Political 3"}\hlstd{,} \hlstr{"Alaska L3 Ecoregions"}\hlstd{,}
+    \hlstr{"Alaska L2 Ecoregions"}\hlstd{,} \hlstr{"Alaska L1 Ecoregions"}\hlstd{,} \hlstr{"LCC Regions"}\hlstd{)}
+\hlstd{shp.list} \hlkwb{<-} \hlkwd{list}\hlstd{(Alaska_shp, Alberta_shp, BC_shp, eco32_shp, eco9_shp, eco3_shp,}
+    \hlstd{LCC_shp)}
+\hlstd{shp.IDs.list} \hlkwb{<-} \hlkwd{list}\hlstd{(}\hlstr{"Alaska"}\hlstd{,} \hlstr{"Alberta"}\hlstd{,} \hlstr{"British Columbia"}\hlstd{, eco32_IDs, eco9_IDs,}
+    \hlstd{eco3_IDs, LCC_IDs)}
+\hlstd{region.names.out} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwd{c}\hlstd{(}\hlstr{"AK-CAN"}\hlstd{,} \hlkwd{unlist}\hlstd{(shp.IDs.list[}\hlnum{1}\hlopt{:}\hlnum{3}\hlstd{]))), shp.IDs.list[}\hlnum{4}\hlopt{:}\hlkwd{length}\hlstd{(shp.IDs.list)])}  \hlcom{# prefix with full domain}
+\hlkwd{names}\hlstd{(region.names.out)} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlstr{"Political"}\hlstd{, shp.names[}\hlnum{5}\hlopt{:}\hlkwd{length}\hlstd{(shp.names)])}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\subsection{Alfresco example}
+A representative map layer is loaded with the \texttt{raster} package.
+A nested list of cell numbers is obtained efficiently for several shapefiles by using \texttt{mclapply} from the \texttt{parallel} package.
+This is further processed with a call to \texttt{rapply} and then a full extent region is appended to the list (no shapefile was used here of course).
+
+At this point, subsampling and/or \texttt{NA} removal is done,
+resulting, in this example, in four total versions of nested lists which can be used in conjunction with SNAP's Alfresco output geotiffs
+under various conditions of data extraction for any and all of the input spatial regions.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# For AK-CAN 1-km ALfresco extractions}
+\hlstd{dirs} \hlkwb{<-} \hlkwd{list.files}\hlstd{(}\hlstr{"/big_scratch/apbennett/Calibration/FinalCalib"}\hlstd{,} \hlkwc{pattern} \hlstd{=} \hlstr{".*.sres.*."}\hlstd{,}
+    \hlkwc{full} \hlstd{= T)}
+\hlstd{r} \hlkwb{<-} \hlkwd{readAll}\hlstd{(}\hlkwd{raster}\hlstd{(}\hlkwd{list.files}\hlstd{(}\hlkwd{file.path}\hlstd{(dirs[}\hlnum{1}\hlstd{],} \hlstr{"Maps"}\hlstd{),} \hlkwc{pattern} \hlstd{=} \hlstr{"^Age_0_.*.tif$"}\hlstd{,}
+    \hlkwc{full} \hlstd{= T)[}\hlnum{1}\hlstd{]))}  \hlcom{# template done}
+\hlstd{data.ind} \hlkwb{<-} \hlkwd{Which}\hlstd{(}\hlopt{!}\hlkwd{is.na}\hlstd{(r),} \hlkwc{cells} \hlstd{= T)}
+\hlstd{cells_shp_list} \hlkwb{<-} \hlkwd{mclapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(shp.list),} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{shp}\hlstd{,} \hlkwc{r}\hlstd{)} \hlkwd{extract}\hlstd{(r,}
+    \hlstd{shp[[x]],} \hlkwc{cellnumbers} \hlstd{= T),} \hlkwc{shp} \hlstd{= shp.list,} \hlkwc{r} \hlstd{= r,} \hlkwc{mc.cores} \hlstd{=} \hlnum{32}\hlstd{)}
+\hlstd{cells_shp_list} \hlkwb{<-} \hlkwd{rapply}\hlstd{(cells_shp_list,} \hlkwc{f} \hlstd{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{d.ind}\hlstd{)} \hlkwd{intersect}\hlstd{(x[,}
+    \hlnum{1}\hlstd{], d.ind),} \hlkwc{classes} \hlstd{=} \hlstr{"matrix"}\hlstd{,} \hlkwc{how} \hlstd{=} \hlstr{"replace"}\hlstd{,} \hlkwc{d.ind} \hlstd{= data.ind)}
+\hlstd{cells_shp_list} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{list}\hlstd{(data.ind), cells_shp_list[[}\hlnum{1}\hlstd{]], cells_shp_list[[}\hlnum{2}\hlstd{]],}
+    \hlstd{cells_shp_list[[}\hlnum{3}\hlstd{]])), cells_shp_list[}\hlopt{-}\hlkwd{c}\hlstd{(}\hlnum{1}\hlopt{:}\hlnum{3}\hlstd{)])}  \hlcom{# Combine full domain and other political boundaries into one group}
+
+\hlstd{n.shp} \hlkwb{<-} \hlkwd{sum}\hlstd{(}\hlkwd{unlist}\hlstd{(}\hlkwd{lapply}\hlstd{(cells_shp_list, length)))}
+\hlkwd{names}\hlstd{(cells_shp_list)} \hlkwb{<-} \hlkwd{names}\hlstd{(region.names.out)}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(cells_shp_list))} \hlkwd{names}\hlstd{(cells_shp_list[[i]])} \hlkwb{<-} \hlstd{region.names.out[[i]]}
+
+\hlstd{cells_shp_list_5pct} \hlkwb{<-} \hlkwd{rapply}\hlstd{(cells_shp_list,} \hlkwc{f} \hlstd{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{pct}\hlstd{)} \hlkwd{sort}\hlstd{(}\hlkwd{sample}\hlstd{(x,}
+    \hlkwc{size} \hlstd{= pct} \hlopt{*} \hlkwd{length}\hlstd{(x),} \hlkwc{replace} \hlstd{=} \hlnum{FALSE}\hlstd{)),} \hlkwc{classes} \hlstd{=} \hlstr{"integer"}\hlstd{,} \hlkwc{how} \hlstd{=} \hlstr{"replace"}\hlstd{,}
+    \hlkwc{pct} \hlstd{=} \hlnum{0.05}\hlstd{)}
+\hlstd{cells_shp_list_rmNA} \hlkwb{<-} \hlkwd{rapply}\hlstd{(cells_shp_list,} \hlkwc{f} \hlstd{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{n.cells}\hlstd{,} \hlkwc{d.ind}\hlstd{)} \hlkwd{which}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n.cells} \hlopt{%in%}
+    \hlstd{x)[d.ind]),} \hlkwc{classes} \hlstd{=} \hlstr{"integer"}\hlstd{,} \hlkwc{how} \hlstd{=} \hlstr{"replace"}\hlstd{,} \hlkwc{n.cells} \hlstd{=} \hlkwd{ncell}\hlstd{(r),} \hlkwc{d.ind} \hlstd{= data.ind)}
+\hlstd{cells_shp_list_rmNA_5pct} \hlkwb{<-} \hlkwd{rapply}\hlstd{(cells_shp_list_5pct,} \hlkwc{f} \hlstd{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{n.cells}\hlstd{,}
+    \hlkwc{d.ind}\hlstd{)} \hlkwd{which}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n.cells} \hlopt{%in%} \hlstd{x)[d.ind]),} \hlkwc{classes} \hlstd{=} \hlstr{"integer"}\hlstd{,} \hlkwc{how} \hlstd{=} \hlstr{"replace"}\hlstd{,}
+    \hlkwc{n.cells} \hlstd{=} \hlkwd{ncell}\hlstd{(r),} \hlkwc{d.ind} \hlstd{= data.ind)}
+
+\hlkwd{save}\hlstd{(cells_shp_list, region.names.out, n.shp,} \hlkwc{file} \hlstd{=} \hlkwd{file.path}\hlstd{(outDir,} \hlstr{"shapes2cells_AKCAN1km.RData"}\hlstd{))}
+\hlkwd{save}\hlstd{(cells_shp_list_5pct, region.names.out, n.shp,} \hlkwc{file} \hlstd{=} \hlkwd{file.path}\hlstd{(outDir,}
+    \hlstr{"shapes2cells_AKCAN1km_5pct.RData"}\hlstd{))}
+\hlkwd{save}\hlstd{(cells_shp_list_rmNA, region.names.out, n.shp,} \hlkwc{file} \hlstd{=} \hlkwd{file.path}\hlstd{(outDir,}
+    \hlstr{"shapes2cells_AKCAN1km_rmNA.RData"}\hlstd{))}
+\hlkwd{save}\hlstd{(cells_shp_list_rmNA_5pct, region.names.out, n.shp,} \hlkwc{file} \hlstd{=} \hlkwd{file.path}\hlstd{(outDir,}
+    \hlstr{"shapes2cells_AKCAN1km_rmNA_5pct.RData"}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\subsection{Climate example}
+THe process for this data set is the same as above.
+
+\begin{knitrout}
+\definecolor{shadecolor}{rgb}{0, 0.169, 0.212}\color{fgcolor}\begin{kframe}
+\begin{alltt}
+\hlcom{# For AK-CAN 2-km extractions}
+\hlstd{r} \hlkwb{<-} \hlkwd{readAll}\hlstd{(}\hlkwd{raster}\hlstd{(}\hlstr{"/Data/Base_Data/Climate/AK_CAN_2km/projected/AR5_CMIP5_models/rcp60/5modelAvg/pr/pr_total_mm_AR5_5modelAvg_rcp60_01_2006.tif"}\hlstd{))}  \hlcom{# template done}
+\hlstd{data.ind} \hlkwb{<-} \hlkwd{Which}\hlstd{(}\hlopt{!}\hlkwd{is.na}\hlstd{(r),} \hlkwc{cells} \hlstd{= T)}
+\hlstd{cells_shp_list} \hlkwb{<-} \hlkwd{mclapply}\hlstd{(}\hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(shp.list),} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{shp}\hlstd{,} \hlkwc{r}\hlstd{)} \hlkwd{extract}\hlstd{(r,}
+    \hlstd{shp[[x]],} \hlkwc{cellnumbers} \hlstd{= T),} \hlkwc{shp} \hlstd{= shp.list,} \hlkwc{r} \hlstd{= r,} \hlkwc{mc.cores} \hlstd{=} \hlnum{32}\hlstd{)}
+\hlstd{cells_shp_list} \hlkwb{<-} \hlkwd{rapply}\hlstd{(cells_shp_list,} \hlkwc{f} \hlstd{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{d.ind}\hlstd{)} \hlkwd{intersect}\hlstd{(x[,}
+    \hlnum{1}\hlstd{], d.ind),} \hlkwc{classes} \hlstd{=} \hlstr{"matrix"}\hlstd{,} \hlkwc{how} \hlstd{=} \hlstr{"replace"}\hlstd{,} \hlkwc{d.ind} \hlstd{= data.ind)}
+\hlstd{cells_shp_list} \hlkwb{<-} \hlkwd{c}\hlstd{(}\hlkwd{list}\hlstd{(}\hlkwd{c}\hlstd{(}\hlkwd{list}\hlstd{(data.ind), cells_shp_list[[}\hlnum{1}\hlstd{]], cells_shp_list[[}\hlnum{2}\hlstd{]],}
+    \hlstd{cells_shp_list[[}\hlnum{3}\hlstd{]])), cells_shp_list[}\hlopt{-}\hlkwd{c}\hlstd{(}\hlnum{1}\hlopt{:}\hlnum{3}\hlstd{)])}  \hlcom{# Combine full domain and other political boundaries into one group}
+
+\hlstd{n.shp} \hlkwb{<-} \hlkwd{sum}\hlstd{(}\hlkwd{unlist}\hlstd{(}\hlkwd{lapply}\hlstd{(cells_shp_list, length)))}
+\hlkwd{names}\hlstd{(cells_shp_list)} \hlkwb{<-} \hlkwd{names}\hlstd{(region.names.out)}
+\hlkwa{for} \hlstd{(i} \hlkwa{in} \hlnum{1}\hlopt{:}\hlkwd{length}\hlstd{(cells_shp_list))} \hlkwd{names}\hlstd{(cells_shp_list[[i]])} \hlkwb{<-} \hlstd{region.names.out[[i]]}
+
+\hlstd{cells_shp_list_5pct} \hlkwb{<-} \hlkwd{rapply}\hlstd{(cells_shp_list,} \hlkwc{f} \hlstd{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{pct}\hlstd{)} \hlkwd{sort}\hlstd{(}\hlkwd{sample}\hlstd{(x,}
+    \hlkwc{size} \hlstd{= pct} \hlopt{*} \hlkwd{length}\hlstd{(x),} \hlkwc{replace} \hlstd{=} \hlnum{FALSE}\hlstd{)),} \hlkwc{classes} \hlstd{=} \hlstr{"integer"}\hlstd{,} \hlkwc{how} \hlstd{=} \hlstr{"replace"}\hlstd{,}
+    \hlkwc{pct} \hlstd{=} \hlnum{0.05}\hlstd{)}
+\hlstd{cells_shp_list_rmNA} \hlkwb{<-} \hlkwd{rapply}\hlstd{(cells_shp_list,} \hlkwc{f} \hlstd{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{n.cells}\hlstd{,} \hlkwc{d.ind}\hlstd{)} \hlkwd{which}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n.cells} \hlopt{%in%}
+    \hlstd{x)[d.ind]),} \hlkwc{classes} \hlstd{=} \hlstr{"integer"}\hlstd{,} \hlkwc{how} \hlstd{=} \hlstr{"replace"}\hlstd{,} \hlkwc{n.cells} \hlstd{=} \hlkwd{ncell}\hlstd{(r),} \hlkwc{d.ind} \hlstd{= data.ind)}
+\hlstd{cells_shp_list_rmNA_5pct} \hlkwb{<-} \hlkwd{rapply}\hlstd{(cells_shp_list_5pct,} \hlkwc{f} \hlstd{=} \hlkwa{function}\hlstd{(}\hlkwc{x}\hlstd{,} \hlkwc{n.cells}\hlstd{,}
+    \hlkwc{d.ind}\hlstd{)} \hlkwd{which}\hlstd{(}\hlkwd{c}\hlstd{(}\hlnum{1}\hlopt{:}\hlstd{n.cells} \hlopt{%in%} \hlstd{x)[d.ind]),} \hlkwc{classes} \hlstd{=} \hlstr{"integer"}\hlstd{,} \hlkwc{how} \hlstd{=} \hlstr{"replace"}\hlstd{,}
+    \hlkwc{n.cells} \hlstd{=} \hlkwd{ncell}\hlstd{(r),} \hlkwc{d.ind} \hlstd{= data.ind)}
+
+\hlkwd{save}\hlstd{(cells_shp_list, region.names.out, n.shp,} \hlkwc{file} \hlstd{=} \hlkwd{file.path}\hlstd{(outDir,} \hlstr{"shapes2cells_AKCAN2km.RData"}\hlstd{))}
+\hlkwd{save}\hlstd{(cells_shp_list_5pct, region.names.out, n.shp,} \hlkwc{file} \hlstd{=} \hlkwd{file.path}\hlstd{(outDir,}
+    \hlstr{"shapes2cells_AKCAN2km_5pct.RData"}\hlstd{))}
+\hlkwd{save}\hlstd{(cells_shp_list_rmNA, region.names.out, n.shp,} \hlkwc{file} \hlstd{=} \hlkwd{file.path}\hlstd{(outDir,}
+    \hlstr{"shapes2cells_AKCAN2km_rmNA.RData"}\hlstd{))}
+\hlkwd{save}\hlstd{(cells_shp_list_rmNA_5pct, region.names.out, n.shp,} \hlkwc{file} \hlstd{=} \hlkwd{file.path}\hlstd{(outDir,}
+    \hlstr{"shapes2cells_AKCAN2km_rmNA_5pct.RData"}\hlstd{))}
+\end{alltt}
+\end{kframe}
+\end{knitrout}
+
+\end{document}

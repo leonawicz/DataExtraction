@@ -1,0 +1,82 @@
+\documentclass{article}
+\usepackage{geometry}
+\geometry{verbose, tmargin=2.5cm, bmargin=2.5cm, lmargin=2.5cm, rmargin=2.5cm}
+\begin{document}
+
+\title{Data Extraction Evaluation}
+\author{Matthew Leonawicz}
+\maketitle
+
+<<highlight, echo=FALSE>>=
+knit_theme$set(knit_theme$get('solarized-dark'))
+@
+
+<<knitr_setup, echo=FALSE>>=
+opts_chunk$set(cache=FALSE, echo=TRUE, eval=FALSE, tidy=TRUE, message=FALSE, warning=FALSE)
+read_chunk("../../code/extract_eval.R")
+@
+
+\section{\textbf{R} code: Statistical sampling for spatial data extraction}
+
+\subsection{Setup}
+
+\subsubsection{Packages}
+
+<<packages>>=
+@
+
+\subsubsection{Additional setup}
+
+<<setup>>=
+@
+
+\subsubsection{Examine population mean}
+
+<<means>>=
+@
+
+\subsubsection{Sampling setup}
+
+<<sampling>>=
+@
+
+\subsection{Sample mean by size}
+
+<<size>>=
+@
+
+\subsection{Significant figures}
+
+<<sigdig>>=
+@
+
+\subsection{Compute time by sample size}
+
+<<time>>=
+@
+
+\subsection{Benchmarks}
+
+<<benchmarks3>>=
+@
+
+<<benchmarks4>>=
+@
+
+\subsection{Benchmarks: median compute times}
+
+<<benchmarks4med1>>=
+@
+
+<<benchmarks4med2>>=
+@
+
+\subsection{Final benchmarks}
+
+<<benchmarks1>>=
+@
+
+<<benchmarks2>>=
+@
+
+\end{document}
