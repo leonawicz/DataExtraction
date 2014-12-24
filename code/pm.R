@@ -74,5 +74,13 @@ files.Rmd <- list.files(pattern=".Rmd$", full=T)
 # @knitr save
 # write all yaml front-matter-specified outputs to Rmd directory for all Rmd files
 lapply(files.Rmd, render, output_format="all")
-
 moveDocs(path.docs=docs.path)
+
+# if also making PDFs for a project, speed up the Rmd to Rnw file conversion/duplication
+rnw.path <- file.path(docs.path, "Rnw")
+setwd(rnw.path)
+#themes <- knit_theme$get()
+highlight <- "solarized-dark"
+convertDocs(path=rmd.path, emphasis="replace", overwrite=TRUE, highlight=highlight) # Be careful
+lapply(list.files(pattern=".Rnw$"), knit2pdf)
+moveDocs(path.docs=docs.path, type="pdf", remove.latex=FALSE)
