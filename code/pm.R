@@ -1,5 +1,5 @@
 # @knitr create_project
-source("C:/github/ProjectManagement/code/projman.R") # eventually load a package instead of source script
+source("C:/github/ProjectManagement/code/rpm.R") # eventually load a package instead of source script
 proj.name <- "DataExtraction" # Project name
 proj.location <- matt.proj.path # Use default file location
 
@@ -25,7 +25,8 @@ chunkNames(path=file.path(proj.location, proj.name, "code"), append.new=TRUE)
 
 # @knitr website
 # Setup for generating a project website
-proj.github <- file.path("https://github.com/leonawicz", proj.name)
+user <- "leonawicz"
+proj.github <- file.path("https://github.com", user, proj.name)
 index.url <- "index.html"
 #file.copy(index.url, "index.html")
 
@@ -36,14 +37,14 @@ proj.submenu <- list(
 	c("Project", "Introduction", "Case study: sample mean", "Results", "Next steps", "divider", "R Code", "Complete code"),
 	c("Project", "Introduction", "Simulations", "divider", "Use cases", "Case 1: Climate", "Case 2: Vegetation", "divider", "R code", "Basic simulation"),
 	c("Project", "Introduction", "Related items", "divider", "R Code", "Complete code"),
-	c("Projects diagram", "divider", "About", "Other")
+	c("empty")
 )
 
 proj.files <- list(
 	c("header", "eval_intro.html", "eval_case.html", "eval_res.html", "eval_next.html", "divider", "header", "extract_eval_code.html"),
 	c("header", "dens_intro.html", "dens_sims.html", "divider", "header", "dens_use1.html", "dens_use2.html", "divider", "header", "dens_sims_code.html"),
 	c("header", "ind_intro.html", "ind_related.html", "divider", "header", "ind_code.html"),
-	c("proj_sankey.html", "divider", "proj_intro.html", "proj_intro.html")
+	c("http://leonawicz.github.io")
 )
 
 # generate navigation bar html file common to all pages

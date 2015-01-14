@@ -124,14 +124,7 @@ body {
               <li><a href="ind_code.html">Complete code</a></li>
             </ul>
 
-          <li class="dropdown">
-            <a href="all-projects" class="dropdown-toggle" data-toggle="dropdown">All Projects <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="proj_sankey.html">Projects diagram</a></li>
-              <li class="divider"></li>
-              <li><a href="proj_intro.html">About</a></li>
-              <li><a href="proj_intro.html">Other</a></li>
-            </ul>
+          <li><a href="http://leonawicz.github.io">All Projects</a></li>
         </ul>
         <ul class="nav pull-right">
           <a class="btn btn-primary" href="https://github.com/leonawicz/DataExtraction">
@@ -156,29 +149,29 @@ body {
 <p>The plots below benchmark different sample mean computations. Comparisons involve the sample mean of the entire data set and do not involve the main approach outlined above which focuses on efficiency gains by taking the mean of a smaller, representative sample. This provides some insight into how it is beneficial nonetheless to considering the right programmatic approach in conjunction with statistical efficiencies.</p>
 <pre><code>## Unit: milliseconds
 ##                              expr       min        lq      mean    median
-##                mean(v, na.rm = T) 393.68586 395.10932 404.52179 397.43296
-##                  mean(v[dat.ind])  13.85729  14.06022  15.85771  14.14715
-##                sum(v[dat.ind])/nd  12.40554  12.57301  14.55129  12.63770
-##       .Internal(mean(v[dat.ind]))  13.83086  13.97905  15.51085  14.06442
-##  .Primitive(&quot;sum&quot;)(v[dat.ind])/nd  12.45405  12.56524  15.23804  12.65247
+##                mean(v, na.rm = T) 392.99513 394.43071 400.31757 395.33059
+##                  mean(v[dat.ind])  13.24151  14.03099  15.86505  14.09039
+##                sum(v[dat.ind])/nd  11.65945  12.51734  13.88396  12.57037
+##       .Internal(mean(v[dat.ind]))  13.15816  13.94795  15.56267  14.00098
+##  .Primitive(&quot;sum&quot;)(v[dat.ind])/nd  11.78354  12.53725  15.39732  12.59525
 ##         uq       max neval
-##  409.96617 512.88401   100
-##   14.43420  38.15988   100
-##   12.82694  37.51175   100
-##   14.23905  38.25473   100
-##   12.96254  36.27708   100</code></pre>
+##  409.14232 417.41217   100
+##   14.16721 124.87611   100
+##   12.63381  36.23882   100
+##   14.08495  37.44551   100
+##   12.65838 124.72123   100</code></pre>
 <p><img src="eval_next_files/figure-html/benchmarks1-1.png" /></p>
 <pre><code>## Unit: milliseconds
 ##                expr       min        lq      mean    median        uq
-##    mean(v[dat.ind]) 13.910163 14.068307 15.836762 14.112624 14.186799
-##  sum(v[dat.ind])/nd 12.419843 12.567880 14.313123 12.611731 12.691659
-##             mean(d)  2.947361  2.965710  3.001732  2.980016  3.007850
-##           sum(d)/nd  1.482233  1.493429  1.518239  1.500271  1.515354
+##    mean(v[dat.ind]) 13.121464 14.090699 16.192409 14.269369 14.885930
+##  sum(v[dat.ind])/nd 11.647627 12.610644 14.755189 12.793668 13.407429
+##             mean(d)  2.947673  2.977996  3.080655  3.012672  3.073939
+##           sum(d)/nd  1.483167  1.499650  1.569516  1.516289  1.562162
 ##         max neval
-##  131.861508  1000
-##  128.139443  1000
-##    4.179860  1000
-##    2.301721  1000</code></pre>
+##  130.332315  1000
+##  139.616330  1000
+##    7.570088  1000
+##    2.691718  1000</code></pre>
 <p><img src="eval_next_files/figure-html/benchmarks2-1.png" /></p>
 </div>
 
