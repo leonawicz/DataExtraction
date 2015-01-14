@@ -151,14 +151,7 @@ code > span.er { color: #c3bf9f; }
               <li><a href="ind_code.html">Complete code</a></li>
             </ul>
 
-          <li class="dropdown">
-            <a href="all-projects" class="dropdown-toggle" data-toggle="dropdown">All Projects <b class="caret"></b></a>
-            <ul class="dropdown-menu">
-              <li><a href="proj_sankey.html">Projects diagram</a></li>
-              <li class="divider"></li>
-              <li><a href="proj_intro.html">About</a></li>
-              <li><a href="proj_intro.html">Other</a></li>
-            </ul>
+          <li><a href="http://leonawicz.github.io">All Projects</a></li>
         </ul>
         <ul class="nav pull-right">
           <a class="btn btn-primary" href="https://github.com/leonawicz/DataExtraction">
@@ -304,15 +297,15 @@ s100pct &lt;-<span class="st"> </span>d.sub[, <span class="dv">1</span>]</code><
 mb3</code></pre>
 <pre><code>## Unit: microseconds
 ##                          expr    min     lq      mean median     uq
-##  sum(s005pct)/length(s005pct)  4.976  5.287  5.593206  5.287  5.598
-##  sum(s010pct)/length(s010pct)  9.641  9.952 10.206170  9.952 10.263
-##  sum(s025pct)/length(s025pct) 23.325 23.636 24.100902 23.637 23.947
-##  sum(s100pct)/length(s100pct) 92.056 92.367 94.069328 92.368 92.678
+##  sum(s005pct)/length(s005pct)  4.977  5.288  5.991606  5.599  5.910
+##  sum(s010pct)/length(s010pct)  9.642  9.953 10.744204  9.953 10.264
+##  sum(s025pct)/length(s025pct) 23.326 23.637 25.192871 23.948 24.570
+##  sum(s100pct)/length(s100pct) 92.057 92.368 97.234920 92.990 94.545
 ##       max neval
-##    91.434 10000
-##   189.711 10000
-##   380.977 10000
-##  7405.256 10000</code></pre>
+##   219.568 10000
+##   263.419 10000
+##   290.476 10000
+##  1026.306 10000</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/benchmark3.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">1600</span>, <span class="dt">res =</span> <span class="dv">200</span>)
 <span class="kw">autoplot</span>(mb3) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Compute time for mean by sample size&quot;</span>, 
     <span class="dt">y =</span> <span class="st">&quot;Function&quot;</span>)</code></pre>
@@ -324,39 +317,39 @@ mb3</code></pre>
 mb4</code></pre>
 <pre><code>## Unit: microseconds
 ##                          expr        min         lq         mean
-##  sum(s005pct)/length(s005pct)      5.287      7.153     10.99080
-##            mean(v, na.rm = T) 392910.224 393667.202 401508.71784
-##              sum(d)/length(d)   1485.343   1494.673   1513.95511
-##                 mean(s005pct)     18.038     20.526     47.34066
-##       median         uq        max neval
-##       9.6410     11.196     22.703   100
-##  395279.2780 406332.114 510015.025   100
-##    1502.1370   1518.932   1832.110   100
-##      57.2245     64.377    108.850   100</code></pre>
+##  sum(s005pct)/length(s005pct)      5.288      7.154     10.96692
+##            mean(v, na.rm = T) 392916.757 394782.454 401966.96705
+##              sum(d)/length(d)   1486.899   1498.406   1517.08164
+##                 mean(s005pct)     18.039     20.527     46.76945
+##       median          uq        max neval
+##       9.6420     10.7305     21.771   100
+##  396446.9340 406652.2910 503252.299   100
+##    1505.7145   1524.0635   1730.413   100
+##      55.6705     63.7560     98.899   100</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">med &lt;-<span class="st"> </span><span class="kw">print</span>(mb4)$median</code></pre>
 <pre><code>## Unit: microseconds
 ##                          expr        min         lq         mean
-##  sum(s005pct)/length(s005pct)      5.287      7.153     10.99080
-##            mean(v, na.rm = T) 392910.224 393667.202 401508.71784
-##              sum(d)/length(d)   1485.343   1494.673   1513.95511
-##                 mean(s005pct)     18.038     20.526     47.34066
-##       median         uq        max neval
-##       9.6410     11.196     22.703   100
-##  395279.2780 406332.114 510015.025   100
-##    1502.1370   1518.932   1832.110   100
-##      57.2245     64.377    108.850   100</code></pre>
+##  sum(s005pct)/length(s005pct)      5.288      7.154     10.96692
+##            mean(v, na.rm = T) 392916.757 394782.454 401966.96705
+##              sum(d)/length(d)   1486.899   1498.406   1517.08164
+##                 mean(s005pct)     18.039     20.527     46.76945
+##       median          uq        max neval
+##       9.6420     10.7305     21.771   100
+##  396446.9340 406652.2910 503252.299   100
+##    1505.7145   1524.0635   1730.413   100
+##      55.6705     63.7560     98.899   100</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(med) &lt;-<span class="st"> </span><span class="kw">print</span>(mb4)$expr</code></pre>
 <pre><code>## Unit: microseconds
 ##                          expr        min         lq         mean
-##  sum(s005pct)/length(s005pct)      5.287      7.153     10.99080
-##            mean(v, na.rm = T) 392910.224 393667.202 401508.71784
-##              sum(d)/length(d)   1485.343   1494.673   1513.95511
-##                 mean(s005pct)     18.038     20.526     47.34066
-##       median         uq        max neval
-##       9.6410     11.196     22.703   100
-##  395279.2780 406332.114 510015.025   100
-##    1502.1370   1518.932   1832.110   100
-##      57.2245     64.377    108.850   100</code></pre>
+##  sum(s005pct)/length(s005pct)      5.288      7.154     10.96692
+##            mean(v, na.rm = T) 392916.757 394782.454 401966.96705
+##              sum(d)/length(d)   1486.899   1498.406   1517.08164
+##                 mean(s005pct)     18.039     20.527     46.76945
+##       median          uq        max neval
+##       9.6420     10.7305     21.771   100
+##  396446.9340 406652.2910 503252.299   100
+##    1505.7145   1524.0635   1730.413   100
+##      55.6705     63.7560     98.899   100</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">med &lt;-<span class="st"> </span>med[<span class="kw">c</span>(<span class="dv">1</span>, <span class="dv">4</span>:<span class="dv">2</span>)]
 
 if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/benchmark4.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">1600</span>, <span class="dt">res =</span> <span class="dv">200</span>)
@@ -403,17 +396,17 @@ if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/benchma
 mb</code></pre>
 <pre><code>## Unit: milliseconds
 ##                              expr       min        lq      mean    median
-##                mean(v, na.rm = T) 392.87166 394.22327 403.45858 397.49827
-##                  mean(v[dat.ind])  13.14821  13.43868  15.67489  14.07235
-##                sum(v[dat.ind])/nd  11.62741  11.87326  13.48359  12.59012
-##       .Internal(mean(v[dat.ind]))  13.10965  13.29593  14.41560  13.92618
-##  .Primitive(&quot;sum&quot;)(v[dat.ind])/nd  11.69708  11.89643  13.81963  12.59540
+##                mean(v, na.rm = T) 392.93728 395.19111 403.15414 398.10177
+##                  mean(v[dat.ind])  11.73067  14.18291  15.26229  14.24947
+##                sum(v[dat.ind])/nd  11.71760  12.69912  15.26086  12.78356
+##       .Internal(mean(v[dat.ind]))  13.17340  14.13548  15.79933  14.20111
+##  .Primitive(&quot;sum&quot;)(v[dat.ind])/nd  11.73720  12.70472  13.83175  12.79258
 ##         uq       max neval
-##  409.93507 509.07176   100
-##   14.21852  40.02527   100
-##   12.69897  42.67686   100
-##   14.11776  31.70504   100
-##   12.73520  37.40414   100</code></pre>
+##  409.04000 503.50950   100
+##   14.37355  37.57893   100
+##   12.98416  40.00941   100
+##   14.39082  38.76011   100
+##   13.00033  34.67791   100</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/benchmark1.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">1600</span>, <span class="dt">res =</span> <span class="dv">200</span>)
 <span class="kw">autoplot</span>(mb) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Comparisons of time to index data and compute mean&quot;</span>, 
     <span class="dt">y =</span> <span class="st">&quot;Function&quot;</span>)</code></pre>
@@ -423,16 +416,16 @@ mb</code></pre>
     <span class="dt">times =</span> <span class="dv">1000</span>)
 mb2</code></pre>
 <pre><code>## Unit: milliseconds
-##                expr       min        lq      mean    median        uq
-##    mean(v[dat.ind]) 13.119908 13.404630 15.541724 14.101739 14.188353
-##  sum(v[dat.ind])/nd 11.653225 11.956762 13.827187 12.612976 12.700678
-##             mean(d)  2.946117  2.964777  2.996609  2.975973  3.005362
-##           sum(d)/nd  1.482855  1.494673  1.512901  1.500271  1.512711
+##                expr       min       lq      mean    median        uq
+##    mean(v[dat.ind]) 11.576719 14.22894 15.895620 14.328616 14.527656
+##  sum(v[dat.ind])/nd 11.643273 12.73131 14.583438 12.826945 13.026453
+##             mean(d)  2.948917  2.97473  3.043755  2.997744  3.047505
+##           sum(d)/nd  1.484721  1.49965  1.544993  1.510224  1.538680
 ##         max neval
-##  128.038989  1000
-##  126.924983  1000
-##    3.781155  1000
-##    2.961356  1000</code></pre>
+##  125.784230  1000
+##   43.318461  1000
+##    4.205674  1000
+##    2.668394  1000</code></pre>
 <pre class="sourceCode r"><code class="sourceCode r">if (no.knit) <span class="kw">png</span>(<span class="st">&quot;../plots/benchmark2.png&quot;</span>, <span class="dt">width =</span> <span class="dv">2000</span>, <span class="dt">height =</span> <span class="dv">1600</span>, <span class="dt">res =</span> <span class="dv">200</span>)
 <span class="kw">autoplot</span>(mb2) +<span class="st"> </span><span class="kw">theme_bw</span>() +<span class="st"> </span><span class="kw">labs</span>(<span class="dt">title =</span> <span class="st">&quot;Comparisons of time to compute mean&quot;</span>, 
     <span class="dt">y =</span> <span class="st">&quot;Function&quot;</span>)</code></pre>
