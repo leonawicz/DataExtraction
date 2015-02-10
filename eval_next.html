@@ -14,10 +14,11 @@
 <title>Data Extraction Evaluation</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link href="libs/bootstrap-2.3.2/css/united.min.css" rel="stylesheet" />
-<link href="libs/bootstrap-2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
 <style type="text/css">
 
 /* padding for bootstrap navbar */
@@ -83,63 +84,72 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
 </style>
 <div class="container-fluid main-container">
 
 <div class="navbar navbar-default navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="brand" href="index.html">Data Extraction</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
+      <a class="navbar-brand" href="index.html">Data Extraction</a>
+      </div>
+      <div class="navbar-collapse collapse navbar-responsive-collapse">
+        <ul class="nav navbar-nav">
           <li class="dropdown">
             <a href="extraction-evaluation" class="dropdown-toggle" data-toggle="dropdown">Extraction evaluation <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li class="nav-header">Project</li>
+              <li class="dropdown-header">Project</li>
               <li><a href="eval_intro.html">Introduction</a></li>
               <li><a href="eval_case.html">Case study: sample mean</a></li>
               <li><a href="eval_res.html">Results</a></li>
               <li><a href="eval_next.html">Next steps</a></li>
               <li class="divider"></li>
-              <li class="nav-header">R Code</li>
+              <li class="dropdown-header">R Code</li>
               <li><a href="extract_eval_code.html">Complete code</a></li>
             </ul>
 
           <li class="dropdown">
             <a href="density-estimation" class="dropdown-toggle" data-toggle="dropdown">Density estimation <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li class="nav-header">Project</li>
+              <li class="dropdown-header">Project</li>
               <li><a href="dens_intro.html">Introduction</a></li>
               <li><a href="dens_sims.html">Simulations</a></li>
               <li class="divider"></li>
-              <li class="nav-header">Use cases</li>
+              <li class="dropdown-header">Use cases</li>
               <li><a href="dens_use1.html">Case 1: Climate</a></li>
               <li><a href="dens_use2.html">Case 2: Vegetation</a></li>
               <li class="divider"></li>
-              <li class="nav-header">R code</li>
+              <li class="dropdown-header">R code</li>
               <li><a href="dens_sims_code.html">Basic simulation</a></li>
             </ul>
 
           <li class="dropdown">
             <a href="pre-indexing" class="dropdown-toggle" data-toggle="dropdown">Pre-indexing <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li class="nav-header">Project</li>
+              <li class="dropdown-header">Project</li>
               <li><a href="ind_intro.html">Introduction</a></li>
               <li><a href="ind_related.html">Related items</a></li>
               <li class="divider"></li>
-              <li class="nav-header">R Code</li>
+              <li class="dropdown-header">R Code</li>
               <li><a href="ind_code.html">Complete code</a></li>
             </ul>
 
           <li><a href="http://leonawicz.github.io">All Projects</a></li>
         </ul>
-        <ul class="nav pull-right">
-          <a class="btn btn-primary" href="https://github.com/leonawicz/DataExtraction">
+        <ul class="nav navbar-nav navbar-right">
+          <a class="btn btn-link" href="https://github.com/leonawicz/DataExtraction">
             <i class="fa fa-github fa-lg"></i>
             Github
           </a>
@@ -147,7 +157,6 @@ body {
       </div><!--/.nav-collapse -->
     </div>
   </div>
-</div>
 
 <div id="header">
 <h1 class="title">Data Extraction Evaluation</h1>
@@ -161,29 +170,29 @@ body {
 <p>The plots below benchmark different sample mean computations. Comparisons involve the sample mean of the entire data set and do not involve the main approach outlined above which focuses on efficiency gains by taking the mean of a smaller, representative sample. This provides some insight into how it is beneficial nonetheless to considering the right programmatic approach in conjunction with statistical efficiencies.</p>
 <pre><code>## Unit: milliseconds
 ##                              expr       min        lq      mean    median
-##                mean(v, na.rm = T) 392.99513 394.43071 400.31757 395.33059
-##                  mean(v[dat.ind])  13.24151  14.03099  15.86505  14.09039
-##                sum(v[dat.ind])/nd  11.65945  12.51734  13.88396  12.57037
-##       .Internal(mean(v[dat.ind]))  13.15816  13.94795  15.56267  14.00098
-##  .Primitive(&quot;sum&quot;)(v[dat.ind])/nd  11.78354  12.53725  15.39732  12.59525
+##                mean(v, na.rm = T) 396.47883 397.82827 406.17620 400.14353
+##                  mean(v[dat.ind])  13.90274  14.20379  16.13493  14.29787
+##                sum(v[dat.ind])/nd  12.50043  12.67972  14.83503  12.73974
+##       .Internal(mean(v[dat.ind]))  13.85267  14.12884  17.53939  14.21576
+##  .Primitive(&quot;sum&quot;)(v[dat.ind])/nd  12.42454  12.69061  14.86212  12.77971
 ##         uq       max neval
-##  409.14232 417.41217   100
-##   14.16721 124.87611   100
-##   12.63381  36.23882   100
-##   14.08495  37.44551   100
-##   12.65838 124.72123   100</code></pre>
+##  413.33920 460.99813   100
+##   14.48043  39.90315   100
+##   12.93490  37.49413   100
+##   14.61431 129.31290   100
+##   13.10424  37.06526   100</code></pre>
 <p><img src="eval_next_files/figure-html/benchmarks1-1.png" /></p>
 <pre><code>## Unit: milliseconds
 ##                expr       min        lq      mean    median        uq
-##    mean(v[dat.ind]) 13.121464 14.090699 16.192409 14.269369 14.885930
-##  sum(v[dat.ind])/nd 11.647627 12.610644 14.755189 12.793668 13.407429
-##             mean(d)  2.947673  2.977996  3.080655  3.012672  3.073939
-##           sum(d)/nd  1.483167  1.499650  1.569516  1.516289  1.562162
+##    mean(v[dat.ind]) 13.966493 14.197724 16.128581 14.275008 14.388991
+##  sum(v[dat.ind])/nd 12.430764 12.685009 14.343592 12.755917 12.860413
+##             mean(d)  2.957944  2.998063  3.035984  3.017034  3.045491
+##           sum(d)/nd  1.485037  1.508673  1.541806  1.523446  1.541484
 ##         max neval
-##  130.332315  1000
-##  139.616330  1000
-##    7.570088  1000
-##    2.691718  1000</code></pre>
+##  128.881233  1000
+##  127.381268  1000
+##    4.004467  1000
+##    3.351673  1000</code></pre>
 <p><img src="eval_next_files/figure-html/benchmarks2-1.png" /></p>
 </div>
 

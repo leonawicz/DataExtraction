@@ -14,10 +14,11 @@
 <title>Data Extraction Evaluation</title>
 
 <script src="libs/jquery-1.11.0/jquery.min.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<link href="libs/bootstrap-2.3.2/css/united.min.css" rel="stylesheet" />
-<link href="libs/bootstrap-2.3.2/css/bootstrap-responsive.min.css" rel="stylesheet" />
-<script src="libs/bootstrap-2.3.2/js/bootstrap.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="libs/bootstrap-3.3.1/css/united.min.css" rel="stylesheet" />
+<script src="libs/bootstrap-3.3.1/js/bootstrap.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/html5shiv.min.js"></script>
+<script src="libs/bootstrap-3.3.1/shim/respond.min.js"></script>
 <style type="text/css">
 
 /* padding for bootstrap navbar */
@@ -83,63 +84,72 @@ body {
   margin-left: auto;
   margin-right: auto;
 }
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img { 
+  max-width:100%; 
+  height: auto; 
+}
 </style>
 <div class="container-fluid main-container">
 
 <div class="navbar navbar-default navbar-fixed-top">
-  <div class="navbar-inner">
-    <div class="container">
-      <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-responsive-collapse">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="brand" href="index.html">Data Extraction</a>
-      <div class="nav-collapse collapse">
-        <ul class="nav">
+      <a class="navbar-brand" href="index.html">Data Extraction</a>
+      </div>
+      <div class="navbar-collapse collapse navbar-responsive-collapse">
+        <ul class="nav navbar-nav">
           <li class="dropdown">
             <a href="extraction-evaluation" class="dropdown-toggle" data-toggle="dropdown">Extraction evaluation <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li class="nav-header">Project</li>
+              <li class="dropdown-header">Project</li>
               <li><a href="eval_intro.html">Introduction</a></li>
               <li><a href="eval_case.html">Case study: sample mean</a></li>
               <li><a href="eval_res.html">Results</a></li>
               <li><a href="eval_next.html">Next steps</a></li>
               <li class="divider"></li>
-              <li class="nav-header">R Code</li>
+              <li class="dropdown-header">R Code</li>
               <li><a href="extract_eval_code.html">Complete code</a></li>
             </ul>
 
           <li class="dropdown">
             <a href="density-estimation" class="dropdown-toggle" data-toggle="dropdown">Density estimation <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li class="nav-header">Project</li>
+              <li class="dropdown-header">Project</li>
               <li><a href="dens_intro.html">Introduction</a></li>
               <li><a href="dens_sims.html">Simulations</a></li>
               <li class="divider"></li>
-              <li class="nav-header">Use cases</li>
+              <li class="dropdown-header">Use cases</li>
               <li><a href="dens_use1.html">Case 1: Climate</a></li>
               <li><a href="dens_use2.html">Case 2: Vegetation</a></li>
               <li class="divider"></li>
-              <li class="nav-header">R code</li>
+              <li class="dropdown-header">R code</li>
               <li><a href="dens_sims_code.html">Basic simulation</a></li>
             </ul>
 
           <li class="dropdown">
             <a href="pre-indexing" class="dropdown-toggle" data-toggle="dropdown">Pre-indexing <b class="caret"></b></a>
             <ul class="dropdown-menu">
-              <li class="nav-header">Project</li>
+              <li class="dropdown-header">Project</li>
               <li><a href="ind_intro.html">Introduction</a></li>
               <li><a href="ind_related.html">Related items</a></li>
               <li class="divider"></li>
-              <li class="nav-header">R Code</li>
+              <li class="dropdown-header">R Code</li>
               <li><a href="ind_code.html">Complete code</a></li>
             </ul>
 
           <li><a href="http://leonawicz.github.io">All Projects</a></li>
         </ul>
-        <ul class="nav pull-right">
-          <a class="btn btn-primary" href="https://github.com/leonawicz/DataExtraction">
+        <ul class="nav navbar-nav navbar-right">
+          <a class="btn btn-link" href="https://github.com/leonawicz/DataExtraction">
             <i class="fa fa-github fa-lg"></i>
             Github
           </a>
@@ -147,7 +157,6 @@ body {
       </div><!--/.nav-collapse -->
     </div>
   </div>
-</div>
 
 <div id="header">
 <h1 class="title">Data Extraction Evaluation</h1>
@@ -172,50 +181,50 @@ body {
 <p>Compute time for the mean is of course affected by the sample size.</p>
 <pre><code>## Unit: microseconds
 ##                          expr    min     lq      mean median     uq
-##  sum(s005pct)/length(s005pct)  4.976  5.288  5.899026  5.288  5.599
-##  sum(s010pct)/length(s010pct)  9.642  9.953 10.556888  9.953  9.954
-##  sum(s025pct)/length(s025pct) 23.326 23.637 25.073227 23.637 23.948
-##  sum(s100pct)/length(s100pct) 92.057 92.368 97.091832 92.369 92.990
+##  sum(s005pct)/length(s005pct)  4.976  5.288  5.724557  5.599  5.599
+##  sum(s010pct)/length(s010pct)  9.642  9.953 10.325661  9.953 10.264
+##  sum(s025pct)/length(s025pct) 23.326 23.637 24.326452 23.638 23.948
+##  sum(s100pct)/length(s100pct) 92.057 92.368 94.517756 92.369 92.680
 ##       max neval
-##   550.784 10000
-##   492.627 10000
-##   915.278 10000
-##  2547.724 10000</code></pre>
+##   279.592 10000
+##   120.048 10000
+##   394.974 10000
+##  1341.044 10000</code></pre>
 <p><img src="eval_res_files/figure-html/benchmarks3-1.png" /></p>
 <p>Using optimal subsampling to estimate the mean achieves speed improvements orders of magnitude greater than what can be achieved through strictly algorithmic changes to how the mean is computed on the full dataset, though those help immensely as well, also by many orders of magnitude. Sampling is vastly more effective, but both approaches can be combined for maximum benefit.</p>
 <pre><code>## Unit: microseconds
-##                          expr        min          lq         mean
-##  sum(s005pct)/length(s005pct)      5.288      5.9100     11.37744
-##            mean(v, na.rm = T) 393572.348 395334.3265 404437.26407
-##              sum(d)/length(d)   1487.210   1500.5830   1565.61965
-##                 mean(s005pct)     17.728     20.5275     46.47082
-##       median          uq        max neval
-##       9.4865     19.1280     21.461   100
-##  399798.5965 410536.3880 502100.039   100
-##    1514.2675   1551.2765   2641.647   100
-##      55.0480     63.6005     92.680   100</code></pre>
+##                          expr        min         lq         mean
+##  sum(s005pct)/length(s005pct)      5.288      5.910     11.56720
+##            mean(v, na.rm = T) 396563.736 398563.792 405586.40831
+##              sum(d)/length(d)   1479.750   1493.900   1537.60891
+##                 mean(s005pct)     17.417     20.838     46.45236
+##       median         uq        max neval
+##       9.9530     19.283     21.771   100
+##  399598.9635 411080.703 507892.307   100
+##    1509.1395   1546.149   1959.626   100
+##      54.4265     63.290     90.503   100</code></pre>
 <pre><code>## Unit: microseconds
-##                          expr        min          lq         mean
-##  sum(s005pct)/length(s005pct)      5.288      5.9100     11.37744
-##            mean(v, na.rm = T) 393572.348 395334.3265 404437.26407
-##              sum(d)/length(d)   1487.210   1500.5830   1565.61965
-##                 mean(s005pct)     17.728     20.5275     46.47082
-##       median          uq        max neval
-##       9.4865     19.1280     21.461   100
-##  399798.5965 410536.3880 502100.039   100
-##    1514.2675   1551.2765   2641.647   100
-##      55.0480     63.6005     92.680   100</code></pre>
+##                          expr        min         lq         mean
+##  sum(s005pct)/length(s005pct)      5.288      5.910     11.56720
+##            mean(v, na.rm = T) 396563.736 398563.792 405586.40831
+##              sum(d)/length(d)   1479.750   1493.900   1537.60891
+##                 mean(s005pct)     17.417     20.838     46.45236
+##       median         uq        max neval
+##       9.9530     19.283     21.771   100
+##  399598.9635 411080.703 507892.307   100
+##    1509.1395   1546.149   1959.626   100
+##      54.4265     63.290     90.503   100</code></pre>
 <pre><code>## Unit: microseconds
-##                          expr        min          lq         mean
-##  sum(s005pct)/length(s005pct)      5.288      5.9100     11.37744
-##            mean(v, na.rm = T) 393572.348 395334.3265 404437.26407
-##              sum(d)/length(d)   1487.210   1500.5830   1565.61965
-##                 mean(s005pct)     17.728     20.5275     46.47082
-##       median          uq        max neval
-##       9.4865     19.1280     21.461   100
-##  399798.5965 410536.3880 502100.039   100
-##    1514.2675   1551.2765   2641.647   100
-##      55.0480     63.6005     92.680   100</code></pre>
+##                          expr        min         lq         mean
+##  sum(s005pct)/length(s005pct)      5.288      5.910     11.56720
+##            mean(v, na.rm = T) 396563.736 398563.792 405586.40831
+##              sum(d)/length(d)   1479.750   1493.900   1537.60891
+##                 mean(s005pct)     17.417     20.838     46.45236
+##       median         uq        max neval
+##       9.9530     19.283     21.771   100
+##  399598.9635 411080.703 507892.307   100
+##    1509.1395   1546.149   1959.626   100
+##      54.4265     63.290     90.503   100</code></pre>
 <p><img src="eval_res_files/figure-html/benchmarks4-1.png" /></p>
 <p>Similar to above, below are the median compute times for the mean using (1) the full data while removing NAs, (2) the sum divided by the length after NAs removed, (3) the mean of a subsample, and (4) a combination of (2) and (3).</p>
 <p><img src="eval_res_files/figure-html/benchmarks4med1-1.png" /></p>
