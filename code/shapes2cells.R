@@ -3,7 +3,7 @@ library(raster)
 library(maptools)
 library(parallel)
 
-outDir <- "/workspace/UA/mfleonawicz/Leonawicz/Projects/2014/DataExtraction/workspaces"
+outDir <- "/workspace/UA/mfleonawicz/leonawicz/projects/DataExtraction/workspaces"
 
 # Political boundaries
 Alaska_shp <- shapefile("/workspace/Shared/Users/mfleonawicz/shapefiles/Political/Alaska")
