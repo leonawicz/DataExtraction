@@ -55,7 +55,7 @@ genNavbar(htmlfile=file.path(proj.location, proj.name, "docs/Rmd/include/navbar.
 yaml.out <- file.path(proj.location, proj.name, "docs/Rmd/_output.yaml")
 libs <- "libs"
 common.header <- "include/in_header.html"
-genOutyaml(file=yaml.out, lib=libs, header=common.header, before_body="include/navbar.html")
+genOutyaml(file=yaml.out, lib=libs, header=common.header, before_body="include/navbar.html", after_body="include/after_body.html")
 
 # @knitr knit_setup
 library(rmarkdown)
