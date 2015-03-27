@@ -62,15 +62,8 @@ library(rmarkdown)
 library(knitr)
 setwd(rmd.path)
 
-# R scripts
-#files.r <- list.files("../../code", pattern=".R$", full=T)
-
 # Rmd files
 files.Rmd <- list.files(pattern=".Rmd$", full=T)
-
-# potential non-Rmd directories for writing various output files
-#outtype <- file.path(dirname(getwd()), list.dirs("../", full=F, recursive=F))
-#outtype <- outtype[basename(outtype)!="Rmd"]
 
 # @knitr save
 # write all yaml front-matter-specified outputs to Rmd directory for all Rmd files
