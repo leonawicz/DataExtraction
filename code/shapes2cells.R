@@ -25,11 +25,15 @@ eco3_IDs <- sapply(slot(eco3_shp, "polygons"), function(x) slot(x, "ID"))
 LCC_shp <- shapefile(file.path(shpDir, "LCC/LCC_summarization_units_singlepartPolys"))
 LCC_IDs <- gsub(" LCC", "", gsub("South", "S", gsub("western", "W", gsub("Western", "W", gsub("North", "N", gsub("  ", " ", gsub("\\.", "", as.data.frame(LCC_shp)[,1])))))))
 
+# CAVM regions
+CAVM_shp <- shapefile(file.path(shpDir, "CAVM/CAVM_complete"))
+CAVM_IDs <- as.data.frame(CAVM_shp)[,4]
+
 # @knitr organize
 # organize shapefile lists and associated metadata
-shp.names <- c("Political 0", "Political 1", "Political 2", "Political 3", "Alaska L3 Ecoregions", "Alaska L2 Ecoregions","Alaska L1 Ecoregions", "LCC Regions")
-shp.list <- list(Alaska_shp, Alberta_shp, BC_shp, eco32_shp, eco9_shp, eco3_shp, LCC_shp)
-shp.IDs.list <- list("Alaska", "Alberta", "British Columbia", eco32_IDs, eco9_IDs, eco3_IDs, LCC_IDs)
+shp.names <- c("Political 0", "Political 1", "Political 2", "Political 3", "Alaska L3 Ecoregions", "Alaska L2 Ecoregions","Alaska L1 Ecoregions", "LCC Regions", "CAVM Regions")
+shp.list <- list(Alaska_shp, Alberta_shp, BC_shp, eco32_shp, eco9_shp, eco3_shp, LCC_shp, CAVM_shp)
+shp.IDs.list <- list("Alaska", "Alberta", "British Columbia", eco32_IDs, eco9_IDs, eco3_IDs, LCC_IDs, CAVM_IDs)
 region.names.out <- c(list(c("AK-CAN", unlist(shp.IDs.list[1:3]))), shp.IDs.list[4:length(shp.IDs.list)]) # prefix with full domain
 names(region.names.out) <- c("Political", shp.names[5:length(shp.names)])
 
