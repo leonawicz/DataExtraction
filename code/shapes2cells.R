@@ -5,6 +5,7 @@ library(parallel)
 
 outDir <- "/workspace/UA/mfleonawicz/leonawicz/projects/DataExtraction/workspaces"
 shpDir <- "/workspace/UA/mfleonawicz/leonawicz/projects/DataExtraction/data/shapefiles"
+set.seed(253)
 
 # Political boundaries
 Alaska_shp <- shapefile(file.path(shpDir, "Political/Alaska"))
