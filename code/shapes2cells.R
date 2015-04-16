@@ -4,14 +4,15 @@ library(maptools)
 library(parallel)
 
 outDir <- "/workspace/UA/mfleonawicz/leonawicz/projects/DataExtraction/workspaces"
+shpDir <- "/workspace/UA/mfleonawicz/leonawicz/projects/DataExtraction/data/shapefiles"
 
 # Political boundaries
-Alaska_shp <- shapefile("/workspace/Shared/Users/mfleonawicz/shapefiles/Political/Alaska")
-Alberta_shp <- shapefile("/workspace/Shared/Users/mfleonawicz/shapefiles/Political/alberta_albers")
-BC_shp <- shapefile("/workspace/Shared/Users/mfleonawicz/shapefiles/Political/BC_albers")
+Alaska_shp <- shapefile(file.path(shpDir, "Political/Alaska"))
+Alberta_shp <- shapefile(file.path(shpDir, "Political/alberta_albers"))
+BC_shp <- shapefile(file.path(shpDir, "Political/BC_albers"))
 
 # Alaska ecoregions
-eco32_shp <- shapefile("/workspace/Shared/Users/mfleonawicz/shapefiles/AK_ecoregions/akecoregions")
+eco32_shp <- shapefile(file.path(shpDir, "AK_ecoregions/akecoregions"))
 eco32_shp <- spTransform(eco32_shp, CRS(projection(Alaska_shp)))
 eco9_shp <- unionSpatialPolygons(eco32_shp, eco32_shp@data$LEVEL_2)
 eco3_shp <- unionSpatialPolygons(eco32_shp, eco32_shp@data$LEVEL_1)
@@ -21,7 +22,7 @@ eco9_IDs <- sapply(slot(eco9_shp, "polygons"), function(x) slot(x, "ID"))
 eco3_IDs <- sapply(slot(eco3_shp, "polygons"), function(x) slot(x, "ID"))
 
 # LCC regions
-LCC_shp <- shapefile("/workspace/Shared/Users/mfleonawicz/shapefiles/LCC/LCC_summarization_units_singlepartPolys")
+LCC_shp <- shapefile(file.path(shpDir, "LCC/LCC_summarization_units_singlepartPolys"))
 LCC_IDs <- gsub(" LCC", "", gsub("South", "S", gsub("western", "W", gsub("Western", "W", gsub("North", "N", gsub("  ", " ", gsub("\\.", "", as.data.frame(LCC_shp)[,1])))))))
 
 # @knitr organize
