@@ -8,9 +8,14 @@ shpDir <- "/workspace/UA/mfleonawicz/leonawicz/projects/DataExtraction/data/shap
 set.seed(253)
 
 # Political boundaries
+# Alaska
 Alaska_shp <- shapefile(file.path(shpDir, "Political/Alaska"))
-Alberta_shp <- shapefile(file.path(shpDir, "Political/alberta_albers"))
-BC_shp <- shapefile(file.path(shpDir, "Political/BC_albers"))
+# Western Canada regions
+#Alberta_shp <- shapefile(file.path(shpDir, "Political/alberta_albers")) # OLD
+#BC_shp <- shapefile(file.path(shpDir, "Political/BC_albers")) # OLD
+Canada_shp <- shapefile(file.path(shpDir, "Political/CanadianProvinces_NAD83AlaskaAlbers"))
+Canada_IDs <- c("Alberta", "Saskatchewan", "Manitoba", "Yukon Territory", "British Columbia")
+Canada_shp <- subset(Canada_shp, NAME %in% Canada_IDs)
 
 # Alaska ecoregions
 eco32_shp <- shapefile(file.path(shpDir, "AK_ecoregions/akecoregions"))
@@ -22,6 +27,7 @@ eco32_IDs <- gsub("\\.", "", as.data.frame(eco32_shp)[,1])
 eco9_IDs <- sapply(slot(eco9_shp, "polygons"), function(x) slot(x, "ID"))
 eco3_IDs <- sapply(slot(eco3_shp, "polygons"), function(x) slot(x, "ID"))
 
+
 # LCC regions
 LCC_shp <- shapefile(file.path(shpDir, "LCC/LCC_summarization_units_singlepartPolys"))
 LCC_IDs <- gsub(" LCC", "", gsub("South", "S", gsub("western", "W", gsub("Western", "W", gsub("North", "N", gsub("  ", " ", gsub("\\.", "", as.data.frame(LCC_shp)[,1])))))))
@@ -32,11 +38,11 @@ CAVM_IDs <- as.data.frame(CAVM_shp)[,4]
 
 # @knitr organize
 # organize shapefile lists and associated metadata
-shp.names <- c("Political 0", "Political 1", "Political 2", "Political 3", "Alaska L3 Ecoregions", "Alaska L2 Ecoregions","Alaska L1 Ecoregions", "LCC Regions", "CAVM Regions")
-shp.list <- list(Alaska_shp, Alberta_shp, BC_shp, eco32_shp, eco9_shp, eco3_shp, LCC_shp, CAVM_shp)
-shp.IDs.list <- list("Alaska", "Alberta", "British Columbia", eco32_IDs, eco9_IDs, eco3_IDs, LCC_IDs, CAVM_IDs)
-region.names.out <- c(list(c("AK-CAN", unlist(shp.IDs.list[1:3]))), shp.IDs.list[4:length(shp.IDs.list)]) # prefix with full domain
-names(region.names.out) <- c("Political", shp.names[5:length(shp.names)])
+shp.names <- c(paste("Political", 0:6), paste0("Alaska L", 3:1, " Ecoregions"), "LCC Regions", "CAVM Regions")
+shp.list <- list(Alaska_shp, Canada_shp, eco32_shp, eco9_shp, eco3_shp, LCC_shp, CAVM_shp)
+shp.IDs.list <- list("Alaska", Canada_IDs, eco32_IDs, eco9_IDs, eco3_IDs, LCC_IDs, CAVM_IDs)
+region.names.out <- c(list(c("AK-CAN", unlist(shp.IDs.list[1:6]))), shp.IDs.list[7:length(shp.IDs.list)]) # prefix with full domain
+names(region.names.out) <- c("Political", shp.names[8:length(shp.names)])
 
 # @knitr 1km_AKCAN_alfresco
 # For AK-CAN 1-km ALfresco extractions
