@@ -42,6 +42,14 @@ color: black;
 #disqus_thread {
 margin-top: 45px;
 }
+p {
+  text-align: justify;
+}
+img.centered {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 </style>
 <link rel="stylesheet" href="libs/font-awesome-4.1.0/css/font-awesome.min.css"/>
 
@@ -166,51 +174,51 @@ img {
 <h5>How much faster does this make things go?</h5>
 <p>Compute time for the mean is of course affected by the sample size.</p>
 <pre><code>## Unit: microseconds
-##                          expr    min     lq     mean median     uq     max
-##  sum(s005pct)/length(s005pct)  4.977  5.288  5.91272  5.599  5.599  97.035
-##  sum(s010pct)/length(s010pct)  9.642  9.953 10.73492  9.953 10.264 476.772
-##  sum(s025pct)/length(s025pct) 23.326 23.637 25.14469 23.638 23.949 992.418
-##  sum(s100pct)/length(s100pct) 92.058 92.369 96.74378 92.370 93.303 604.284
-##  neval
-##  10000
-##  10000
-##  10000
-##  10000</code></pre>
+##                          expr    min     lq      mean median     uq
+##  sum(s005pct)/length(s005pct)  4.976  5.288  5.521645  5.288  5.288
+##  sum(s010pct)/length(s010pct)  9.641  9.642 10.169470  9.953  9.953
+##  sum(s025pct)/length(s025pct) 23.325 23.326 24.262944 23.637 23.637
+##  sum(s100pct)/length(s100pct) 91.745 92.057 95.724352 92.057 92.368
+##       max neval
+##   171.984 10000
+##   192.820 10000
+##   361.072 10000
+##  9139.966 10000</code></pre>
 <p><img src="eval_res_files/figure-html/benchmarks3-1.png" /></p>
 <p>Using optimal subsampling to estimate the mean achieves speed improvements orders of magnitude greater than what can be achieved through strictly algorithmic changes to how the mean is computed on the full dataset, though those help immensely as well, also by many orders of magnitude. Sampling is vastly more effective, but both approaches can be combined for maximum benefit.</p>
 <pre><code>## Unit: microseconds
 ##                          expr        min          lq         mean
-##  sum(s005pct)/length(s005pct)      5.599      6.0655     12.04002
-##            mean(v, na.rm = T) 394803.414 400618.1245 413228.42811
-##              sum(d)/length(d)   1487.539   1497.1800   1566.62766
-##                 mean(s005pct)     17.728     20.5270     46.71396
-##      median         uq        max neval
-##       9.798     19.594     29.547   100
-##  408871.581 421030.797 532075.836   100
-##    1509.776   1567.157   2030.554   100
-##      54.738     63.757     92.058   100</code></pre>
+##  sum(s005pct)/length(s005pct)      4.977      6.9985     10.64652
+##            mean(v, na.rm = T) 328957.260 332340.3125 338498.96803
+##              sum(d)/length(d)   1504.617   1517.0565   1554.37041
+##                 mean(s005pct)     14.618     16.4840     37.43600
+##       median         uq        max neval
+##       9.3310     10.575     19.905   100
+##  333486.0350 345901.603 357516.969   100
+##    1526.5415   1543.492   2186.950   100
+##      44.6295     50.383    100.765   100</code></pre>
 <pre><code>## Unit: microseconds
 ##                          expr        min          lq         mean
-##  sum(s005pct)/length(s005pct)      5.599      6.0655     12.04002
-##            mean(v, na.rm = T) 394803.414 400618.1245 413228.42811
-##              sum(d)/length(d)   1487.539   1497.1800   1566.62766
-##                 mean(s005pct)     17.728     20.5270     46.71396
-##      median         uq        max neval
-##       9.798     19.594     29.547   100
-##  408871.581 421030.797 532075.836   100
-##    1509.776   1567.157   2030.554   100
-##      54.738     63.757     92.058   100</code></pre>
+##  sum(s005pct)/length(s005pct)      4.977      6.9985     10.64652
+##            mean(v, na.rm = T) 328957.260 332340.3125 338498.96803
+##              sum(d)/length(d)   1504.617   1517.0565   1554.37041
+##                 mean(s005pct)     14.618     16.4840     37.43600
+##       median         uq        max neval
+##       9.3310     10.575     19.905   100
+##  333486.0350 345901.603 357516.969   100
+##    1526.5415   1543.492   2186.950   100
+##      44.6295     50.383    100.765   100</code></pre>
 <pre><code>## Unit: microseconds
 ##                          expr        min          lq         mean
-##  sum(s005pct)/length(s005pct)      5.599      6.0655     12.04002
-##            mean(v, na.rm = T) 394803.414 400618.1245 413228.42811
-##              sum(d)/length(d)   1487.539   1497.1800   1566.62766
-##                 mean(s005pct)     17.728     20.5270     46.71396
-##      median         uq        max neval
-##       9.798     19.594     29.547   100
-##  408871.581 421030.797 532075.836   100
-##    1509.776   1567.157   2030.554   100
-##      54.738     63.757     92.058   100</code></pre>
+##  sum(s005pct)/length(s005pct)      4.977      6.9985     10.64652
+##            mean(v, na.rm = T) 328957.260 332340.3125 338498.96803
+##              sum(d)/length(d)   1504.617   1517.0565   1554.37041
+##                 mean(s005pct)     14.618     16.4840     37.43600
+##       median         uq        max neval
+##       9.3310     10.575     19.905   100
+##  333486.0350 345901.603 357516.969   100
+##    1526.5415   1543.492   2186.950   100
+##      44.6295     50.383    100.765   100</code></pre>
 <p><img src="eval_res_files/figure-html/benchmarks4-1.png" /></p>
 <p>Similar to above, below are the median compute times for the mean using (1) the full data while removing NAs, (2) the sum divided by the length after NAs removed, (3) the mean of a subsample, and (4) a combination of (2) and (3).</p>
 <p><img src="eval_res_files/figure-html/benchmarks4med1-1.png" /></p>

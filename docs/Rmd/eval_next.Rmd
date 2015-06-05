@@ -14,6 +14,12 @@ opts_chunk$set(cache=FALSE, echo=FALSE, eval=TRUE, tidy=TRUE, message=FALSE, war
 read_chunk("../../code/extract_eval.R")
 ```
 
+```{r packages, results="hide"}
+```
+
+```{r setup, results="hide"}
+```
+
 ### Next steps
 
 Combining sampling and data reduction methods while using the most efficient **R** functions can be particularly useful when processing large numbers of high-resolution geotiff raster layers.

@@ -84,14 +84,20 @@ library(maptools)
 library(parallel)
 
 outDir <- "/workspace/UA/mfleonawicz/leonawicz/projects/DataExtraction/workspaces"
+shpDir <- "/workspace/UA/mfleonawicz/leonawicz/projects/DataExtraction/data/shapefiles"
+set.seed(253)
 
-# Political boundaries
-Alaska_shp <- shapefile("/workspace/Shared/Users/mfleonawicz/shapefiles/Political/Alaska")
-Alberta_shp <- shapefile("/workspace/Shared/Users/mfleonawicz/shapefiles/Political/alberta_albers")
-BC_shp <- shapefile("/workspace/Shared/Users/mfleonawicz/shapefiles/Political/BC_albers")
+# Political boundaries Alaska
+Alaska_shp <- shapefile(file.path(shpDir, "Political/Alaska"))
+# Western Canada regions Alberta_shp <- shapefile(file.path(shpDir,
+# 'Political/alberta_albers')) # OLD BC_shp <- shapefile(file.path(shpDir,
+# 'Political/BC_albers')) # OLD
+Canada_shp <- shapefile(file.path(shpDir, "Political/CanadianProvinces_NAD83AlaskaAlbers"))
+Canada_IDs <- c("Alberta", "Saskatchewan", "Manitoba", "Yukon Territory", "British Columbia")
+Canada_shp <- subset(Canada_shp, NAME %in% Canada_IDs)
 
 # Alaska ecoregions
-eco32_shp <- shapefile("/workspace/Shared/Users/mfleonawicz/shapefiles/AK_ecoregions/akecoregions")
+eco32_shp <- shapefile(file.path(shpDir, "AK_ecoregions/akecoregions"))
 eco32_shp <- spTransform(eco32_shp, CRS(projection(Alaska_shp)))
 eco9_shp <- unionSpatialPolygons(eco32_shp, eco32_shp@data$LEVEL_2)
 eco3_shp <- unionSpatialPolygons(eco32_shp, eco32_shp@data$LEVEL_1)
@@ -100,11 +106,16 @@ eco32_IDs <- gsub("\\.", "", as.data.frame(eco32_shp)[, 1])
 eco9_IDs <- sapply(slot(eco9_shp, "polygons"), function(x) slot(x, "ID"))
 eco3_IDs <- sapply(slot(eco3_shp, "polygons"), function(x) slot(x, "ID"))
 
+
 # LCC regions
-LCC_shp <- shapefile("/workspace/Shared/Users/mfleonawicz/shapefiles/LCC/LCC_summarization_units_singlepartPolys")
+LCC_shp <- shapefile(file.path(shpDir, "LCC/LCC_summarization_units_singlepartPolys"))
 LCC_IDs <- gsub(" LCC", "", gsub("South", "S", gsub("western", "W", gsub("Western", 
     "W", gsub("North", "N", gsub("  ", " ", gsub("\\.", "", as.data.frame(LCC_shp)[, 
         1])))))))
+
+# CAVM regions
+CAVM_shp <- shapefile(file.path(shpDir, "CAVM/CAVM_complete"))
+CAVM_IDs <- as.data.frame(CAVM_shp)[, 4]
 ```
 
 ### Organization and metadata
@@ -113,14 +124,14 @@ Lists of names and IDs must be created to prepare for cell index extraction by s
 
 ```r
 # organize shapefile lists and associated metadata
-shp.names <- c("Political 0", "Political 1", "Political 2", "Political 3", "Alaska L3 Ecoregions", 
-    "Alaska L2 Ecoregions", "Alaska L1 Ecoregions", "LCC Regions")
-shp.list <- list(Alaska_shp, Alberta_shp, BC_shp, eco32_shp, eco9_shp, eco3_shp, 
-    LCC_shp)
-shp.IDs.list <- list("Alaska", "Alberta", "British Columbia", eco32_IDs, eco9_IDs, 
-    eco3_IDs, LCC_IDs)
-region.names.out <- c(list(c("AK-CAN", unlist(shp.IDs.list[1:3]))), shp.IDs.list[4:length(shp.IDs.list)])  # prefix with full domain
-names(region.names.out) <- c("Political", shp.names[5:length(shp.names)])
+shp.names <- c(paste("Political", 0:6), paste0("Alaska L", 3:1, " Ecoregions"), 
+    "LCC Regions", "CAVM Regions")
+shp.list <- list(Alaska_shp, Canada_shp, eco32_shp, eco9_shp, eco3_shp, LCC_shp, 
+    CAVM_shp)
+shp.IDs.list <- list("Alaska", Canada_IDs, eco32_IDs, eco9_IDs, eco3_IDs, LCC_IDs, 
+    CAVM_IDs)
+region.names.out <- c(list(c("AK-CAN", unlist(shp.IDs.list[1:2]))), shp.IDs.list[3:length(shp.IDs.list)])  # prefix with full domain
+names(region.names.out) <- c("Political", shp.names[8:length(shp.names)])
 ```
 
 ### Alfresco example
@@ -144,8 +155,8 @@ cells_shp_list <- mclapply(1:length(shp.list), function(x, shp, r) extract(r,
     shp[[x]], cellnumbers = T), shp = shp.list, r = r, mc.cores = 32)
 cells_shp_list <- rapply(cells_shp_list, f = function(x, d.ind) intersect(x[, 
     1], d.ind), classes = "matrix", how = "replace", d.ind = data.ind)
-cells_shp_list <- c(list(c(list(data.ind), cells_shp_list[[1]], cells_shp_list[[2]], 
-    cells_shp_list[[3]])), cells_shp_list[-c(1:3)])  # Combine full domain and other political boundaries into one group
+cells_shp_list <- c(list(c(list(data.ind), cells_shp_list[[1]], cells_shp_list[[2]])), 
+    cells_shp_list[-c(1:2)])  # Combine full domain and other political boundaries into one group
 
 n.shp <- sum(unlist(lapply(cells_shp_list, length)))
 names(cells_shp_list) <- names(region.names.out)
@@ -181,8 +192,8 @@ cells_shp_list <- mclapply(1:length(shp.list), function(x, shp, r) extract(r,
     shp[[x]], cellnumbers = T), shp = shp.list, r = r, mc.cores = 32)
 cells_shp_list <- rapply(cells_shp_list, f = function(x, d.ind) intersect(x[, 
     1], d.ind), classes = "matrix", how = "replace", d.ind = data.ind)
-cells_shp_list <- c(list(c(list(data.ind), cells_shp_list[[1]], cells_shp_list[[2]], 
-    cells_shp_list[[3]])), cells_shp_list[-c(1:3)])  # Combine full domain and other political boundaries into one group
+cells_shp_list <- c(list(c(list(data.ind), cells_shp_list[[1]], cells_shp_list[[2]])), 
+    cells_shp_list[-c(1:2)])  # Combine full domain and other political boundaries into one group
 
 n.shp <- sum(unlist(lapply(cells_shp_list, length)))
 names(cells_shp_list) <- names(region.names.out)

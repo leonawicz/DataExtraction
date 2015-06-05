@@ -3,6 +3,10 @@ Matthew Leonawicz
 
 
 
+
+
+
+
 ### Next steps
 
 Combining sampling and data reduction methods while using the most efficient **R** functions can be particularly useful when processing large numbers of high-resolution geotiff raster layers.
@@ -19,17 +23,17 @@ This provides some insight into how it is beneficial nonetheless to considering 
 ```
 ## Unit: milliseconds
 ##                              expr       min        lq      mean    median
-##                mean(v, na.rm = T) 395.12810 397.59624 405.07016 400.44723
-##                  mean(v[dat.ind])  13.27930  13.99213  17.44195  14.27125
-##                sum(v[dat.ind])/nd  11.77746  12.52138  15.58598  12.80331
-##       .Internal(mean(v[dat.ind]))  13.12878  13.38691  14.78263  14.07470
-##  .Primitive("sum")(v[dat.ind])/nd  11.74574  12.23075  15.07401  12.66056
+##                mean(v, na.rm = T) 330.42456 332.88923 340.87536 338.32736
+##                  mean(v[dat.ind])  14.08361  14.21268  15.93154  14.30753
+##                sum(v[dat.ind])/nd  12.52177  12.69454  14.97153  12.85843
+##       .Internal(mean(v[dat.ind]))  13.92438  14.14799  15.92813  14.22714
+##  .Primitive("sum")(v[dat.ind])/nd  12.50747  12.71008  15.68299  12.81411
 ##         uq       max neval
-##  408.24988 457.77886   100
-##   15.08655 132.71868   100
-##   14.49393  36.51357   100
-##   14.35134  36.08905   100
-##   13.62265  36.55835   100
+##  343.57206 445.83026   100
+##   14.55011  29.50857   100
+##   13.52864  32.33991   100
+##   14.46739  29.30362   100
+##   13.18172 127.07627   100
 ```
 
 ![](eval_next_files/figure-html/benchmarks1-1.png) 
@@ -38,15 +42,15 @@ This provides some insight into how it is beneficial nonetheless to considering 
 ```
 ## Unit: milliseconds
 ##                expr       min        lq      mean    median        uq
-##    mean(v[dat.ind]) 13.210570 14.153849 16.186283 14.371242 15.165549
-##  sum(v[dat.ind])/nd 11.700951 12.644851 14.871945 12.866910 13.469482
-##             mean(d)  2.945221  2.976476  3.086633  3.007887  3.094504
-##           sum(d)/nd  1.483496  1.500601  1.583292  1.516773  1.573999
+##    mean(v[dat.ind]) 13.991870 14.226052 16.725961 14.357294 14.983181
+##  sum(v[dat.ind])/nd 12.515244 12.695002 14.900060 12.817691 13.153415
+##             mean(d)  2.986529  3.002701  3.058836  3.016230  3.054638
+##           sum(d)/nd  1.502751  1.513480  1.542732  1.518923  1.533851
 ##         max neval
-##  134.808017  1000
-##   47.060690  1000
-##    4.647663  1000
-##    3.920222  1000
+##  126.787354  1000
+##  122.183317  1000
+##    4.819560  1000
+##    2.485198  1000
 ```
 
 ![](eval_next_files/figure-html/benchmarks2-1.png) 
