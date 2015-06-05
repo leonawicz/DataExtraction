@@ -41,7 +41,7 @@ CAVM_IDs <- as.data.frame(CAVM_shp)[,4]
 shp.names <- c(paste("Political", 0:6), paste0("Alaska L", 3:1, " Ecoregions"), "LCC Regions", "CAVM Regions")
 shp.list <- list(Alaska_shp, Canada_shp, eco32_shp, eco9_shp, eco3_shp, LCC_shp, CAVM_shp)
 shp.IDs.list <- list("Alaska", Canada_IDs, eco32_IDs, eco9_IDs, eco3_IDs, LCC_IDs, CAVM_IDs)
-region.names.out <- c(list(c("AK-CAN", unlist(shp.IDs.list[1:6]))), shp.IDs.list[7:length(shp.IDs.list)]) # prefix with full domain
+region.names.out <- c(list(c("AK-CAN", unlist(shp.IDs.list[1:2]))), shp.IDs.list[3:length(shp.IDs.list)]) # prefix with full domain
 names(region.names.out) <- c("Political", shp.names[8:length(shp.names)])
 
 # @knitr 1km_AKCAN_alfresco
@@ -51,7 +51,7 @@ r <- readAll(raster(list.files(file.path(dirs[1], "Maps"), pattern="^Age_0_.*.ti
 data.ind <- Which(!is.na(r),cells=T)
 cells_shp_list <- mclapply(1:length(shp.list), function(x, shp, r) extract(r, shp[[x]], cellnumbers=T), shp=shp.list, r=r, mc.cores=32)
 cells_shp_list <- rapply(cells_shp_list, f=function(x, d.ind) intersect(x[,1], d.ind), classes="matrix", how="replace", d.ind=data.ind)
-cells_shp_list <- c(list(c(list(data.ind), cells_shp_list[[1]], cells_shp_list[[2]], cells_shp_list[[3]])), cells_shp_list[-c(1:3)]) # Combine full domain and other political boundaries into one group
+cells_shp_list <- c(list(c(list(data.ind), cells_shp_list[[1]], cells_shp_list[[2]])), cells_shp_list[-c(1:2)]) # Combine full domain and other political boundaries into one group
 
 n.shp <- sum(unlist(lapply(cells_shp_list, length)))
 names(cells_shp_list) <- names(region.names.out)
@@ -72,7 +72,7 @@ r <- readAll(raster("/Data/Base_Data/Climate/AK_CAN_2km/projected/AR5_CMIP5_mode
 data.ind <- Which(!is.na(r),cells=T)
 cells_shp_list <- mclapply(1:length(shp.list), function(x, shp, r) extract(r, shp[[x]], cellnumbers=T), shp=shp.list, r=r, mc.cores=32)
 cells_shp_list <- rapply(cells_shp_list, f=function(x, d.ind) intersect(x[,1], d.ind), classes="matrix", how="replace", d.ind=data.ind)
-cells_shp_list <- c(list(c(list(data.ind), cells_shp_list[[1]], cells_shp_list[[2]], cells_shp_list[[3]])), cells_shp_list[-c(1:3)]) # Combine full domain and other political boundaries into one group
+cells_shp_list <- c(list(c(list(data.ind), cells_shp_list[[1]], cells_shp_list[[2]])), cells_shp_list[-c(1:2)]) # Combine full domain and other political boundaries into one group
 
 n.shp <- sum(unlist(lapply(cells_shp_list, length)))
 names(cells_shp_list) <- names(region.names.out)
