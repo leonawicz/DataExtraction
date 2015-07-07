@@ -46,8 +46,9 @@ names(region.names.out) <- c("Political", shp.names[8:length(shp.names)])
 
 # @knitr 1km_AKCAN_alfresco
 # For AK-CAN 1-km ALfresco extractions
-dirs <- list.files("/big_scratch/apbennett/Calibration/FinalCalib", pattern=".*.sres.*.", full=T)
-r <- readAll(raster(list.files(file.path(dirs[1], "Maps"), pattern="^Age_0_.*.tif$", full=T)[1])) # template done
+#r <- readAll(raster("/Data/Base_Data/ALFRESCO_formatted/ALFRESCO_Master_Dataset/ALFRESCO_Model_Input_Datasets/AK_CAN_Inputs/Climate/5ModelAvg/sresa2/tas/tas_mean_C_alf_ar4_5modelAvg_sresa2_01_2001.tif"))
+dirs <- list.files("/big_scratch/apbennett/Calibration/FinalCalib", pattern=".*.sres.*.", full=T) # alternate
+r <- readAll(raster(list.files(file.path(dirs[1], "Maps"), pattern="^Age_0_.*.tif$", full=T)[1])) # template
 data.ind <- Which(!is.na(r),cells=T)
 cells_shp_list <- mclapply(1:length(shp.list), function(x, shp, r) extract(r, shp[[x]], cellnumbers=T), shp=shp.list, r=r, mc.cores=32)
 cells_shp_list <- rapply(cells_shp_list, f=function(x, d.ind) intersect(x[,1], d.ind), classes="matrix", how="replace", d.ind=data.ind)
