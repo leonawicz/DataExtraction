@@ -3,8 +3,8 @@ library(raster)
 library(maptools)
 library(parallel)
 
-outDir <- "/workspace/UA/mfleonawicz/leonawicz/projects/DataExtraction/workspaces"
-shpDir <- "/workspace/UA/mfleonawicz/leonawicz/projects/DataExtraction/data/shapefiles"
+outDir <- "/workspace/UA/mfleonawicz/projects/DataExtraction/workspaces"
+shpDir <- "/workspace/UA/mfleonawicz/projects/DataExtraction/data/shapefiles"
 set.seed(253)
 
 # Political boundaries
