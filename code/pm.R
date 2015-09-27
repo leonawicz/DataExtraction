@@ -35,15 +35,15 @@ proj.menu <- c("Extraction evaluation", "Density estimation", "Pre-indexing", "A
 
 proj.submenu <- list(
 	c("Project", "Introduction", "Case study: sample mean", "Results", "Next steps", "divider", "R Code", "Complete code"),
-	c("Project", "Introduction", "Simulations", "divider", "Use cases", "Case 1: Climate", "Case 2: Vegetation", "divider", "R code", "Basic simulation"),
-	c("Project", "Introduction", "Related items", "divider", "R Code", "Complete code"),
+	c("empty"),
+	c("empty"),
 	c("empty")
 )
 
 proj.files <- list(
 	c("header", "eval_intro.html", "eval_case.html", "eval_res.html", "eval_next.html", "divider", "header", "extract_eval_code.html"),
-	c("header", "dens_intro.html", "dens_sims.html", "divider", "header", "dens_use1.html", "dens_use2.html", "divider", "header", "dens_sims_code.html"),
-	c("header", "ind_intro.html", "ind_related.html", "divider", "header", "ind_code.html"),
+	c("extractDensityExample.html"),
+	c("shapes2cells.html"),
 	c("http://leonawicz.github.io")
 )
 
@@ -67,7 +67,7 @@ files.Rmd <- list.files(pattern=".Rmd$", full=T)
 
 # @knitr save
 # write all yaml front-matter-specified outputs to Rmd directory for all Rmd files
-lapply(files.Rmd, render, output_format="all")
+for(i in 1:length(files.Rmd)) render(files.Rmd[i], output_format="all")
 insert_gatc(list.files(pattern=".html$"))
 moveDocs(path.docs=docs.path)
 
