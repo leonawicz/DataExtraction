@@ -57,8 +57,8 @@ get_cells <- function(i, r, shp, grp, loc, idx=Which(!is.na(r),cells=T)){
 
 # @knitr 1km_2km_AKCAN
 # For AK-CAN 1-km Alfresco and 2-km climate extractions
-dirs <- list.files("/big_scratch/apbennett/Calibration/FinalCalib", pattern=".*.sres.*.", full=T) # alternate
-r1km <- readAll(raster(list.files(file.path(dirs[1], "Maps"), pattern="^Age_0_.*.tif$", full=T)[1])) # template
+dirs <- list.files("/atlas_scratch/apbennett/IEM/FinalCalib", pattern=".*.sres.*.", full=T) # alternate
+r1km <- readAll(raster(list.files(file.path(dirs[1], "Maps", 1900), pattern="^Age_0_.*.tif$", full=T)[1])) # template
 r2km <- readAll(raster("/Data/Base_Data/Climate/AK_CAN_2km/projected/AR5_CMIP5_models/rcp60/5modelAvg/pr/pr_total_mm_AR5_5modelAvg_rcp60_01_2006.tif")) # template
 idx1 <- Which(!is.na(r1km),cells=T)
 idx2 <- Which(!is.na(r2km),cells=T)
