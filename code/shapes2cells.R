@@ -32,14 +32,19 @@ eco3_IDs <- sapply(slot(eco3_shp, "polygons"), function(x) slot(x, "ID"))
 LCC_shp <- shapefile(file.path(shpDir, "LCC/LCC_summarization_units_singlepartPolys.shp"))
 LCC_IDs <- gsub(" LCC", "", gsub("South", "S", gsub("western", "W", gsub("Western", "W", gsub("North", "N", gsub("  ", " ", gsub("\\.", "", as.data.frame(LCC_shp)[,1])))))))
 
+# LCC regions
+LCC2_shp <- shapefile(file.path(shpDir, "LCC_AKCAN_boreal/AK_LCC_boundaries_AKAlbersNAD83.shp"))
+LCC2_shp <- subset(LCC2_shp, LCC_Name=="Northwest Boreal LCC")
+LCC2_IDs <- "AK-CAN NW Boreal LCC"
+
 # CAVM regions
 CAVM_shp <- shapefile(file.path(shpDir, "CAVM/CAVM_complete.shp"))
 CAVM_IDs <- as.data.frame(CAVM_shp)[,4]
 
 # shapefile lists, names, and associated metadata
-grp.names <- c(rep("Political Boundaries", 2), paste0("Alaska L", 3:1, " Ecoregions"), "LCC Regions", "CAVM Regions")
-shp.list <- list(Alaska_shp, Canada_shp, eco32_shp, eco9_shp, eco3_shp, LCC_shp, CAVM_shp)
-shp.names.list <- list("Alaska", Canada_IDs, eco32_IDs, eco9_IDs, eco3_IDs, LCC_IDs, CAVM_IDs)
+grp.names <- c(rep("Political Boundaries", 2), paste0("Alaska L", 3:1, " Ecoregions"), "LCC Regions", "CAVM Regions", "AK-CAN LCC")
+shp.list <- list(Alaska_shp, Canada_shp, eco32_shp, eco9_shp, eco3_shp, LCC_shp, CAVM_shp, LCC2_shp)
+shp.names.list <- list("Alaska", Canada_IDs, eco32_IDs, eco9_IDs, eco3_IDs, LCC_IDs, CAVM_IDs, LCC2_IDs)
 
 # function to extract cell indices from raster by shapefile and return data table
 get_cells <- function(i, r, shp, grp, loc, idx=Which(!is.na(r),cells=T)){
