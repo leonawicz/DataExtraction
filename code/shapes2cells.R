@@ -76,3 +76,18 @@ cells2 <- data.table(cells2) %>% group_by(Location) %>% mutate(Cell_rmNA=which(c
 
 cells <- bind_rows(cells1, cells2) %>% data.table %>% group_by(Source, LocGroup, Location)
 save(cells, file=file.path(outDir, "shapes2cells_akcan1km2km.RData"))
+
+# @knitr 1km_AK
+grp.names <- c("FMZ Regions")
+shp.list <- list(FMZ_shp)
+shp.names.list <- list(FMZ_IDs)
+
+rAK1km <- readAll(raster("/atlas_scratch/mfleonawicz/alfresco/CMIP5_Statewide/outputs/3m/rcp45/CCSM4/Maps/2014/Age_0_2014.tif")) # template
+idx3 <- Which(!is.na(rAK1km),cells=T)
+
+cells3 <- data.table(Source="ak1km", rbindlist(mclapply(1:length(shp.list), get_cells, r=rAK1km, shp=shp.list, grp=grp.names, loc=shp.names.list, idx=idx3, mc.cores=32)))
+cells3 <- bind_rows(data.table(Source="ak1km", LocGroup="Statewide", Location="AK", Cell=idx3), cells3)
+cells3 <- data.table(cells3) %>% group_by(Location) %>% mutate(Cell_rmNA=which(c(1:ncell(rAK1km) %in% Cell)[idx3]))
+
+cells <- cells3 %>% data.table %>% group_by(Source, LocGroup, Location)
+save(cells, file=file.path(outDir, "shapes2cells_ak1km.RData"))
