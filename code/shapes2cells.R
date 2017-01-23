@@ -45,10 +45,14 @@ CAVM_IDs <- as.data.frame(CAVM_shp)[,4]
 FMZ_shp <- shapefile(file.path(shpDir, "FireMgmtZones/FireManagementZones_simplified.shp"))
 FMZ_IDs <- as.data.frame(FMZ_shp)[,2]
 
+# Terrestrail Protected Areas
+TPA_shp <- shapefile(file.path(shpDir, "NA_TPA/NA_TPA_simplified.shp"))
+TPA_IDs <- as.data.frame(TPA_shp)[,4]
+
 # shapefile lists, names, and associated metadata
-grp.names <- c(rep("Political Boundaries", 2), paste0("Alaska L", 3:1, " Ecoregions"), "LCC Regions", "CAVM Regions", "AK-CAN LCC", "FMZ Regions")
-shp.list <- list(Alaska_shp, Canada_shp, eco32_shp, eco9_shp, eco3_shp, LCC_shp, CAVM_shp, LCC2_shp, FMZ_shp)
-shp.names.list <- list("Alaska", Canada_IDs, eco32_IDs, eco9_IDs, eco3_IDs, LCC_IDs, CAVM_IDs, LCC2_IDs, FMZ_IDs)
+grp.names <- c(rep("Political Boundaries", 2), paste0("Alaska L", 3:1, " Ecoregions"), "LCC Regions", "CAVM Regions", "AK-CAN LCC", "FMZ Regions", "TPA Regions")
+shp.list <- list(Alaska_shp, Canada_shp, eco32_shp, eco9_shp, eco3_shp, LCC_shp, CAVM_shp, LCC2_shp, FMZ_shp, TPA_shp)
+shp.names.list <- list("Alaska", Canada_IDs, eco32_IDs, eco9_IDs, eco3_IDs, LCC_IDs, CAVM_IDs, LCC2_IDs, FMZ_IDs, TPA_IDs)
 
 # function to extract cell indices from raster by shapefile and return data table
 get_cells <- function(i, r, shp, grp, loc, idx=Which(!is.na(r),cells=T)){
@@ -63,7 +67,7 @@ get_cells <- function(i, r, shp, grp, loc, idx=Which(!is.na(r),cells=T)){
 # For AK-CAN 1-km Alfresco and 2-km climate extractions
 dirs <- list.files("/atlas_scratch/apbennett/IEM/FinalCalib", pattern=".*.sres.*.", full=T) # alternate
 r1km <- readAll(raster(list.files(file.path(dirs[1], "Maps", 1900), pattern="^Age_0_.*.tif$", full=T)[1])) # template
-r2km <- readAll(raster("/Data/Base_Data/Climate/AK_CAN_2km/projected/AR5_CMIP5_models/rcp60/5ModelAvg/pr/pr_total_mm_AR5_5ModelAvg_rcp60_01_2006.tif")) # template
+r2km <- readAll(raster("/Data/Base_Data/Climate/AK_CAN_2km/projected/AR5_CMIP5_models_deprecated/rcp60/5ModelAvg/pr/pr_total_mm_AR5_5ModelAvg_rcp60_01_2006.tif")) # template
 idx1 <- Which(!is.na(r1km),cells=T)
 idx2 <- Which(!is.na(r2km),cells=T)
 
